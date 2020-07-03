@@ -1,4 +1,4 @@
-import lcd
+import lcd, time
 from framework import BaseApp, NeedRebootException
 
 import sensor

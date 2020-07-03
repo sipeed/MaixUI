@@ -24,7 +24,7 @@ class MaixCubeSystem:
 	def __init__(self):
 		self.pmu = AXP173()
 		self.app_stack = []
-		lcd.init(type=2)
+		lcd.init()
 		lcd.rotation(2)
 		self.home_button = None
 		self.back_button = None
@@ -45,18 +45,18 @@ class MaixCubeSystem:
 		self.navigate(LauncherApp(self))
 	def show_provision(self):
 		img = image.Image(resource.provision_image_path)
+		# del img
+		img.draw_string(50, 6,
+						"<-", lcd.RED)
+		img.draw_string(100, 6,
+						"ENTER", lcd.RED)
+		img.draw_string(172, 6,
+						"->", lcd.RED)
+		img.draw_string(172, lcd.height() - 24,
+						"POWER", lcd.RED)
+		img.draw_string(50, lcd.height() - 24,
+						"RESET", lcd.WHITE)
 		lcd.display(img)
-		del img
-		lcd.draw_string(50, 6,
-						"<-", lcd.RED, lcd.BLACK)
-		lcd.draw_string(100, 6,
-						"ENTER", lcd.RED, lcd.BLACK)
-		lcd.draw_string(172, 6,
-						"->", lcd.RED, lcd.BLACK)
-		lcd.draw_string(172, lcd.height() - 24,
-						"POWER", lcd.RED, lcd.BLACK)
-		lcd.draw_string(50, lcd.height() - 24,
-						"RESET", lcd.WHITE, lcd.BLACK)
 		self.wait_event()
 	def button_irq(self, gpio, optional_pin_num=None):
 		print("button_irq start:", gpio, optional_pin_num)

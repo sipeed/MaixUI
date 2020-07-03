@@ -99,8 +99,7 @@ class ExplorerApp(BaseApp):
         path = "Path: " + self.path[0:20]
         # lcd.clear()
         img = image.Image(self.path + "res/images/bg.jpg")
-        lcd.display(img)
-        lcd.draw_string(x_offset, y_offset, path, lcd.WHITE, lcd.RED)
+        img.draw_string(x_offset, y_offset, path, lcd.RED)
         y_offset += 18
         for i in range(self.current_offset, len(self.current_dir_files)):
             gc.collect()
@@ -114,18 +113,20 @@ class ExplorerApp(BaseApp):
                     file_name = file_name + '/'
                 gc.collect()
                 file_readable_size = sizeof_fmt(f_stat[6])
-                lcd.draw_string(lcd.width() - 50, y_offset,
-                                file_readable_size, lcd.WHITE, lcd.BLUE)
+                img.draw_string(lcd.width() - 50, y_offset,
+                                file_readable_size, lcd.BLUE)
             except Exception as e:
                 print("-------------------->", e)
             is_current = self.current_selected_index == i
             line = "%s %d %s" % ("->" if is_current else "  ", i, file_name)
-            lcd.draw_string(x_offset, y_offset, line, lcd.WHITE, lcd.RED)
+            img.draw_string(x_offset, y_offset, line, lcd.RED)
             # gc.collect()
             y_offset += 18
             if y_offset > lcd.height():
                 print(y_offset, lcd.height(), "y_offset > height(), break")
                 break
+            
+        lcd.display(img)
 
 
 # ----------------------

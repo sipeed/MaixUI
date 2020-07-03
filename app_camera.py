@@ -1,5 +1,5 @@
 import os
-import lcd
+import lcd, time
 import sensor
 from fpioa_manager import fm
 from board import board_info
