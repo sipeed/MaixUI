@@ -15,9 +15,7 @@ class AXP173:
 
 
     class NotFoundError(PMUError):
-        print("Error: Unable connect pmu_axp173!");
-        # pass
-
+        print("Error: Unable connect pmu_axp173!")
 
     class OutOfRange(PMUError):
         pass
