@@ -1,46 +1,43 @@
-import _thread, time
 
-class Core:
+class agent:
 
-    log, thread, task, interval, state = print, None, None, 0, False
+  def __init__(self):
+    self.msg = []
 
-    def debug(enable):
-        Core.log = print if enable else lambda *args:None
+  def get_ms(self):
+    import time
+    # return time.time() * 1000
+    return time.ticks_ms()
 
-    def callback(func, inte=0.5):
-        Core.task, Core.interval = func, inte
+  def event(self, interval, function):
+    # arrived, interval, function
+    tmp = (self.get_ms() + interval, interval, function)
+    self.msg.append(tmp)
 
-    def background():
-        try:
-            while Core.state:
-                if Core.task:
-                    try:
-                        Core.task()
-                    except Exception as e:
-                        print(e)
-                time.sleep(Core.interval)
-            Core.log(Core.background, time.time())
-        except Exception as e:
-            print(e)
-        finally:
-            Core.state = True
+  def cycle(self):
+    if (len(self.msg)):
+      tmp = self.msg[0]
+      if (self.get_ms() >= tmp[0]):
+        self.msg.pop(0)
+        self.event(tmp[1], tmp[2])
+        tmp[2]() # function
 
-    def quit():
-        if Core.state == True:
-            Core.state = False
-            if Core.thread != None:
-                while Core.state != True:
-                    time.sleep(1) # wait _thread exit
-                Core.thread = None
-        Core.log(Core.quit, time.time())
+  def unit_test(self):
 
-    def run(): # maybe re-entry
-        Core.quit()
-        if Core.state == False:
-            Core.state, Core.thread = True, _thread.start_new_thread(Core.background, ())
-        Core.log(Core.run, time.time())
+    def test_0():
+      print('test_0')
+    def test_1():
+      print('test_1')
+    def test_2():
+      print('test_2')
 
-Core.run() # import enable
+    import time
+    self.event(200, test_0)
+    self.event(200, test_1)
+    self.event(200, test_2)
+    while True:
+      self.cycle()
+      time.sleep(0.1)
 
-# execfile('core.py')
-# execfile('ui.py')
+if __name__ == "__main__":
+  agent().unit_test()
