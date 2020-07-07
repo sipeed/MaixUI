@@ -8,8 +8,9 @@ BACK = 11
 ENTER = 10
 NEXT = 16
 
-class cube_button:
+Match = [[None, (1, 0)], [(2, 1), None]]
 
+class cube_button:
     def __init__(self):
         self.home_last, self.next_last, self.back_last = 1, 1, 1
         self.cache = {
@@ -42,29 +43,50 @@ class cube_button:
         return tmp
 
     def event(self):
-        if self.home_button.value() == 0 and self.home_last == 1:
-            self.cache['home'] = 1
-            self.home_last = 0
-        elif self.home_button.value() == 1 and self.home_last == 0:
-            self.cache['home'] = 2
-            self.home_last = 1
 
-        if self.back_button.value() == 0 and self.back_last == 1:
-            self.cache['back'] = 1
-            self.back_last = 0
-        elif self.back_button.value() == 1 and self.back_last == 0:
-            self.cache['back'] = 2
-            self.back_last = 1
+        tmp = Match[self.home_button.value()][self.home_last]
+        if tmp:
+            self.cache['home'], self.home_last = tmp
 
-        if self.next_button.value() == 0 and self.next_last == 1:
-            self.cache['next'] = 1
-            self.next_last = 0
-        elif self.next_button.value() == 1 and self.next_last == 0:
-            self.cache['next'] = 2
-            self.next_last = 1
+        tmp = Match[self.back_button.value()][self.back_last]
+        if tmp:
+            self.cache['back'], self.back_last = tmp
 
+        tmp = Match[self.next_button.value()][self.next_last]
+        if tmp:
+            self.cache['next'], self.next_last = tmp
+
+PIR = 16
+
+class ttgo_button:
+
+    def __init__(self):
+        self.home_last = 1
+        self.cache = {
+            'home':0,
+        }
+
+        fm.register(PIR, fm.fpioa.GPIOHS16)
+        self.home_button = GPIO(GPIO.GPIOHS16, GPIO.IN, GPIO.PULL_UP)
+
+    def home(self):
+        tmp, self.cache['home'] = self.cache['home'], 0
+        return tmp
+
+    def event(self):
+
+        tmp = Match[self.home_button.value()][self.home_last]
+        if tmp:
+            self.cache['home'], self.home_last = tmp
 
 if __name__ == "__main__":
+
+    #tmp = ttgo_button()
+    #while True:
+        #tmp.event()
+        #time.sleep_ms(200)
+        #print(tmp.home())
+
     tmp = cube_button()
     while True:
         tmp.event()
