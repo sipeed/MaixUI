@@ -12,7 +12,7 @@ def print_mem_free():
 
 class ui:
 
-    alpha, img, logo, bak = 0, None, None, None
+    alpha, img, logo, bak, load = 0, None, None, None, None
 
     def warp_template(func):
         def tmp_warp(warp=None):
@@ -26,9 +26,29 @@ class ui:
             ui.bak = image.Image("/sd/res/images/bg.jpg") # 90ms
         ui.img = ui.bak.copy() # 10ms
 
+    def load_draw():
+        gc.collect()
+        if ui.load == None:
+            ui.load = image.Image(size=(240,240)) # xxms
+            ui.load.draw_rectangle((0,0,240,240), fill=True, color=(0, 0, 0))
+            ui.load.draw_string(40, 6,
+                            "<-", (255, 0, 0), scale=1)
+            ui.load.draw_string(80, 6,
+                            "ENTER/BACK", (255, 0, 0), scale=1)
+            ui.load.draw_string(182, 6,
+                            "->", (255, 0, 0), scale=1)
+            ui.load.draw_string(10, lcd.height() - 30,
+                            "RESET", (255, 0, 0), scale=2)
+            ui.load.draw_string(162, lcd.height() - 30,
+                            "POWER", (255, 0, 0), scale=2)
+        ui.img = ui.load.copy() # 10ms
+        if ui.logo == None:
+            ui.logo = image.Image("/sd/res/images/logo.jpg") # 90ms
+        tmp = ui.logo.copy() # 10ms
+        ui.img.draw_image(tmp, 50, 50, alpha=int(255)) # 50ms
+
     def logo_draw():
-        ui.bg_draw()
-        value = math.cos(math.pi * ui.alpha / 24) * 60 + 100
+        value = math.cos(math.pi * ui.alpha / 24) * 50 + 150
         ui.alpha = (ui.alpha + 1) % 48
         if ui.logo == None:
             ui.logo = image.Image("/sd/res/images/logo.jpg") # 90ms
@@ -46,11 +66,13 @@ if __name__ == "__main__":
     app_explorer = image.Image("/sd/res/icons/app_explorer.bmp") # 60ms
     app_system_info = image.Image("/sd/res/icons/app_system_info.bmp") # 60ms
     app_camera = image.Image("/sd/res/icons/app_camera.bmp") # 60ms
+    @ui.warp_template(ui.load_draw)
     @ui.warp_template(ui.logo_draw)
     def test_launcher_draw():
          #print_mem_free()
         #lcd.display(ui.img) # 15ms
-        #return
+        ui.display()
+        return
         ## print_mem_free()
         global alpha
         value = math.cos(math.pi * alpha / 12) * 100 + 100
