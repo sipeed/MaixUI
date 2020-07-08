@@ -36,17 +36,19 @@ class launcher:
         icon(40, 150, "/sd/res/icons/app_system_info.bmp")
     ]
 
-  cube_btn = cube_button()
+  btn = cube_button()
 
   def draw():
+    launcher.btn.event()
+
     value = math.cos(math.pi * launcher.alpha / 12) * 50 + 200
     launcher.alpha = (launcher.alpha + 1) % 24
 
-    if launcher.cube_btn.back() == 1:
+    if launcher.btn.back() == 1:
         launcher.app_select -= 1
-    elif launcher.cube_btn.next() == 1:
+    elif launcher.btn.next() == 1:
         launcher.app_select += 1
-    elif launcher.cube_btn.home() == 1:
+    elif launcher.btn.home() == 1:
         print('start', launcher.app_select)
         # ui.img.draw_string(15, 120, '(%s)' % launcher.app_sets[launcher.app_select])
 
@@ -68,4 +70,3 @@ if __name__ == "__main__":
   import time
   while True:
       unit_test()
-      launcher.cube_btn.event()
