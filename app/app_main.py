@@ -56,6 +56,7 @@ class app:
                 if launcher.app_select == 1:
                     app.current = user()
                 if launcher.app_select == 2:
+                    app.index = 1
                     raise Exception("Settings Unrealized.")
                 if launcher.app_select == 3:
                     app.current = user()
