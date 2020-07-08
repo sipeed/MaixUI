@@ -21,14 +21,14 @@ class app:
         ui.display()
 
     @ui.warp_template(ui.bg_draw)
-    @ui.warp_template(taskbar.time_draw)
+    @ui.warp_template(taskbar.mem_draw)
     @ui.warp_template(launcher.draw)
     def main():
         ui.display()
 
     @ui.warp_template(ui.bg_draw)
     @ui.warp_template(ui.logo_draw)
-    @ui.warp_template(taskbar.time_draw)
+    @ui.warp_template(taskbar.mem_draw)
     @ui.warp_template(system_info.info_draw)
     def user():
         if app.current:
@@ -48,20 +48,19 @@ class app:
         if app.index != 0:
             if app.btn.home() == 2:
                 app.index = 2 if app.index == 1 else 1
-                system_info.info = '  selected:\n    %s' % (
-                    app.pages[launcher.app_select])
                 if app.current != None:
                     del app.current
                     app.current = None
+                system_info.info = ""
+                if launcher.app_select == 0:
+                    system_info.info = '  selected:\n    %s' % (app.pages[launcher.app_select])
                 if launcher.app_select == 1:
                     app.current = user()
                 if launcher.app_select == 2:
                     app.index = 1
                     raise Exception("Settings Unrealized.")
                 if launcher.app_select == 3:
-                    app.current = user()
-                if launcher.app_select == 4:
-                    pass
+                    system_info.info = '  selected:\n    %s' % (app.pages[launcher.app_select])
 
         elif app.btn.home() == 2:
             app.index = 1
