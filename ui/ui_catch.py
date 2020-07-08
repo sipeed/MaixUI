@@ -44,7 +44,7 @@ def catch(func):
                     info = "(%d)" % (
                         5 - (int)(time.ticks_ms() - happen) / 1000)
                     btn.event()
-                    if btn.back() or btn.home() or btn.next():
+                    if btn.back() == 2 or btn.home() == 2 or btn.next() == 2:
                         break
                     ui.img.draw_rectangle(
                         (x_offset, y_offset + 5, len(info) * 8, 12), fill=True, color=(50, 50, 50))
