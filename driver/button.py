@@ -21,8 +21,8 @@ class cube_button:
 
         fm.register(ENTER, fm.fpioa.GPIOHS10)
         self.home_button = GPIO(GPIO.GPIOHS10, GPIO.IN, GPIO.PULL_UP)
-        if self.home_button.value() == 0:
-            sys.exit()
+        # if self.home_button.value() == 0:
+        #     sys.exit()
 
         fm.register(BACK, fm.fpioa.GPIOHS11)
         self.back_button = GPIO(GPIO.GPIOHS11, GPIO.IN, GPIO.PULL_UP)

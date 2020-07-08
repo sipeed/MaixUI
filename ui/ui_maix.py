@@ -12,7 +12,7 @@ def print_mem_free():
 
 class ui:
 
-    alpha, img, logo, bak, load = 0, None, None, None, None
+    alpha, img, logo, bak = 0, None, None, None
 
     def warp_template(func):
         def tmp_warp(warp=None):
@@ -26,29 +26,23 @@ class ui:
             ui.bak = image.Image("/sd/res/images/bg.jpg") # 90ms
         ui.img = ui.bak.copy() # 10ms
 
-    def load_draw():
-        gc.collect()
-        if ui.load == None:
-            ui.load = image.Image(size=(240,240)) # xxms
-            ui.load.draw_rectangle((0,0,240,240), fill=True, color=(0, 0, 0))
-            ui.load.draw_string(30, 6, "<", (255, 0, 0), scale=2)
-            ui.load.draw_string(60, 6, "ENTER/HOME", (255, 0, 0), scale=2)
-            ui.load.draw_string(200, 6, ">", (255, 0, 0), scale=2)
-            ui.load.draw_string(10, lcd.height() - 30, "RESET", (255, 0, 0), scale=2)
-            ui.load.draw_string(178, lcd.height() - 30, "POWER", (255, 0, 0), scale=2)
-        ui.img = ui.load.copy() # 10ms
-        if ui.logo == None:
-            ui.logo = image.Image("/sd/res/images/logo.jpg") # 90ms
-        tmp = ui.logo.copy() # 10ms
-        ui.img.draw_image(tmp, 50, 50, alpha=int(255)) # 50ms
+    def help_draw():
+        ui.img.draw_rectangle((0,0,240,240), fill=True, color=(0, 0, 0))
+        ui.img.draw_string(30, 6, "<", (255, 0, 0), scale=2)
+        ui.img.draw_string(60, 6, "ENTER/HOME", (255, 0, 0), scale=2)
+        ui.img.draw_string(200, 6, ">", (255, 0, 0), scale=2)
+        ui.img.draw_string(10, lcd.height() - 30, "RESET", (255, 0, 0), scale=2)
+        ui.img.draw_string(178, lcd.height() - 30, "POWER", (255, 0, 0), scale=2)
+        ui.logo_draw(255)
 
-    def logo_draw():
-        value = math.cos(math.pi * ui.alpha / 24) * 50 + 150
-        ui.alpha = (ui.alpha + 1) % 48
+    def logo_draw(alpha = None):
+        if alpha == None:
+            alpha = math.cos(math.pi * ui.alpha / 24) * 50 + 150
+            ui.alpha = (ui.alpha + 1) % 48
         if ui.logo == None:
             ui.logo = image.Image("/sd/res/images/logo.jpg") # 90ms
         tmp = ui.logo.copy() # 10ms
-        ui.img.draw_image(tmp, 50, 50, alpha=int(value)) # 50ms
+        ui.img.draw_image(tmp, 50, 50, alpha=int(alpha)) # 50ms
         del tmp
 
     def display():
@@ -61,8 +55,8 @@ if __name__ == "__main__":
     app_explorer = image.Image("/sd/res/icons/app_explorer.bmp") # 60ms
     app_system_info = image.Image("/sd/res/icons/app_system_info.bmp") # 60ms
     app_camera = image.Image("/sd/res/icons/app_camera.bmp") # 60ms
-    @ui.warp_template(ui.load_draw)
-    @ui.warp_template(ui.logo_draw)
+    @ui.warp_template(ui.bg_draw)
+    @ui.warp_template(ui.help_draw)
     def test_launcher_draw():
          #print_mem_free()
         #lcd.display(ui.img) # 15ms

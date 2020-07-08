@@ -5,9 +5,9 @@ from ui_maix import ui
 from ui_taskbar import taskbar
 from ui_launcher import launcher
 from ui_system_info import system_info
+from ui_catch import catch
 from ui_user import user
 from button import cube_button
-
 
 class app:
 
@@ -15,8 +15,8 @@ class app:
     ctrl = agent()
     btn = cube_button()
 
-    @ui.warp_template(ui.load_draw)
-    @ui.warp_template(ui.logo_draw)
+    @ui.warp_template(ui.bg_draw)
+    @ui.warp_template(ui.help_draw)
     def load():
         ui.display()
 
@@ -34,14 +34,16 @@ class app:
         if app.current:
             if launcher.app_select == 1:
                 app.current.draw()
-
             if launcher.app_select == 3:
                 app.current.draw()
+
         ui.display()
 
     pages = ['Camera', 'Settings', 'Explorer', 'Statistics']
     current = None
 
+    @ui.warp_template(ui.bg_draw)
+    @catch
     def draw():
         if app.index != 0:
             if app.btn.home() == 2:
@@ -53,8 +55,12 @@ class app:
                     app.current = None
                 if launcher.app_select == 1:
                     app.current = user()
+                if launcher.app_select == 2:
+                    raise Exception("Settings Unrealized.")
                 if launcher.app_select == 3:
                     app.current = user()
+                if launcher.app_select == 4:
+                    pass
 
         elif app.btn.home() == 2:
             app.index = 1
