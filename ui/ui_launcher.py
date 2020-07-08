@@ -1,5 +1,5 @@
 import math, image
-from maix_ui import ui
+from ui_maix import ui
 
 from button import cube_button
 
@@ -57,7 +57,7 @@ class launcher:
         launcher.app_sets[pos].draw(checked, value if checked else 255)
 
 if __name__ == "__main__":
-  from maix_ui import ui
+  from ui_maix import ui
   from ui_taskbar import taskbar
 
   @ui.warp_template(ui.bg_draw)

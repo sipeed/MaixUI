@@ -31,16 +31,11 @@ class ui:
         if ui.load == None:
             ui.load = image.Image(size=(240,240)) # xxms
             ui.load.draw_rectangle((0,0,240,240), fill=True, color=(0, 0, 0))
-            ui.load.draw_string(40, 6,
-                            "<-", (255, 0, 0), scale=1)
-            ui.load.draw_string(80, 6,
-                            "ENTER/BACK", (255, 0, 0), scale=1)
-            ui.load.draw_string(182, 6,
-                            "->", (255, 0, 0), scale=1)
-            ui.load.draw_string(10, lcd.height() - 30,
-                            "RESET", (255, 0, 0), scale=2)
-            ui.load.draw_string(162, lcd.height() - 30,
-                            "POWER", (255, 0, 0), scale=2)
+            ui.load.draw_string(30, 6, "<", (255, 0, 0), scale=2)
+            ui.load.draw_string(60, 6, "ENTER/HOME", (255, 0, 0), scale=2)
+            ui.load.draw_string(200, 6, ">", (255, 0, 0), scale=2)
+            ui.load.draw_string(10, lcd.height() - 30, "RESET", (255, 0, 0), scale=2)
+            ui.load.draw_string(178, lcd.height() - 30, "POWER", (255, 0, 0), scale=2)
         ui.img = ui.load.copy() # 10ms
         if ui.logo == None:
             ui.logo = image.Image("/sd/res/images/logo.jpg") # 90ms
