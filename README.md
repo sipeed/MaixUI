@@ -18,6 +18,10 @@ It is recommended to use app_micro.py as a migration reference for other hardwar
 
 use this [app/app_micro.py](app/app_micro.py)
 
+- Ask questions to [issue](/issues)
+
+- Source archive to [release](/release)
+
 ## Demo effect
 
 
@@ -28,7 +32,7 @@ Explain with code.
 
 ### Layer drawing
 
-For example, implement a status(taskbar) bar.
+For example, implement a status(taskbar) bar base ui_maix.ui.
 
 ```python
 
@@ -62,6 +66,41 @@ if __name__ == "__main__":
 ```
 
 This means that the taskbar(taskbar.mem_draw) is drawn after the background(ui.bg_draw) image is drawn.
+
+look at this [ui/ui_user.py](ui/ui_user.py)
+
+### Page design
+
+The difference is that it can be used multiple times, so object-oriented design is required.
+
+```python
+
+class user:
+
+  def __init__(self):
+    self.btn = cube_button()
+    self.page_info = sys_info()
+    self.page = 0
+
+  def draw(self):
+    self.btn.event()
+
+    if self.btn.back() == 1:
+        self.page -= 1
+    elif self.btn.next() == 1:
+        self.page += 1
+    self.page = self.page % 3
+
+    if self.page == 0:
+      ui.img.draw_string(20, 30, "Weclome to MaixCube", (255, 255, 127), scale=2)
+    if self.page == 1:
+      self.page_info.draw(ui.img)
+    if self.page == 2:
+      ui.img.draw_string(40, 200, "Enjoy it! :D", (255, 0, 127), scale=2)
+
+```
+
+look at this [ui/ui_user.py](ui/ui_user.py)
 
 ### Event-driven
 
@@ -104,6 +143,38 @@ class bar(frame):
 
 Similarly other.
 
+look at this [driver/button.py](driver/button.py)
+
+### driver programming
+
+Simple can be written like this.
+
+```python
+import sys, time
+import sensor, lcd
+
+def camera_init():
+    sensor.run(1)
+
+def get_image():
+    return sensor.snapshot()
+
+try:
+    camera_init()
+except Exception as e:
+    time.sleep(1)
+    camera_init()
+
+if __name__ == "__main__":
+    pass
+```
+
+import will help you perform the first time.
+
+look at this [driver/camera.py](driver/camera.py)
+
+But this is not reliable.
+
 ### Unit-Test
 
 Please make sure that each code can be unit tested.
@@ -121,6 +192,71 @@ if __name__ == "__main__":
 ```
 
 This also facilitates the splitting of components, which facilitates independent commissioning and optimization.
+
+### Optimization
+
+Control memory usage and refresh rate.
+
+#### FPS
+
+- Compatible with CPython
+
+```python
+
+  import time
+  last = time.ticks_ms()
+  while True:
+      try:
+          print(time.ticks_ms() - last)
+          last = time.ticks_ms()
+          your_func()
+      except Exception as e:
+          print(e)
+
+```
+
+- MaixPy only
+
+```python
+
+  clock = time.clock()
+  while(True):
+      clock.tick()
+      lcd.display(get_image())
+      print(clock.fps())
+      print('ram total : ' + str(gc.mem_free() / 1024) + ' kb')
+      kpu.memtest()
+
+```
+
+#### View remaining memory
+
+```python
+
+def print_mem_free():
+    print('ram total : ' + str(gc.mem_free() / 1024) + ' kb')
+
+import gc, image
+
+print_mem_free()
+
+tmp = ' '*4096
+
+print_mem_free()
+
+del tmp
+
+print_mem_free()
+
+'''
+ram total : 989.4375 kb
+ram total : 985.0625 kb
+ram total : 984.8437 kb
+'''
+
+```
+
+Next up to you.
 
 ## Performance statistics
 
