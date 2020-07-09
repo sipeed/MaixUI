@@ -39,13 +39,20 @@ class ui:
         ui.bak.draw_string(75, 55, "o", color=(255, 255, 255), scale=2)
         ui.bak.draw_string(85, 25, "s", color=(255, 255, 255), scale=15)
         ui.img = ui.bak # 15ms
-        #ui.img = ui.bak.copy() # 10ms
+        #ui.img = ui.bak.copy() # 10ms 282kb
 
     def bg_draw():
         gc.collect()
         if ui.bak == None:
             ui.bak = image.Image("/sd/res/images/bg.jpg") # 90ms
         ui.img = ui.bak.copy() # 10ms
+
+    def help_in_draw():
+        ui.img.draw_string(30, 6, "<", (255, 0, 0), scale=2)
+        ui.img.draw_string(60, 6, "ENTER/HOME", (255, 0, 0), scale=2)
+        ui.img.draw_string(200, 6, ">", (255, 0, 0), scale=2)
+        ui.img.draw_string(10, lcd.height() - 30, "RESET", (255, 0, 0), scale=2)
+        ui.img.draw_string(178, lcd.height() - 30, "POWER", (255, 0, 0), scale=2)
 
     def help_draw():
         ui.img.draw_rectangle((0,0,240,240), fill=True, color=(0, 0, 0))

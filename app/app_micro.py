@@ -22,7 +22,7 @@ class app:
     btn = cube_button()
 
     @ui.warp_template(ui.bg_in_draw)
-    @ui.warp_template(ui.help_draw)
+    #@ui.warp_template(ui.help_draw)
     def load():
         ui.display()
 
