@@ -1,4 +1,6 @@
-# MicroPython-Samples [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge)](./LICENSE)
+# MicroPython-Samples
+
+[![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 This is the MicroPython UI framework.
 
@@ -14,7 +16,7 @@ Enjoy it!
 
 It is recommended to use app_micro.py as a migration reference for other hardware, it will not contain external images.
 
-use this [](app/app_micro.py)
+use this [app/app_micro.py](app/app_micro.py)
 
 ## Architecture description
 
