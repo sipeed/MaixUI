@@ -18,6 +18,10 @@ It is recommended to use app_micro.py as a migration reference for other hardwar
 
 use this [app/app_micro.py](app/app_micro.py)
 
+## Demo effect
+
+
+
 ## Architecture description
 
 Explain with code.
