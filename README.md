@@ -18,9 +18,9 @@ It is recommended to use app_micro.py as a migration reference for other hardwar
 
 use this [app/app_micro.py](app/app_micro.py)
 
-- Ask questions to [issue](github.com/sipeed/MaixUI/issues)
+- Ask questions to [issue](https://github.com/sipeed/MaixUI/issues)
 
-- Source archive to [release](github.com/sipeed/MaixUI/release)
+- Source archive to [release](https://github.com/sipeed/MaixUI/release)
 
 ## Demo effect
 
