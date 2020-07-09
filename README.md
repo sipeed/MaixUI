@@ -14,7 +14,7 @@ Enjoy it!
 
 It is recommended to use app_micro.py as a migration reference for other hardware, it will not contain external images.
 
-use this [](./app/app_micro.py)
+use this ![](app/app_micro.py)
 
 ## Architecture description
 
