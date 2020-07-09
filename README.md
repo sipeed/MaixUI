@@ -92,3 +92,44 @@ class bar(frame):
 
 Similarly other.
 
+## Performance statistics
+
+Record the time and memory usage of each component.
+
+- ui_maix.py
+  - bg_in_draw
+  - anime_in_draw
+  - need 35ms (28fps)
+  - need mem xxxkb
+
+- app_micro.py
+  - bg_draw
+  - anime_draw
+  - system_info
+  - taskbar
+  - need 30 ~ 51ms (20 ~ 28fps)
+  - need mem 330kb
+
+- bg_in_draw
+  - time xxms
+  - mem xxkb
+
+- anime_in_draw
+  - time xxms
+  - mem xxkb
+
+- bg_draw
+  - time xxms
+  - mem xxkb
+
+- anime_draw
+  - time xxms
+  - mem xxkb
+
+- system_info
+  - time xxms
+  - mem xxkb
+
+- taskbar
+  - time xxms
+  - mem xxkb
