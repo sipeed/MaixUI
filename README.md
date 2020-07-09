@@ -20,7 +20,7 @@ use this [app/app_micro.py](app/app_micro.py)
 
 - Ask questions to [issue](https://github.com/sipeed/MaixUI/issues)
 
-- Source archive to [release](https://github.com/sipeed/MaixUI/release)
+- Source archive to [releases](https://github.com/sipeed/MaixUI/releases)
 
 ## Demo effect
 
