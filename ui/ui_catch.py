@@ -7,7 +7,7 @@
 
 from ui_maix import ui
 from button import cube_button
-import sys, image, lcd, time
+import sys, image, lcd, time, gc
 
 def catch(func):
     def warp(warp=None):
@@ -56,6 +56,8 @@ def catch(func):
                     ui.img.draw_string(x_offset, y_offset + 5, info, color=(0, 255, 0))
                     lcd.display(ui.img)
                     time.sleep_ms(100)
+                del ui.img
+                gc.collect()
             except Exception as e:
                 print(e)
     return warp
