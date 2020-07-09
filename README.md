@@ -10,6 +10,12 @@ This is the MicroPython UI framework.
 
 Enjoy it!
 
+## Get-started
+
+It is recommended to use app_micro.py as a migration reference for other hardware, it will not contain external images.
+
+use this ![](./app/app_micro.py)
+
 ## Architecture description
 
 Explain with code.
@@ -92,6 +98,24 @@ class bar(frame):
 
 Similarly other.
 
+### Unit-Test
+
+Please make sure that each code can be unit tested.
+
+```python
+
+class test:
+
+    def hello():
+      pass
+
+if __name__ == "__main__":
+    test.hello()
+
+```
+
+This also facilitates the splitting of components, which facilitates independent commissioning and optimization.
+
 ## Performance statistics
 
 Record the time and memory usage of each component.
@@ -110,26 +134,12 @@ Record the time and memory usage of each component.
   - need 30 ~ 51ms (20 ~ 28fps)
   - need mem 330kb
 
-- bg_in_draw
-  - time xxms
-  - mem xxkb
+## Precautions
 
-- anime_in_draw
-  - time xxms
-  - mem xxkb
+请注意组件可重用性和绘图性能测试，必须保证每个模块均有开发过程产生的单元测试。
 
-- bg_draw
-  - time xxms
-  - mem xxkb
+Please note that component reusability and graphics performance testing must ensure that each module has unit tests generated during the development process.
 
-- anime_draw
-  - time xxms
-  - mem xxkb
+请确保页面只是对 UI 元素的描述和交互，所以可以在页面交互逻辑中实现业务逻辑、绘图逻辑，但不允许存在驱动逻辑，这也是为了在 CPython 里同步实现。
 
-- system_info
-  - time xxms
-  - mem xxkb
-
-- taskbar
-  - time xxms
-  - mem xxkb
+Please ensure that the page is only the description and interaction of UI elements, so you can implement business logic and drawing logic in the page interaction logic, but there is no hardware driving logic allowed. This is also for synchronous implementation in CPython.
