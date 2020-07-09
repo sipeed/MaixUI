@@ -1,3 +1,10 @@
+# This file is part of MaixUI
+# Copyright (c) 2020 sipeed.com
+#
+# Licensed under the MIT license:
+#   http://www.opensource.org/licenses/mit-license.php
+#
+
 import math, image
 from ui_maix import ui
 

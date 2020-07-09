@@ -1,5 +1,10 @@
 
-# backup
+# This file is part of MaixUI
+# Copyright (c) 2020 sipeed.com
+#
+# Licensed under the MIT license:
+#   http://www.opensource.org/licenses/mit-license.php
+#
 
 # def down(down_argument):  # down get "down_argument"
 #   print(down, 1, down_argument)  # down get "down_argument"

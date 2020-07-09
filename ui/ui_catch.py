@@ -1,4 +1,9 @@
-# debug file
+# This file is part of MaixUI
+# Copyright (c) 2020 sipeed.com
+#
+# Licensed under the MIT license:
+#   http://www.opensource.org/licenses/mit-license.php
+#
 
 from ui_maix import ui
 from button import cube_button
