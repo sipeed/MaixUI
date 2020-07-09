@@ -14,6 +14,7 @@ from ui_system_info import system_info
 from ui_catch import catch
 from ui_user import user
 from button import cube_button
+from ui_camera import test_camera
 
 class app:
 
@@ -22,7 +23,7 @@ class app:
     btn = cube_button()
 
     @ui.warp_template(ui.bg_in_draw)
-    #@ui.warp_template(ui.help_draw)
+    @ui.warp_template(ui.help_in_draw)
     def load():
         ui.display()
 
@@ -38,6 +39,9 @@ class app:
     @ui.warp_template(system_info.info_draw)
     def user():
         if app.current:
+            if launcher.app_select == 0:
+                test_camera.info_draw()
+                print(test_camera.info_draw)
             if launcher.app_select == 1:
                 app.current.draw()
             if launcher.app_select == 3:
@@ -60,6 +64,7 @@ class app:
                 system_info.info = ""
                 if launcher.app_select == 0:
                     system_info.info = '  selected:\n    %s' % (app.pages[launcher.app_select])
+                    app.current = user()
                 if launcher.app_select == 1:
                     app.current = user()
                 if launcher.app_select == 2:

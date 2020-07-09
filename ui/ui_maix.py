@@ -28,6 +28,9 @@ class ui:
               return lambda *args: [func(), warp()]
         return tmp_warp
 
+    def blank_draw():
+        ui.img = image.Image(size=(240, 240)) # 50ms # 168.75kb (112kb)
+
     def bg_in_draw():
         #if ui.bak == None:
         ui.bak = image.Image(size=(240, 240)) # 50ms # 168.75kb (112kb)
@@ -77,7 +80,7 @@ class ui:
 
     def anime_in_draw(alpha = None):
         if alpha == None:
-            alpha = math.cos(math.pi * ui.alpha / 200) * 200
+            alpha = math.cos(math.pi * ui.alpha / 100) * 200
             ui.alpha = (ui.alpha + 1) % 200
         r, g, b = random.randint(50, 150), random.randint(50, 150), random.randint(50, 150)
 
