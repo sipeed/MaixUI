@@ -1,6 +1,6 @@
 # MicroPython-Samples [![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge)](./LICENSE)
 
-This is the UI framework.
+This is the MicroPython UI framework.
 
 - Decoration design
 - Support layer drawing
