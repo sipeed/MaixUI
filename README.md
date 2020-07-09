@@ -2,7 +2,7 @@
 
 [![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![sipeed](https://img.shields.io/badge/owner-%20sipeed%20-red)](https://github.com/sipeed)
-[![micropython](https://img.shields.io/badge/Python-micropython-blue?logo=python](http://www.micropython.org)
+[![micropython](https://img.shields.io/badge/Python-micropython-blue?logo=python)](http://www.micropython.org)
 
 This is the MicroPython UI framework.
 
