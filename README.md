@@ -10,7 +10,17 @@
 <br />
 <br />
 
-[![MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+<a href="https://travis-ci.org/sipeed/MaixUI">
+    <img src="https://travis-ci.org/sipeed/MaixPy.svg?branch=master" alt="Master branch build status" />
+</a>
+<a href="https://github.com/sipeed/MaixUI/releases">
+    <img src="https://img.shields.io/github/release/sipeed/maixpy.svg" alt="Latest release version" />
+</a>
+<a href="https://github.com/sipeed/MaixUI/blob/master/LICENSE.md">
+    <img src="https://img.shields.io/badge/license-MIT%20v2.0-orange.svg" alt="MIT" />
+</a>
+
+<br />
 
 <br />
 
