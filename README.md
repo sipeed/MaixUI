@@ -33,18 +33,16 @@
 
 Enjoy it! 🤡
 
-## Get-started
-
-It is recommended to use app_micro.py as a migration reference for other hardware, it will not contain external images.
-
-Use this [app/app_micro.py](app/app_micro.py)
-
 ## Demo effect
 
 ![](./image/demo_01.gif)
 ![](./image/demo_02.gif)
 ![](./image/demo_03.gif)
 ![](./image/demo_04.gif)
+
+### Get-started
+
+Start from [ui/ui_maix.py](ui/ui_maix.py)
 
 ## Architecture description
 
@@ -134,6 +132,12 @@ class user:
 look at this [ui/ui_user.py](ui/ui_user.py)
 
 ![](./image/ui_user.gif)
+
+It is recommended to use app_micro.py as a migration reference for other hardware, it will not contain external images.
+
+Use this [app/app_micro.py](app/app_micro.py)
+
+![](./image/layer.png)
 
 ### Event-driven
 
