@@ -3,8 +3,8 @@
 <br />
 
 <br />
-<div class="title_pic">
-    <img width=205 src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/maixpy.png"> <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/micropython.png"> <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/icon_sipeed2.png"  height="60">
+<div class="title_pic" align='center'>
+    <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/micropython.png"> <img width=205 src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/maixpy.png"> <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/icon_sipeed2.png"  height="60">
 </div>
 
 <br />
