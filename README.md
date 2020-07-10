@@ -1,6 +1,8 @@
 # MicroPython-Samples
 
-[![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![sipeed](https://img.shields.io/badge/Maker-%20sipeed%20-red)](https://github.com/sipeed)
+[![MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![micropython](https://img.shields.io/badge/Python-micropython-blue?logo=python)](http://www.micropython.org)
 
 This is the MicroPython UI framework.
 
@@ -280,7 +282,7 @@ Record the time and memory usage of each component.
 
 Please note that component reusability and graphics performance testing must ensure that each module has unit tests generated during the development process.
 
-请确保页面只是对 UI 元素的描述和交互，所以可以在页面交互逻辑中实现业务逻辑、绘图逻辑，但不允许存在驱动逻辑，这也是为了在 CPython 里同步实现。
+请确保页面只是对 UI 元素的描述和交互，所以可以在页面交互逻辑中实现业务逻辑、绘图逻辑，但不允许存在硬件驱动逻辑，这也是为了在 CPython 里同步实现。
 
 Please ensure that the page is only the description and interaction of UI elements, so you can implement business logic and drawing logic in the page interaction logic, but there is no hardware driving logic allowed. This is also for synchronous implementation in CPython.
 
