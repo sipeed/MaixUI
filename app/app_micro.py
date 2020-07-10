@@ -14,7 +14,7 @@ from ui_system_info import system_info
 from ui_catch import catch
 from ui_user import user
 from button import cube_button
-from ui_camera import test_camera
+from ui_camera import ai_camera
 
 class app:
 
@@ -38,7 +38,7 @@ class app:
         if app.current:
             if launcher.app_select == 0:
                 try:
-                    test_camera.info_draw()
+                    ai_camera.ai_draw()
                 except Exception as e:
                     app.index = 1
                     raise e
