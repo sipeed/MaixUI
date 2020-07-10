@@ -33,6 +33,15 @@ Explain with code.
 
 ### Layer drawing
 
+Let's look at an example.
+
+```python
+  @ui.warp_template(ui.blank_draw) # first draw
+  def app_main():
+      # second draw
+      ui.display() # third display
+```
+
 For example, implement a status(taskbar) bar base ui_maix.ui.
 
 ```python
@@ -68,7 +77,9 @@ if __name__ == "__main__":
 
 This means that the taskbar(taskbar.mem_draw) is drawn after the background(ui.bg_draw) image is drawn.
 
-look at this [ui/ui_user.py](ui/ui_user.py)
+look at this [ui/ui_taskbar.py](ui/ui_taskbar.py)
+
+![](./image/ui_taskbar.gif)
 
 ### Page design
 
@@ -103,6 +114,8 @@ class user:
 
 look at this [ui/ui_user.py](ui/ui_user.py)
 
+![](./image/ui_user.gif)
+
 ### Event-driven
 
 Note that many events are not implemented for users to reload, in fact it is tailorable and not necessary.
@@ -113,7 +126,7 @@ Note that many events are not implemented for users to reload, in fact it is tai
 
 class bar(frame):
   
-  def on_button_press():
+  def on_button_press():  
     pass
   
   def on_button_release():
@@ -146,6 +159,8 @@ Similarly other.
 
 look at this [driver/button.py](driver/button.py)
 
+![](./image/button.gif)
+
 ### driver programming
 
 Simple can be written like this.
@@ -154,27 +169,26 @@ Simple can be written like this.
 import sys, time
 import sensor, lcd
 
-def camera_init():
-    sensor.run(1)
+class obj:
 
-def get_image():
-    return sensor.snapshot()
+    is_init = False
 
-try:
-    camera_init()
-except Exception as e:
-    time.sleep(1)
-    camera_init()
+    def init():
+      pass
+
+    def get_image():
+        if obj.is_init == False:
+            obj.init()
+            obj.is_init = True
+        return sensor.snapshot()
 
 if __name__ == "__main__":
     pass
 ```
 
-import will help you perform the first time.
-
 look at this [driver/camera.py](driver/camera.py)
 
-But this is not reliable.
+![](./image/demo_02.gif)
 
 ### Unit-Test
 
