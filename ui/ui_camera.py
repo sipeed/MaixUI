@@ -16,7 +16,7 @@ class test_camera:
   info = 'Sensor Test'
 
   def info_draw():
-    ui.img.draw_image(camera.get_image(), 0, 0) # 50ms
+    ui.img.draw_image(camera.obj.get_image(), 0, 0) # 50ms
     ui.img.draw_string(40, 2, test_camera.info, color=(0, 255, 0), scale=2, mono_space=1)
 
 if __name__ == "__main__":

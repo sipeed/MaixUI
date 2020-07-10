@@ -25,6 +25,7 @@ Use this [app/app_micro.py](app/app_micro.py)
 ![](./image/demo_01.gif)
 ![](./image/demo_02.gif)
 ![](./image/demo_03.gif)
+![](./image/demo_04.gif)
 
 ## Architecture description
 
@@ -267,7 +268,7 @@ Record the time and memory usage of each component.
   - anime_draw
   - system_info
   - taskbar
-  - need 49ms (19fps)
+  - need 49ms (19 ~ 23fps)
   - need mem 760kb
 
 ![](./image/test_main.gif)
@@ -277,7 +278,7 @@ Record the time and memory usage of each component.
   - anime_in_draw
   - system_info
   - taskbar
-  - need 30 ~ 51ms (20 ~ 28fps)
+  - need 30 ~ 51ms (24 ~ 42fps)
   - need mem 330kb
 
 ![](./image/test_micro.gif)

@@ -22,26 +22,26 @@ class app:
     ctrl = agent()
     btn = cube_button()
 
-    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(ui.help_in_draw)
     def load():
         ui.display()
 
-    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(taskbar.mem_draw)
     @ui.warp_template(launcher.draw)
     def main():
         ui.display()
 
-    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(ui.anime_in_draw)
     @ui.warp_template(taskbar.mem_draw)
     @ui.warp_template(system_info.info_draw)
     def user():
         if app.current:
             if launcher.app_select == 0:
-                test_camera.info_draw()
-                print(test_camera.info_draw)
+                try:
+                    test_camera.info_draw()
+                except Exception as e:
+                    app.index = 1
+                    raise e
             if launcher.app_select == 1:
                 app.current.draw()
             if launcher.app_select == 3:
@@ -94,7 +94,7 @@ class app:
             last = time.ticks_ms()
             while True:
                 try:
-                    print(time.ticks_ms() - last)
+                    print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                     last = time.ticks_ms()
                     app.ctrl.cycle()
                     #time.sleep(0.1)
