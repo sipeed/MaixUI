@@ -1,4 +1,5 @@
-# MicroPython-Samples
+
+<div align='center' ><font size='70'>🦄 MaixUI 📲</font></div>
 
 [![sipeed](https://img.shields.io/badge/Maker-%20sipeed%20-red)](https://github.com/sipeed)
 [![MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
@@ -12,7 +13,7 @@ This is the MicroPython UI framework.
 - No function overloading is required
 - Provide basic framework examples
 
-Enjoy it!
+Enjoy it! 🤡
 
 ## Get-started
 
