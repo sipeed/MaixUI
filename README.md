@@ -23,7 +23,7 @@ Use this [app/app_micro.py](app/app_micro.py)
 ## Demo effect
 
 ![](./image/demo_01.gif)
-![](./image/demo_01.gif)
+![](./image/demo_02.gif)
 ![](./image/demo_03.gif)
 
 ## Architecture description
