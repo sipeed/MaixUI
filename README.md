@@ -5,16 +5,13 @@
 
 <br />
 
-<img width=205 src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/maixpy.png">
-
 <br />
 
 [![MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 
 <br />
-
 <div class="title_pic">
-    <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/micropython.png"><img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/icon_sipeed2.png"  height="60">
+    <img width=205 src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/maixpy.png"><img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/micropython.png"><img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/icon_sipeed2.png"  height="60">
 </div>
 
 <br />
