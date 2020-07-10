@@ -261,14 +261,18 @@ Next up to you.
 Record the time and memory usage of each component.
 
 - ui_maix.py
-  - bg_in_draw
-  - anime_in_draw
-  - need 35ms (28fps)
-  - need mem xxxkb
-
-- app_micro.py
   - bg_draw
   - anime_draw
+  - system_info
+  - taskbar
+  - need 49ms (19fps)
+  - need mem 760kb
+
+![](./image/test_main.gif)
+
+- app_micro.py
+  - bg_in_draw
+  - anime_in_draw
   - system_info
   - taskbar
   - need 30 ~ 51ms (20 ~ 28fps)
