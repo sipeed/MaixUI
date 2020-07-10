@@ -1,13 +1,6 @@
 <div align='center'><h1 style=""color:#FF0000;">💻 MaixUI 📲</h1></div>
 
 <br />
-
-<br />
-<div class="title_pic" align='center'>
-    <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/icon_sipeed2.png"  height="60"> <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/micropython.png"> <img width=205 src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/maixpy.png">
-</div>
-
-<br />
 <br />
 
 <a href="https://travis-ci.org/sipeed/MaixUI">
@@ -21,8 +14,15 @@
 </a>
 
 <br />
+<br />
+
+<div class="title_pic" align='center'>
+    <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/icon_sipeed2.png"  height="60"> <img width=205 src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/maixpy.png"> <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/micropython.png">
+</div>
 
 <br />
+<br />
+
 
 
 This is the MicroPython UI framework.
