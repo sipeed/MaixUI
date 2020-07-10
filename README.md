@@ -1,5 +1,5 @@
 
-<div align='center' ><font size='70'>🦄 MaixUI 📲</font></div>
+<div align='center' ><h1 size='70'>🦄 MaixUI 📲</h1></div>
 
 [![sipeed](https://img.shields.io/badge/Maker-%20sipeed%20-red)](https://github.com/sipeed)
 [![MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
