@@ -3,6 +3,13 @@
 <br />
 <br />
 
+<div class="title_pic" align='center'>
+    <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/icon_sipeed2.png"  height="60"> <img width=205 src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/maixpy.png"> <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/micropython.png">
+</div>
+
+<br />
+<br />
+
 <a href="https://travis-ci.org/sipeed/MaixUI">
     <img src="https://travis-ci.org/sipeed/MaixPy.svg?branch=master" alt="Master branch build status" />
 </a>
@@ -16,16 +23,7 @@
 <br />
 <br />
 
-<div class="title_pic" align='center'>
-    <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/icon_sipeed2.png"  height="60"> <img width=205 src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/maixpy.png"> <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/micropython.png">
-</div>
-
-<br />
-<br />
-
-
-
-This is the MicroPython UI framework.
+**This is the MicroPython UI framework.**
 
 - Decoration design
 - Support layer drawing
