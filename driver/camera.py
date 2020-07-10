@@ -15,7 +15,6 @@ class obj:
     is_init = False
 
     def init():
-        #sensor.reset()
         sensor.reset(dual_buff=True)
         sensor.set_pixformat(sensor.YUV422)
         sensor.set_framesize(sensor.QVGA)

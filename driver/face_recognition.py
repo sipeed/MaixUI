@@ -19,7 +19,7 @@ class FaceRecognition():
             bbox = kpu.run_yolo2(FaceRecognition.model, img)
             if bbox:
                 for i in bbox:
-                    print(i)
+                    # print(i)
                     img.draw_rectangle(i.rect())
 
     def free():
