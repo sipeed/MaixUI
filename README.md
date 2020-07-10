@@ -272,6 +272,8 @@ Record the time and memory usage of each component.
   - need 30 ~ 51ms (20 ~ 28fps)
   - need mem 330kb
 
+![](./image/test_micro.gif)
+
 ## Precautions
 
 请注意组件可重用性和绘图性能测试，必须保证每个模块均有开发过程产生的单元测试。

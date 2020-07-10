@@ -5,34 +5,36 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import sys, time
-import sensor, lcd
-import KPU as kpu
+import sys
+import time
+import sensor
+import lcd
 
-def camera_init():
-    sensor.reset()
-    sensor.set_pixformat(sensor.YUV422)
-    sensor.set_framesize(sensor.QVGA)
-    sensor.run(1)
-    sensor.skip_frames()
+class obj:
 
-    sensor.set_hmirror(1)
-    sensor.set_vflip(1)
+    is_init = False
 
-def get_image():
+    def init():
+        sensor.reset()
+        sensor.set_pixformat(sensor.YUV422)
+        sensor.set_framesize(sensor.QVGA)
+        sensor.set_hmirror(1)
+        sensor.set_vflip(1)
+        sensor.run(1)
+        sensor.skip_frames()
 
-    return sensor.snapshot()
-
-try:
-    camera_init()
-except Exception as e:
-    time.sleep(1)
-    camera_init()
+    def get_image():
+        if obj.is_init == False:
+            obj.init()
+            obj.is_init = True
+        return sensor.snapshot()
 
 if __name__ == "__main__":
 
+    import KPU as kpu
+
     kpu.memtest()
-    
+
     lcd.init(freq=15000000)
 
     print('ram total : ' + str(gc.mem_free() / 1024) + ' kb')
@@ -41,7 +43,7 @@ if __name__ == "__main__":
     clock = time.clock()
     while(True):
         clock.tick()
-        lcd.display(get_image())
+        lcd.display(obj.get_image())
         print(clock.fps())
         print('ram total : ' + str(gc.mem_free() / 1024) + ' kb')
         kpu.memtest()
