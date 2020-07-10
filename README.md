@@ -1,9 +1,23 @@
 
+<br />
+
 <div align='center'><h1 style=""color:#FF0000;">💻 MaixUI 📲</h1></div>
 
-[![sipeed](https://img.shields.io/badge/Maker-%20sipeed%20-red)](https://github.com/sipeed)
+<br />
+
+<img width=205 src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/maixpy.png">
+
+<br />
+
 [![MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
-[![micropython](https://img.shields.io/badge/Python-micropython-blue?logo=python)](http://www.micropython.org)
+
+<br />
+
+<div class="title_pic">
+    <img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/micropython.png"><img src="https://raw.githubusercontent.com/sipeed/MaixPy/master/assets/image/icon_sipeed2.png"  height="60">
+</div>
+
+<br />
 
 This is the MicroPython UI framework.
 
