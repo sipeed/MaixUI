@@ -81,7 +81,7 @@ class taskbar:
     ui.img.draw_string(10, 2, info, scale=2)
 
 if __name__ == "__main__":
-
+    @ui.warp_template(ui.blank_draw)
     @ui.warp_template(ui.bg_draw)
     @ui.warp_template(taskbar.mem_draw)
     def app_main():
