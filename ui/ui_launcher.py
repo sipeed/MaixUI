@@ -1,5 +1,5 @@
 # This file is part of MaixUI
-# Copyright (c) 2020 sipeed.com
+# Copyright (c) sipeed.com
 #
 # Licensed under the MIT license:
 #   http://www.opensource.org/licenses/mit-license.php
@@ -69,6 +69,7 @@ if __name__ == "__main__":
   from ui_maix import ui
   from ui_taskbar import taskbar
 
+  @ui.warp_template(ui.blank_draw)
   @ui.warp_template(ui.bg_draw)
   @ui.warp_template(taskbar.time_draw)
   def unit_test():

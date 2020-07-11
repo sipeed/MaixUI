@@ -1,5 +1,5 @@
 # This file is part of MaixUI
-# Copyright (c) 2020 sipeed.com
+# Copyright (c) sipeed.com
 #
 # Licensed under the MIT license:
 #   http://www.opensource.org/licenses/mit-license.php
@@ -16,6 +16,7 @@ class system_info:
 
 if __name__ == "__main__":
 
+    @ui.warp_template(ui.blank_draw)
     @ui.warp_template(ui.bg_draw)
     @ui.warp_template(system_info.info_draw)
     def unit_test():

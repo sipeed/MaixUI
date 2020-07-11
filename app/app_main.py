@@ -1,5 +1,5 @@
 # This file is part of MaixUI
-# Copyright (c) 2020 sipeed.com
+# Copyright (c) sipeed.com
 #
 # Licensed under the MIT license:
 #   http://www.opensource.org/licenses/mit-license.php
@@ -12,7 +12,7 @@ from ui_taskbar import taskbar
 from ui_launcher import launcher
 from ui_system_info import system_info
 from ui_catch import catch
-from ui_user import user
+from ui_pages import pages
 from button import cube_button
 from ui_camera import test_camera
 
@@ -34,7 +34,7 @@ class app:
     @ui.warp_template(ui.anime_draw)
     @ui.warp_template(taskbar.mem_draw)
     @ui.warp_template(system_info.info_draw)
-    def user():
+    def pages():
         if app.current:
             if launcher.app_select == 0:
                 try:
@@ -64,9 +64,9 @@ class app:
                 system_info.info = ""
                 if launcher.app_select == 0:
                     system_info.info = '  selected:\n    %s' % (app.pages[launcher.app_select])
-                    app.current = user()
+                    app.current = pages()
                 if launcher.app_select == 1:
-                    app.current = user()
+                    app.current = pages()
                 if launcher.app_select == 2:
                     app.index = 1
                     raise Exception("Settings Unrealized.")
@@ -81,7 +81,7 @@ class app:
         elif app.index == 1:
             app.main()
         elif app.index == 2:
-            app.user()
+            app.pages()
 
         app.btn.event()
 

@@ -1,5 +1,5 @@
 # This file is part of MaixUI
-# Copyright (c) 2020 sipeed.com
+# Copyright (c) sipeed.com
 #
 # Licensed under the MIT license:
 #   http://www.opensource.org/licenses/mit-license.php
@@ -12,7 +12,7 @@ from ui_taskbar import taskbar
 from ui_launcher import launcher
 from ui_system_info import system_info
 from ui_catch import catch
-from ui_user import user
+from ui_pages import pages
 from button import cube_button
 from ui_camera import ai_camera
 
@@ -34,7 +34,38 @@ class app:
     @ui.warp_template(ui.anime_in_draw)
     @ui.warp_template(taskbar.mem_draw)
     @ui.warp_template(system_info.info_draw)
-    def user():
+    def pages():
+        ui.display()
+
+    def camera():
+        ai_camera.ai_draw()
+
+    applist = ['Camera', 'Settings', 'Explorer', 'Statistics']
+    current = None
+
+    @ui.warp_template(ui.blank_in_draw)
+    @catch
+    def draw():
+        if app.index != 0:
+            if app.btn.home() == 2:
+                app.index = 2 if app.index == 1 else 1
+                if app.current != None:
+                    del app.current
+                    app.current = None
+                system_info.info = ""
+                if launcher.app_select == 0:
+                    system_info.info = '  selected:\n    %s' % (app.applist[launcher.app_select])
+                if launcher.app_select == 1:
+                    app.current = pages()
+                if launcher.app_select == 2:
+                    app.index = 1
+                    raise Exception("Settings Unrealized.")
+                if launcher.app_select == 3:
+                    system_info.info = '  selected:\n    %s' % (app.applist[launcher.app_select])
+
+        elif app.btn.home() == 2:
+            app.index = 1
+
         if app.current:
             if launcher.app_select == 0:
                 try:
@@ -46,42 +77,13 @@ class app:
                 app.current.draw()
             if launcher.app_select == 3:
                 app.current.draw()
-
-        ui.display()
-
-    pages = ['Camera', 'Settings', 'Explorer', 'Statistics']
-    current = None
-
-    @ui.warp_template(ui.bg_in_draw)
-    @catch
-    def draw():
-        if app.index != 0:
-            if app.btn.home() == 2:
-                app.index = 2 if app.index == 1 else 1
-                if app.current != None:
-                    del app.current
-                    app.current = None
-                system_info.info = ""
-                if launcher.app_select == 0:
-                    system_info.info = '  selected:\n    %s' % (app.pages[launcher.app_select])
-                    app.current = user()
-                if launcher.app_select == 1:
-                    app.current = user()
-                if launcher.app_select == 2:
-                    app.index = 1
-                    raise Exception("Settings Unrealized.")
-                if launcher.app_select == 3:
-                    system_info.info = '  selected:\n    %s' % (app.pages[launcher.app_select])
-
-        elif app.btn.home() == 2:
-            app.index = 1
-
+        
         if app.index == 0:
             app.load()
         elif app.index == 1:
             app.main()
         elif app.index == 2:
-            app.user()
+            app.pages()
 
         app.btn.event()
 

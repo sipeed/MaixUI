@@ -104,7 +104,7 @@ The difference is that it can be used multiple times, so object-oriented design 
 
 ```python
 
-class user:
+class pages:
 
   def __init__(self):
     self.btn = cube_button()
@@ -129,9 +129,9 @@ class user:
 
 ```
 
-look at this [ui/ui_user.py](ui/ui_user.py)
+look at this [ui/ui_pages.py](ui/ui_pages.py)
 
-![](./image/ui_user.gif)
+![](./image/ui_pages.gif)
 
 It is recommended to use app_micro.py as a migration reference for other hardware, it will not contain external images.
 
