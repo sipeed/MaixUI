@@ -106,7 +106,7 @@ if __name__ == "__main__":
     tmp = pages()
 
     @ui.warp_template(ui.blank_draw)
-    @ui.warp_template(ui.bg_draw)
+    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(ui.anime_in_draw)
     @ui.warp_template(tmp.draw)
     def unit_test():

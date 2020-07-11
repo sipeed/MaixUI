@@ -39,8 +39,8 @@ class launcher:
   app_sets = [
         icon(40, 50, "/sd/res/icons/app_camera.bmp"),
         icon(140, 50, "/sd/res/icons/app_settings.bmp"),
-        icon(140, 150, "/sd/res/icons/app_explorer.bmp"),
-        icon(40, 150, "/sd/res/icons/app_system_info.bmp")
+        icon(40, 150, "/sd/res/icons/app_explorer.bmp"),
+        icon(140, 150, "/sd/res/icons/app_system_info.bmp")
     ]
 
   btn = cube_button()
@@ -70,7 +70,7 @@ if __name__ == "__main__":
   from ui_taskbar import taskbar
 
   @ui.warp_template(ui.blank_draw)
-  @ui.warp_template(ui.bg_draw)
+  @ui.warp_template(ui.bg_in_draw)
   @ui.warp_template(taskbar.time_draw)
   def unit_test():
     launcher.draw()

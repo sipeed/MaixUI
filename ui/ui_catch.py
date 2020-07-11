@@ -86,7 +86,7 @@ if __name__ == "__main__":
                 raise Exception(btn)
 
     @ui.warp_template(ui.blank_draw)
-    @ui.warp_template(ui.bg_draw)
+    @ui.warp_template(ui.bg_in_draw)
     @catch
     @ui.warp_template(test.info_draw)
     def unit_test():

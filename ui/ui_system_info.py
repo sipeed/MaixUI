@@ -17,7 +17,7 @@ class system_info:
 if __name__ == "__main__":
 
     @ui.warp_template(ui.blank_draw)
-    @ui.warp_template(ui.bg_draw)
+    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(system_info.info_draw)
     def unit_test():
       ui.display()

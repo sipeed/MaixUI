@@ -25,7 +25,7 @@ class taskbar:
 if __name__ == "__main__":
 
     @ui.warp_template(ui.blank_draw)
-    @ui.warp_template(ui.bg_draw)
+    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(taskbar.time_draw)
     def app_main():
         ui.display()
