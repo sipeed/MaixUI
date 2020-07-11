@@ -18,74 +18,89 @@ from ui_camera import ai_camera
 
 class app:
 
-    index = 0
+    layer = 0 # set help_draw to top
     ctrl = agent()
     btn = cube_button()
 
+    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(ui.help_in_draw)
-    def load():
+    def draw_load():
         ui.display()
 
+    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(taskbar.mem_draw)
     @ui.warp_template(launcher.draw)
-    def main():
+    def draw_launcher():
         ui.display()
 
+    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(ui.anime_in_draw)
     @ui.warp_template(taskbar.mem_draw)
     @ui.warp_template(system_info.info_draw)
-    def pages():
+    def draw_pages():
+        if app.current != None:
+            app.current.draw()
         ui.display()
-
-    def camera():
-        ai_camera.ai_draw()
 
     applist = ['Camera', 'Settings', 'Explorer', 'Statistics']
     current = None
 
-    @ui.warp_template(ui.blank_in_draw)
+    def draw_camera():
+        try:
+            ai_camera.ai_draw()
+            ui.display()
+        except Exception as e:
+            app.layer = 1
+            raise e
+
+    def load_application(selected):
+        if app.current != None: # clear last application
+            del app.current
+            app.current = None
+        if selected == 0:
+            system_info.info = '  selected:\n    %s' % (app.applist[selected])
+        elif selected == 1:
+            app.current = pages()
+        elif selected == 2:
+            app.layer -= 1 # return last layer
+            raise Exception("Settings Unrealized.")
+        elif selected == 3:
+            system_info.info = '  selected:\n    %s' % (app.applist[selected])
+
+    def exec_application():
+        if launcher.app_select == 0:
+            app.draw_camera()
+        if launcher.app_select == 1:
+            app.draw_pages()
+        if launcher.app_select == 2:
+            pass
+        if launcher.app_select == 3:
+            app.draw_pages()
+
+    @ui.warp_template(ui.blank_draw)
     @catch
     def draw():
-        if app.index != 0:
-            if app.btn.home() == 2:
-                app.index = 2 if app.index == 1 else 1
-                if app.current != None:
-                    del app.current
-                    app.current = None
-                system_info.info = ""
-                if launcher.app_select == 0:
-                    system_info.info = '  selected:\n    %s' % (app.applist[launcher.app_select])
-                if launcher.app_select == 1:
-                    app.current = pages()
-                if launcher.app_select == 2:
-                    app.index = 1
-                    raise Exception("Settings Unrealized.")
-                if launcher.app_select == 3:
-                    system_info.info = '  selected:\n    %s' % (app.applist[launcher.app_select])
-
-        elif app.btn.home() == 2:
-            app.index = 1
-
-        if app.current:
-            if launcher.app_select == 0:
-                try:
-                    ai_camera.ai_draw()
-                except Exception as e:
-                    app.index = 1
-                    raise e
-            if launcher.app_select == 1:
-                app.current.draw()
-            if launcher.app_select == 3:
-                app.current.draw()
-        
-        if app.index == 0:
-            app.load()
-        elif app.index == 1:
-            app.main()
-        elif app.index == 2:
-            app.pages()
 
         app.btn.event()
+
+        if app.btn.home() == 2: # click button release to 2
+            if app.layer == 1:
+                app.layer += 1
+                # launcher into application
+                app.load_application(launcher.app_select)
+            elif app.layer == 2:
+                app.layer -= 1
+                # application return launcher
+            else:
+                app.layer += 1
+                # help into launcher
+
+        if app.layer == 0:
+            app.draw_load()
+        elif app.layer == 1:
+            app.draw_launcher()
+        elif app.layer == 2:
+            app.exec_application()
 
     def run():
         #app.ctrl.event(100, lambda *args: time.sleep(1))
