@@ -15,6 +15,7 @@ from ui_catch import catch
 from ui_pages import pages
 from button import cube_button
 from ui_camera import ai_camera
+from ui_sample import sample_page
 
 class app:
 
@@ -42,14 +43,13 @@ class app:
             app.current.draw()
         ui.display()
 
-    def draw_sensor():
-        pass
+    @ui.warp_template(taskbar.time_draw)
+    def draw_samples():
+        sample_page.sample_draw()
+        ui.display()
 
     def draw_explorer():
         pass
-
-    applist = ['Camera', 'Settings', 'Explorer', 'Statistics']
-    current = None
 
     def draw_camera():
         try:
@@ -59,19 +59,24 @@ class app:
             app.layer = 1
             raise e
 
+    applist = ['Camera', 'Settings', 'Explorer', 'Statistics']
+    current = None
+
     def load_application(selected):
         if app.current != None: # clear last application
             del app.current
             app.current = None
         if selected == 0:
-            system_info.info = '  selected:\n    %s' % (app.applist[selected])
+            pass
+            #system_info.info = '  selected:\n    %s' % (app.applist[selected])
         elif selected == 1:
             app.current = pages()
         elif selected == 2:
             app.layer -= 1 # return last layer
             raise Exception("Settings Unrealized.")
         elif selected == 3:
-            system_info.info = '  selected:\n    %s' % (app.applist[selected])
+            sample_page.add_demo()
+            #system_info.info = '  selected:\n    %s' % (app.applist[selected])
 
     def exec_application():
         if launcher.app_select == 0:
@@ -81,7 +86,7 @@ class app:
         if launcher.app_select == 2:
             pass
         if launcher.app_select == 3:
-            app.draw_pages()
+            app.draw_samples()
 
     @ui.warp_template(ui.blank_draw)
     @catch

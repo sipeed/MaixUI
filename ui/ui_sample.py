@@ -46,52 +46,57 @@ class sample_page():
         if sample_page.case:
             sample_page.case.work()
 
+    def add_demo():
+        
+        class case1():
+
+            def __init__(self):
+                self.is_load = False
+
+            def load(self):
+                if self.is_load == False:
+                    #print(case.load)
+                    self.is_load = True
+
+            def work(self):
+                #print(case.work)
+                ui.img.draw_string(20, 200, 'mem free %d kb' % (gc.mem_free() / 1024), (127, 255, 255), scale=2)
+
+                ui.img.draw_line(0,0, 240,240,color=(255,0,0))
+
+            def free(self):
+                if self.is_load:
+                    #print(sample.free)
+                    self.is_load = False
+
+        class case2():
+
+            def __init__(self):
+                self.is_load = False
+
+            def load(self):
+                if self.is_load == False:
+                    #print(case.load)
+                    self.is_load = True
+
+            def work(self):
+                #print(self.work)
+                from Maix import utils
+                ui.img.draw_string(20, 200, 'heap free %d kb' % (utils.heap_free() / 1024), (127, 255, 255), scale=2)
+
+            def free(self):
+                if self.is_load:
+                    #print(sample.free)
+                    self.is_load = False
+
+        sample_page.add_sample(case1())
+        sample_page.add_sample(case2())
+
+
 if __name__ == "__main__":
 
-    class case1():
-
-        def __init__(self):
-            self.is_load = False
-
-        def load(self):
-            if self.is_load == False:
-                #print(case.load)
-                self.is_load = True
-
-        def work(self):
-            #print(case.work)
-            ui.img.draw_string(20, 200, 'mem free %d kb' % (gc.mem_free() / 1024), (127, 255, 255), scale=2)
-
-            ui.img.draw_line(0,0, 240,240,color=(255,0,0))
-
-        def free(self):
-            if self.is_load:
-                #print(sample.free)
-                self.is_load = False
-
-    class case2():
-
-        def __init__(self):
-            self.is_load = False
-
-        def load(self):
-            if self.is_load == False:
-                #print(case.load)
-                self.is_load = True
-
-        def work(self):
-            #print(self.work)
-            from Maix import utils
-            ui.img.draw_string(20, 200, 'heap free %d kb' % (utils.heap_free() / 1024), (127, 255, 255), scale=2)
-
-        def free(self):
-            if self.is_load:
-                #print(sample.free)
-                self.is_load = False
-
-    sample_page.add_sample(case1())
-    sample_page.add_sample(case2())
-
+    sample_page.add_demo()
+    
     @ui.warp_template(ui.blank_draw)
     @ui.warp_template(sample_page.sample_draw)
     def app_main():
