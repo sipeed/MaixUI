@@ -36,7 +36,7 @@ class app:
     @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(ui.anime_in_draw)
     @ui.warp_template(taskbar.mem_draw)
-    @ui.warp_template(system_info.info_draw)
+    #@ui.warp_template(system_info.info_draw)
     def draw_pages():
         if app.current != None:
             app.current.draw()
@@ -103,6 +103,9 @@ class app:
             app.exec_application()
 
     def run():
+        from machine import WDT
+
+        protect = WDT(id=0, timeout=5000) # protect.stop()
         #app.ctrl.event(100, lambda *args: time.sleep(1))
         #app.ctrl.event(10, app.btn.event)
         app.ctrl.event(10, app.draw)
@@ -114,10 +117,12 @@ class app:
                     print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                     last = time.ticks_ms()
                     app.ctrl.cycle()
+                    protect.feed()
                     #time.sleep(0.1)
                 except Exception as e:
                     gc.collect()
                     print(e)
+
 
 
 if __name__ == "__main__":
