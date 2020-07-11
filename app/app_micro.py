@@ -105,7 +105,7 @@ class app:
     def run():
         from machine import WDT
 
-        protect = WDT(id=0, timeout=5000) # protect.stop()
+        protect = WDT(id=0, timeout=3000) # protect.stop()
         #app.ctrl.event(100, lambda *args: time.sleep(1))
         #app.ctrl.event(10, app.btn.event)
         app.ctrl.event(10, app.draw)
@@ -119,6 +119,9 @@ class app:
                     app.ctrl.cycle()
                     protect.feed()
                     #time.sleep(0.1)
+                except KeyboardInterrupt:
+                    protect.stop()
+                    raise KeyboardInterrupt()
                 except Exception as e:
                     gc.collect()
                     print(e)
