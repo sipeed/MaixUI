@@ -42,6 +42,12 @@ class app:
             app.current.draw()
         ui.display()
 
+    def draw_sensor():
+        pass
+
+    def draw_explorer():
+        pass
+
     applist = ['Camera', 'Settings', 'Explorer', 'Statistics']
     current = None
 
