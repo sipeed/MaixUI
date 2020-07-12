@@ -13,6 +13,7 @@ import random
 from ui_maix import ui
 from button import cube_button
 
+
 class sample_page():
 
     index, case, samples = 0, None, []
@@ -47,7 +48,7 @@ class sample_page():
             sample_page.case.work()
 
     def add_demo():
-        
+
         class case1():
 
             def __init__(self):
@@ -60,9 +61,16 @@ class sample_page():
 
             def work(self):
                 #print(case.work)
-                ui.img.draw_string(20, 200, 'mem free %d kb' % (gc.mem_free() / 1024), (127, 255, 255), scale=2)
+                ui.img.draw_string(20, 200, 'mem free %d kb' % (
+                    gc.mem_free() / 1024), (127, 255, 255), scale=2)
 
-                ui.img.draw_line(0,0, 240,240,color=(255,0,0))
+                ui.img.draw_rectangle((80, 80, 30, 30), color=(153, 141, 123))
+                ui.img.draw_circle((150, 140, 30), color=(141, 236, 87))
+                ui.img.draw_cross((150, 40), color=(141, 36, 236))
+                ui.img.draw_arrow((150, 150, 20, 170), color=(236, 36, 36))
+                ui.img.draw_line(20, 20, 200, 200, color=(56, 31, 167))
+                ui.img.draw_ellipse(120, 120, 80, 60, 15, color=(
+                    126, 51, 123), thickness=2, fill=False)
 
             def free(self):
                 if self.is_load:
@@ -82,7 +90,17 @@ class sample_page():
             def work(self):
                 #print(self.work)
                 from Maix import utils
-                ui.img.draw_string(20, 200, 'heap free %d kb' % (utils.heap_free() / 1024), (127, 255, 255), scale=2)
+                ui.img.draw_string(20, 200, 'heap free %d kb' % (
+                    utils.heap_free() / 1024), (127, 255, 255), scale=2)
+
+                wai = b'\x00\x00\x04\x08\x08\x0F\x11\x11\x29\x26\x42\x04\x04\x08\x10\x20\x00\x00\x20\x20\x20\xA0\x20\x38\x24\x22\x20\x20\x20\x20\x20\x20'
+
+                ui.img.draw_font(50, 100, 16, 16, wai,
+                                 scale=1, color=(255, 0, 0))
+                ui.img.draw_font(100, 100, 16, 16, wai,
+                                 scale=2, color=(0, 255, 0))
+                ui.img.draw_font(150, 50, 16, 16, wai,
+                                 scale=3, color=(0, 0, 255))
 
             def free(self):
                 if self.is_load:
@@ -96,7 +114,7 @@ class sample_page():
 if __name__ == "__main__":
 
     sample_page.add_demo()
-    
+
     @ui.warp_template(ui.blank_draw)
     @ui.warp_template(sample_page.sample_draw)
     def app_main():
@@ -109,9 +127,9 @@ if __name__ == "__main__":
         last = time.ticks_ms()
         app_main()
         #try:
-            #print(time.ticks_ms() - last)
-            #last = time.ticks_ms()
-            #app_main()
+        #print(time.ticks_ms() - last)
+        #last = time.ticks_ms()
+        #app_main()
         #except Exception as e:
-            #gc.collect()
-            #print(e)
+        #gc.collect()
+        #print(e)
