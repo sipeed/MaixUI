@@ -116,7 +116,7 @@ class app:
     def run():
         from machine import WDT
 
-        protect = WDT(id=0, timeout=3000) # protect.stop()
+        protect = WDT(id=0, timeout=6000) # protect.stop()
         #app.ctrl.event(100, lambda *args: time.sleep(1))
         #app.ctrl.event(10, app.btn.event)
         app.ctrl.event(10, app.draw)
