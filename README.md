@@ -45,6 +45,7 @@ Use this [app/app_micro.py](app/app_micro.py)
 ![](./image/demo_02.gif)
 ![](./image/demo_03.gif)
 ![](./image/demo_04.gif)
+![](./image/demo_05.gif)
 
 ## Architecture description
 
