@@ -1,5 +1,5 @@
 # This file is part of MaixUI
-# Copyright (c) 2020 sipeed.com
+# Copyright (c) sipeed.com
 #
 # Licensed under the MIT license:
 #   http://www.opensource.org/licenses/mit-license.php
@@ -85,7 +85,8 @@ if __name__ == "__main__":
             if test.btn.back() | test.btn.home() | test.btn.next():
                 raise Exception(btn)
 
-    @ui.warp_template(ui.bg_draw)
+    @ui.warp_template(ui.blank_draw)
+    @ui.warp_template(ui.bg_in_draw)
     @catch
     @ui.warp_template(test.info_draw)
     def unit_test():

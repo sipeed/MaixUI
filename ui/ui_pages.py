@@ -1,5 +1,5 @@
 # This file is part of MaixUI
-# Copyright (c) 2020 sipeed.com
+# Copyright (c) sipeed.com
 #
 # Licensed under the MIT license:
 #   http://www.opensource.org/licenses/mit-license.php
@@ -78,7 +78,7 @@ class sys_info:
           img.draw_string(x, y, info, (255, 0, 0))
 
 
-class user:
+class pages:
 
   def __init__(self):
     self.btn = cube_button()
@@ -103,9 +103,10 @@ class user:
 
 if __name__ == "__main__":
 
-    tmp = user()
+    tmp = pages()
 
-    @ui.warp_template(ui.bg_draw)
+    @ui.warp_template(ui.blank_draw)
+    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(ui.anime_in_draw)
     @ui.warp_template(tmp.draw)
     def unit_test():

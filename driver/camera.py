@@ -1,5 +1,5 @@
 # This file is part of MaixUI
-# Copyright (c) 2020 sipeed.com
+# Copyright (c) sipeed.com
 #
 # Licensed under the MIT license:
 #   http://www.opensource.org/licenses/mit-license.php
@@ -15,7 +15,7 @@ class obj:
     is_init = False
 
     def init():
-        sensor.reset()
+        sensor.reset(dual_buff=True)
         sensor.set_pixformat(sensor.YUV422)
         sensor.set_framesize(sensor.QVGA)
         sensor.set_hmirror(1)

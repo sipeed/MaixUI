@@ -33,12 +33,6 @@
 
 Enjoy it! 🤡
 
-## Get-started
-
-It is recommended to use app_micro.py as a migration reference for other hardware, it will not contain external images.
-
-Use this [app/app_micro.py](app/app_micro.py)
-
 ## Demo effect
 
 ![](./image/demo_01.gif)
@@ -46,6 +40,10 @@ Use this [app/app_micro.py](app/app_micro.py)
 ![](./image/demo_03.gif)
 ![](./image/demo_04.gif)
 ![](./image/demo_05.gif)
+
+### Get-started
+
+Start from [ui/ui_maix.py](ui/ui_maix.py)
 
 ## Architecture description
 
@@ -84,8 +82,8 @@ class taskbar:
     ui.img.draw_string(10, 2, info, scale=2)
 
 if __name__ == "__main__":
-
-    @ui.warp_template(ui.bg_draw)
+    @ui.warp_template(ui.blank_draw)
+    @ui.warp_template(ui.bg_in_draw)
     @ui.warp_template(taskbar.mem_draw)
     def app_main():
         ui.display()
@@ -107,7 +105,7 @@ The difference is that it can be used multiple times, so object-oriented design 
 
 ```python
 
-class user:
+class pages:
 
   def __init__(self):
     self.btn = cube_button()
@@ -132,9 +130,15 @@ class user:
 
 ```
 
-look at this [ui/ui_user.py](ui/ui_user.py)
+look at this [ui/ui_pages.py](ui/ui_pages.py)
 
-![](./image/ui_user.gif)
+![](./image/ui_pages.gif)
+
+It is recommended to use app_micro.py as a migration reference for other hardware, it will not contain external images.
+
+Use this [app/app_micro.py](app/app_micro.py)
+
+![](./image/layer.png)
 
 ### Event-driven
 
