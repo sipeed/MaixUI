@@ -16,6 +16,7 @@ from ui_pages import pages
 from button import cube_button
 from ui_camera import ai_camera
 from ui_sample import sample_page
+from ui_explorer import explorer
 
 class app:
 
@@ -48,8 +49,9 @@ class app:
         sample_page.sample_draw()
         ui.display()
 
+    @ui.warp_template(explorer.draw)
     def draw_explorer():
-        pass
+        ui.display()
 
     def draw_camera():
         try:
@@ -72,8 +74,9 @@ class app:
         elif selected == 1:
             app.current = pages()
         elif selected == 2:
-            app.layer -= 1 # return last layer
-            raise Exception("Settings Unrealized.")
+            pass
+            #app.layer -= 1 # return last layer
+            #raise Exception("Settings Unrealized.")
         elif selected == 3:
             sample_page.add_demo()
             #system_info.info = '  selected:\n    %s' % (app.applist[selected])
@@ -84,7 +87,7 @@ class app:
         if launcher.app_select == 1:
             app.draw_pages()
         if launcher.app_select == 2:
-            pass
+            app.draw_explorer()
         if launcher.app_select == 3:
             app.draw_samples()
 
@@ -92,16 +95,18 @@ class app:
     @catch
     def draw():
 
-        app.btn.event()
+        #app.btn.event()
+        app.btn.expand_event()
 
         if app.btn.home() == 2: # click button release to 2
+            print('into', app.layer)
             if app.layer == 1:
                 app.layer += 1
                 # launcher into application
                 app.load_application(launcher.app_select)
             elif app.layer == 2:
-                # if app.btn.interval() > 1500: # long press
-                app.layer -= 1
+                if app.btn.interval() > 1000: # long press
+                    app.layer -= 1
                 # application return launcher
             else:
                 app.layer += 1
@@ -126,7 +131,7 @@ class app:
             last = time.ticks_ms()
             while True:
                 try:
-                    print((int)(1000 / (time.ticks_ms() - last)), 'fps')
+                    #print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                     last = time.ticks_ms()
                     app.ctrl.cycle()
                     protect.feed()

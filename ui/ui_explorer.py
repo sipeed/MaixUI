@@ -72,9 +72,9 @@ class explorer:
         list_lshift(explorer.files)
     elif explorer.btn.home() == 1:
         tmp = explorer.files[0]
-        if tmp == '/':
-            raise Exception('exit explorer...')
-        elif tmp in ["../"] or tmp.find('.') == -1:
+        # if tmp == '/':
+        #     raise Exception('exit explorer...')
+        if tmp in ["../"] or tmp.find('.') == -1:
             explorer.load_explorer(tmp)
             list_lshift(explorer.files)
         else:

@@ -14,7 +14,7 @@ BACK = 11
 ENTER = 10
 NEXT = 16
 
-Limit = 2000
+Limit = 1000 # 1s
 
 Match = [[None, (1, 0)], [(2, 1), None]]
 
