@@ -37,9 +37,9 @@ class ui:
         #ui.bak.draw_rectangle((60,30,120,150), fill=True, color=(250, 0, 0))
         #ui.bak.draw_string(70, 40, "o", color=(255, 255, 255), scale=2)
         #ui.bak.draw_string(80, 10, "s", color=(255, 255, 255), scale=15)
-        ui.img.draw_circle(120, 120, int(80), fill=True, color=(250, 0, 0)) # 10ms
-        ui.img.draw_string(75, 55, "o", color=(255, 255, 255), scale=2)
-        ui.img.draw_string(85, 25, "s", color=(255, 255, 255), scale=15)
+        ui.img.draw_circle(120, 120, int(40), fill=True, color=(250, 0, 0)) # 10ms
+        ui.img.draw_string(95, 90, "o", color=(255, 255, 255), scale=1)
+        ui.img.draw_string(100, 70, "s", color=(255, 255, 255), scale=8)
         # ui.img = ui.img # 15ms
         #ui.img = ui.bak.copy() # 10ms 282kb
 
@@ -81,19 +81,19 @@ class ui:
         if alpha == None:
             alpha = math.cos(math.pi * ui.alpha / 100) * 200
             ui.alpha = (ui.alpha + 1) % 200
-        r, g, b = random.randint(50, 150), random.randint(50, 150), random.randint(50, 150)
+        r, g, b = random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)
 
-        ui.img.draw_circle(0, 0, int(alpha), color=(r,g,150-b)) # 10ms
-        ui.img.draw_circle(0, 0, 100 - int(alpha), color=(r,150-g,b), thickness=5) # 10ms
+        ui.img.draw_circle(0, 0, int(alpha), color=(r,g,b)) # 10ms
+        ui.img.draw_circle(0, 0, 100 - int(alpha), color=(r,g,b), thickness=5) # 10ms
 
-        ui.img.draw_circle(240, 0, int(alpha), color=(r,150-g,b), thickness=5) # 10ms
-        ui.img.draw_circle(240, 0, 100 - int(alpha), color=(150-r,g,b)) # 10ms
+        ui.img.draw_circle(240, 0, int(alpha), color=(r,g,b), thickness=5) # 10ms
+        ui.img.draw_circle(240, 0, 100 - int(alpha), color=(r,g,b)) # 10ms
 
-        ui.img.draw_circle(0, 240, int(alpha), color=(r,g,150-b)) # 10ms
-        ui.img.draw_circle(0, 240, 100 - int(alpha), color=(r,150-g,b), thickness=5) # 10ms
+        ui.img.draw_circle(0, 240, int(alpha), color=(r,g,b)) # 10ms
+        ui.img.draw_circle(0, 240, 100 - int(alpha), color=(r,g,b), thickness=5) # 10ms
 
-        ui.img.draw_circle(240, 240, int(alpha), color=(r,g,150-b)) # 10ms
-        ui.img.draw_circle(240, 240, 100 - int(alpha), color=(r,150-g,b), thickness=5) # 10ms
+        ui.img.draw_circle(240, 240, int(alpha), color=(r,g,b)) # 10ms
+        ui.img.draw_circle(240, 240, 100 - int(alpha), color=(r,g,b), thickness=5) # 10ms
 
     def display(): # 10ms
         lcd.display(ui.img)

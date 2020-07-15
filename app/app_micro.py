@@ -92,7 +92,7 @@ class app:
     @catch
     def draw():
 
-        app.btn.expand_event()
+        app.btn.event()
 
         if app.btn.home() == 2: # click button release to 2
             if app.layer == 1:
@@ -100,9 +100,9 @@ class app:
                 # launcher into application
                 app.load_application(launcher.app_select)
             elif app.layer == 2:
-                if app.btn.interval() > 1500: # long press
-                    app.layer -= 1
-                    # application return launcher
+                # if app.btn.interval() > 1500: # long press
+                app.layer -= 1
+                # application return launcher
             else:
                 app.layer += 1
                 # help into launcher
