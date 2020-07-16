@@ -24,8 +24,8 @@ class taskbar:
     def time_draw():
         now = 0 + time.ticks_ms() / 1000
         taskbar.now = time.localtime(int(now))
-        ui.img.draw_string(30, 100, "%02u:%02u:%02u" % (
-            taskbar.now[3], taskbar.now[4], taskbar.now[5]), color=(255, 255, 255), scale=3, mono_space=1)
+        ui.img.draw_string(50, 2, "%02u:%02u:%02u" % (
+            taskbar.now[3], taskbar.now[4], taskbar.now[5]), color=(255, 255, 255), scale=2, mono_space=1)
 
     def mem_draw():
         info = 'Rmnng %s KB' % str(gc.mem_free() / 1024)
@@ -46,7 +46,7 @@ class taskbar:
         if taskbar.img != None:
             #ui.img.draw_rectangle((0,0,240,25), fill=True, color=(50, 50, 50))
             ui.img.draw_image(taskbar.img, 10, 2, alpha=int(255))
-        ui.img.draw_string(100, 2, taskbar.info, scale=2, color=(255, 50, 50))
+        ui.img.draw_string(20, 200, taskbar.info, scale=3, color=(255, 50, 50))
 
 # config usb input limit 190ma
 taskbar.axp173.enable_adc(True)
