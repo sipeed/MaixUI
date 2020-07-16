@@ -43,8 +43,8 @@ class ExplorerApp:
 
     def __lazy_init(self):
         try:
-            self.current_dir_files = os.listdir("/sd/")
-            self.path = "/sd/"
+            self.current_dir_files = os.listdir(os.getcwd() + "/")
+            self.path = os.getcwd() + "/"
         except Exception as e:
             print("Exception: " + str(e))
             self.current_dir_files = os.listdir("/flash/")
@@ -115,7 +115,7 @@ lcd.init()
 lcd.rotation(2)  # Rotate the lcd 180deg
 os.listdir("/flash")
 os.listdir("")
-img = image.Image("/sd/res/images/bg.jpg")
+img = image.Image(os.getcwd() + "/res/images/bg.jpg")
 img = image.Image()
 
 def test_irq(gpio, pin_num=None):

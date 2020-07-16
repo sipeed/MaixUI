@@ -45,10 +45,10 @@ class launcher:
   alpha = 0
   app_select = 0
   app_sets = [
-      icon(40, 50, "/sd/res/icons/app_camera.bmp"),
-      icon(140, 50, "/sd/res/icons/app_settings.bmp"),
-      icon(40, 150, "/sd/res/icons/app_explorer.bmp"),
-      icon(140, 150, "/sd/res/icons/app_system_info.bmp")
+      icon(40, 50, os.getcwd() + "/res/icons/app_camera.bmp"),
+      icon(140, 50, os.getcwd() + "/res/icons/app_settings.bmp"),
+      icon(40, 150, os.getcwd() + "/res/icons/app_explorer.bmp"),
+      icon(140, 150, os.getcwd() + "/res/icons/app_system_info.bmp")
   ]
 
   btn = cube_button()

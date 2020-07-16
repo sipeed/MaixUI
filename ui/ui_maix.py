@@ -24,8 +24,8 @@ class ui:
 
     alpha, img, anime, bak = 0, None, None, None
 
-    bg_path = "/sd/res/images/bg.jpg"
-    logo_path = "/sd/res/images/logo.jpg"
+    bg_path = os.getcwd() + "/res/images/bg.jpg"
+    logo_path = os.getcwd() + "/res/images/logo.jpg"
 
     height, weight = lcd.height(), lcd.width()
 
