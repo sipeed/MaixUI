@@ -5,10 +5,16 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import math, image
-from ui_maix import ui
+import math
+import image
 
-from button import cube_button
+try:
+    from ui_maix import ui
+    from button import cube_button
+except ImportError:
+    from ui.ui_maix import ui
+    from driver.button import cube_button
+
 
 class icon:
 
@@ -20,28 +26,30 @@ class icon:
     self.w, self.h = self.img.width(), self.img.height()
 
   def checked(self, color=(255, 0, 0)):
-    ui.img.draw_rectangle(self.x - 2, self.y - 2, self.w + 4, self.h + 4, color, thickness=1)
+    ui.canvas.draw_rectangle(self.x - 2, self.y - 2,
+                             self.w + 4, self.h + 4, color, thickness=1)
 
-  def draw(self, is_check = False, alpha = 0, color=(255, 255, 255)):
+  def draw(self, is_check=False, alpha=0, color=(255, 255, 255)):
     tmp = self.img.copy()  # 1ms
     if is_check:
       self.checked(color)
-    ui.img.draw_image(tmp, self.x, self.y, alpha=int(alpha))  # 4ms
+    ui.canvas.draw_image(tmp, self.x, self.y, alpha=int(alpha))  # 4ms
     del tmp
 
   def title(self, string, color=(255, 255, 255)):
-    ui.img.draw_string(self.x, self.y, string)
+    ui.canvas.draw_string(self.x, self.y, string)
+
 
 class launcher:
 
   alpha = 0
   app_select = 0
   app_sets = [
-        icon(40, 50, "/sd/res/icons/app_camera.bmp"),
-        icon(140, 50, "/sd/res/icons/app_settings.bmp"),
-        icon(40, 150, "/sd/res/icons/app_explorer.bmp"),
-        icon(140, 150, "/sd/res/icons/app_system_info.bmp")
-    ]
+      icon(40, 50, "/sd/res/icons/app_camera.bmp"),
+      icon(140, 50, "/sd/res/icons/app_settings.bmp"),
+      icon(40, 150, "/sd/res/icons/app_explorer.bmp"),
+      icon(140, 150, "/sd/res/icons/app_system_info.bmp")
+  ]
 
   btn = cube_button()
 
@@ -57,13 +65,14 @@ class launcher:
         launcher.app_select += 1
     elif launcher.btn.home() == 1:
         print('start', launcher.app_select)
-        # ui.img.draw_string(15, 120, '(%s)' % launcher.app_sets[launcher.app_select])
+        # ui.canvas.draw_string(15, 120, '(%s)' % launcher.app_sets[launcher.app_select])
 
-    launcher.app_select = launcher.app_select % 4 # lock pos
+    launcher.app_select = launcher.app_select % 4  # lock pos
 
     for pos in range(0, 4):
         checked = (pos == launcher.app_select)
         launcher.app_sets[pos].draw(checked, value if checked else 255)
+
 
 if __name__ == "__main__":
   from ui_maix import ui

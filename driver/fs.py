@@ -1,21 +1,26 @@
 
 import os
 
+
 class OS:
     cache = None
+
     def update():
         OS.cache = os.listdir('/flash')
+
     def chdir(path):
         pass
+
     def getcwd(path):
         pass
+
     def listdir(path):
         #print(path, OS.cache)
         if OS.cache == None:
             OS.update()
         if path == '/' or '/sd' in path:
             return os.listdir(path)
-        if '/flash' == path: # '/flash'
+        if '/flash' == path:  # '/flash'
             directory, result = {}, []
             #tmp = [item for item in OS.cache if '/' not in item]
             for item in OS.cache:
@@ -29,9 +34,10 @@ class OS:
                 result.append(item)
             # print(directory, result)
             return result
-        else: # '/flash/script' and '/script'
+        else:  # '/flash/script' and '/script'
             path = path.replace('/flash', '').replace('/', '') + '/'
             return [item.replace(path, '') for item in OS.cache if path in item]
+
 
 if __name__ == "__main__":
 
@@ -53,5 +59,4 @@ if __name__ == "__main__":
 
     #print(OS.listdir('/sd/res'))
 
-    print(OS.listdir('/flash/script')) # no
-
+    print(OS.listdir('/flash/script'))  # no

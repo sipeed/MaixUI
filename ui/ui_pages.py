@@ -5,13 +5,17 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-from ui_maix import ui
-
-from button import cube_button
+try:
+    from ui_maix import ui
+    from button import cube_button
+except ImportError:
+    from ui.ui_maix import ui
+    from driver.button import cube_button
 
 import os
 import machine
 import ubinascii
+
 
 class sys_info:
 
@@ -64,7 +68,7 @@ class sys_info:
       # y += 16
       img.draw_string(x, y, "FirmwareVersion:", (255, 0, 0))
       y += 16
-      img.draw_string(x, y, self.system_uname.version[:28], (0, 255, 0))
+      img.draw_string(x, y, self.system_uname.version[:35], (0, 255, 0))
       y += 20
       #img.draw_string(x, y, "-----------------------------", (255, 255, 255))
       # y += 16
@@ -95,11 +99,13 @@ class pages:
     self.page = self.page % 3
 
     if self.page == 0:
-      ui.img.draw_string(20, 30, "Weclome to MaixCube", (255, 255, 127), scale=2)
+      ui.canvas.draw_string(20, 30, "Weclome to MaixCube",
+                            (255, 124, 12), scale=2)
     if self.page == 1:
-      self.page_info.draw(ui.img)
+      self.page_info.draw(ui.canvas)
     if self.page == 2:
-      ui.img.draw_string(40, 200, "Enjoy it! :D", (255, 0, 127), scale=2)
+      ui.canvas.draw_string(40, 200, "Enjoy it! :D", (51, 169, 212), scale=2)
+
 
 if __name__ == "__main__":
 

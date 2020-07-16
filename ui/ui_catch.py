@@ -5,9 +5,20 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-from ui_maix import ui
-from button import cube_button
-import sys, image, lcd, time, gc
+
+try:
+    from ui_maix import ui
+    from button import cube_button
+except ImportError:
+    from ui.ui_maix import ui
+    from driver.button import cube_button
+
+import sys
+import image
+import lcd
+import time
+import gc
+
 
 def catch(func):
     def warp(warp=None):
@@ -21,28 +32,29 @@ def catch(func):
                 string_io = uio.StringIO()
                 sys.print_exception(e, string_io)
                 s = string_io.getvalue()
-                ui.img.draw_rectangle(
+                ui.canvas.draw_rectangle(
                     (10, 10, 220, 220), fill=True, color=(50, 50, 50))
                 msg = "** " + str(e)
                 chunks, chunk_size = len(msg), 29
                 msg_lines = [msg[i:i+chunk_size]
                              for i in range(0, chunks, chunk_size)]
                 x_offset, y_offset = 10 + 5, 20
-                ui.img.draw_string(
+                ui.canvas.draw_string(
                     x_offset + 24, y_offset + 5, "A problem has been detected", color=(0, 255, 0))
-                ui.img.draw_string(
+                ui.canvas.draw_string(
                     x_offset + 3, y_offset + 16, "------------------------------", (255, 255, 255))
 
                 current_y = y_offset + 10 + 5 + 16
                 for line in msg_lines:
-                    ui.img.draw_string(x_offset, current_y,
-                                    line, color=(255, 0, 0))
-                    current_y += 32
-                    if current_y >= ui.img.height():
+                    ui.canvas.draw_string(x_offset, current_y,
+                                          line, color=(255, 0, 0))
+                    current_y += 16
+                    if current_y >= ui.canvas.height():
                         break
 
-                ui.img.draw_string(x_offset, y_offset + current_y, s, color=(0, 255, 0))
-                lcd.display(ui.img)
+                ui.canvas.draw_string(
+                    x_offset, y_offset + current_y, s, color=(0, 255, 0))
+                lcd.display(ui.canvas)
 
                 happen = time.ticks_ms()
                 while (happen + 5000) > time.ticks_ms():
@@ -51,12 +63,13 @@ def catch(func):
                     btn.event()
                     if btn.back() == 2 or btn.home() == 2 or btn.next() == 2:
                         break
-                    ui.img.draw_rectangle(
+                    ui.canvas.draw_rectangle(
                         (x_offset, y_offset + 5, len(info) * 8, 12), fill=True, color=(50, 50, 50))
-                    ui.img.draw_string(x_offset, y_offset + 5, info, color=(0, 255, 0))
-                    lcd.display(ui.img)
+                    ui.canvas.draw_string(
+                        x_offset, y_offset + 5, info, color=(0, 255, 0))
+                    lcd.display(ui.canvas)
                     time.sleep_ms(100)
-                del ui.img
+                del ui.canvas
                 gc.collect()
             except Exception as e:
                 print(e)
@@ -64,8 +77,6 @@ def catch(func):
 
 
 if __name__ == "__main__":
-
-    from button import cube_button
 
     class test:
 
@@ -75,7 +86,7 @@ if __name__ == "__main__":
 
         def info_draw():
 
-            ui.img.draw_string(10, 120, test.info, scale=2, mono_space=1)
+            ui.canvas.draw_string(10, 120, test.info, scale=2, mono_space=1)
 
             if test.info != "working":
                 test.info = "working"

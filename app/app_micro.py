@@ -6,18 +6,33 @@
 #
 
 import time
-from core import agent
-from ui_maix import ui, print_mem_free
-from ui_taskbar import taskbar
-from ui_launcher import launcher
-from ui_system_info import system_info
-from ui_catch import catch
-from ui_pages import pages
-from button import cube_button
-from ui_camera import ai_camera
-from ui_sample import sample_page
-from ui_explorer import explorer
-from sample_shtxx import sample_shtxx
+
+try:
+    from core import agent
+    from ui_maix import ui, print_mem_free
+    from ui_taskbar import taskbar
+    from ui_launcher import launcher
+    from ui_system_info import system_info
+    from ui_catch import catch
+    from ui_pages import pages
+    from ui_camera import ai_camera
+    from ui_sample import sample_page
+    from ui_explorer import explorer
+    from sample_shtxx import sample_shtxx
+    from button import cube_button
+except ImportError:
+    from lib.core import agent
+    from ui.ui_maix import ui, print_mem_free
+    from ui.ui_taskbar import taskbar
+    from ui.ui_launcher import launcher
+    from ui.ui_system_info import system_info
+    from ui.ui_catch import catch
+    from ui.ui_pages import pages
+    from ui.ui_camera import ai_camera
+    from ui.ui_sample import sample_page
+    from ui.ui_explorer import explorer
+    from ui.sample_shtxx import sample_shtxx
+    from driver.button import cube_button
 
 class app:
 
@@ -36,8 +51,7 @@ class app:
     def draw_launcher():
         ui.display()
 
-    @ui.warp_template(ui.bg_in_draw)
-    @ui.warp_template(ui.anime_in_draw)
+    @ui.warp_template(ui.anime_draw)
     @ui.warp_template(taskbar.mem_draw)
     #@ui.warp_template(system_info.info_draw)
     def draw_pages():
@@ -46,8 +60,8 @@ class app:
         ui.display()
 
     @ui.warp_template(taskbar.time_draw)
+    @ui.warp_template(sample_page.sample_draw)
     def draw_samples():
-        sample_page.sample_draw()
         ui.display()
 
     @ui.warp_template(explorer.draw)
@@ -96,7 +110,7 @@ class app:
             except Exception as e:
                 app.layer -= 1
 
-    @ui.warp_template(ui.blank_draw)
+    @ui.warp_template(ui.grey_draw)
     @catch
     def draw():
 

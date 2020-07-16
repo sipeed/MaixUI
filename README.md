@@ -43,7 +43,22 @@ Enjoy it! 🤡
 
 ### Get-started
 
-Start from [ui/ui_maix.py](ui/ui_maix.py)
+Developers can sart from [ui/ui_maix.py](ui/ui_maix.py)
+
+1. Ready a sipeed maix-cube (hardware) and flash [sipeed/maxipy](github.com/sipeed/maxipy).
+
+2. Copy all files to SD card.
+
+    - ui
+    - res
+    - lib
+    - driver
+
+3. Rename [app/app_micro.py](app/app_micro.py) to `main.py`.
+
+3. Move `main.py` to the root directory in SD card.
+
+4. Boot from the SD card.
 
 ## Architecture description
 
@@ -75,11 +90,11 @@ class taskbar:
   def time_draw():
     now = 45678 + time.ticks() / 1000
     taskbar.now = time.localtime(int(now))
-    ui.img.draw_string(60, 2, "%02u:%02u:%02u" % (taskbar.now[3], taskbar.now[4], taskbar.now[5]), scale=2)
+    ui.canvas.draw_string(60, 2, "%02u:%02u:%02u" % (taskbar.now[3], taskbar.now[4], taskbar.now[5]), scale=2)
 
   def mem_draw():
     info = 'GC %s KB' % str(gc.mem_free() / 1024)
-    ui.img.draw_string(10, 2, info, scale=2)
+    ui.canvas.draw_string(10, 2, info, scale=2)
 
 if __name__ == "__main__":
     @ui.warp_template(ui.blank_draw)
@@ -122,11 +137,11 @@ class pages:
     self.page = self.page % 3
 
     if self.page == 0:
-      ui.img.draw_string(20, 30, "Weclome to MaixCube", (255, 255, 127), scale=2)
+      ui.canvas.draw_string(20, 30, "Weclome to MaixCube", (255, 255, 127), scale=2)
     if self.page == 1:
-      self.page_info.draw(ui.img)
+      self.page_info.draw(ui.canvas)
     if self.page == 2:
-      ui.img.draw_string(40, 200, "Enjoy it! :D", (255, 0, 127), scale=2)
+      ui.canvas.draw_string(40, 200, "Enjoy it! :D", (255, 0, 127), scale=2)
 
 ```
 

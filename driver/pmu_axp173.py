@@ -10,7 +10,9 @@
 # start of pmu_axp173.py
 
 from machine import I2C, Timer
-import lcd, utime
+import lcd
+import utime
+
 
 class AXP173:
 
@@ -25,30 +27,27 @@ class AXP173:
     class OutOfRange(PMUError):
         pass
 
-
-    _chargingCurrent_100mA     = 0
-    _chargingCurrent_190mA     = 1
-    _chargingCurrent_280mA     = 2
-    _chargingCurrent_360mA     = 3
-    _chargingCurrent_450mA     = 4
-    _chargingCurrent_550mA     = 5
-    _chargingCurrent_630mA     = 6
-    _chargingCurrent_700mA     = 7
-    _chargingCurrent_780mA     = 8
-    _chargingCurrent_880mA     = 9
-    _chargingCurrent_960mA     = 10
-    _chargingCurrent_1000mA    = 11
-    _chargingCurrent_1080mA    = 12
-    _chargingCurrent_1160mA    = 13
-    _chargingCurrent_1240mA    = 14
-    _chargingCurrent_1320mA    = 15
-
+    _chargingCurrent_100mA = 0
+    _chargingCurrent_190mA = 1
+    _chargingCurrent_280mA = 2
+    _chargingCurrent_360mA = 3
+    _chargingCurrent_450mA = 4
+    _chargingCurrent_550mA = 5
+    _chargingCurrent_630mA = 6
+    _chargingCurrent_700mA = 7
+    _chargingCurrent_780mA = 8
+    _chargingCurrent_880mA = 9
+    _chargingCurrent_960mA = 10
+    _chargingCurrent_1000mA = 11
+    _chargingCurrent_1080mA = 12
+    _chargingCurrent_1160mA = 13
+    _chargingCurrent_1240mA = 14
+    _chargingCurrent_1320mA = 15
 
     _targevoltage_4100mV = 0
     _targevoltage_4150mV = 1
     _targevoltage_4200mV = 2
     _targevoltage_4360mV = 3
-
 
     def __init__(self, i2c_dev=None, i2c_addr=0x34):
         from machine import I2C
@@ -68,7 +67,7 @@ class AXP173:
         self.system_periodic_task = None
 
         if self.axp173Addr not in scan_list:
-             raise Exception("Error: Unable connect pmu_axp173!")
+            raise Exception("Error: Unable connect pmu_axp173!")
         # enable timer by default
         # self.enablePMICSleepMode(True)
 
@@ -84,9 +83,10 @@ class AXP173:
     def __chkPwrKeyWaitForSleep__(self, timer):
         if self.system_periodic_task:
             self.system_periodic_task(self)
-        self.i2cDev.writeto(self.axp173Addr , bytes([0x46]))
-        pek_stu = (self.i2cDev.readfrom(self.axp173Addr , 1))[0]
-        self.i2cDev.writeto_mem(self.axp173Addr , 0x46, 0xFF, mem_size=8)  # Clear IRQ
+        self.i2cDev.writeto(self.axp173Addr, bytes([0x46]))
+        pek_stu = (self.i2cDev.readfrom(self.axp173Addr, 1))[0]
+        self.i2cDev.writeto_mem(self.axp173Addr, 0x46,
+                                0xFF, mem_size=8)  # Clear IRQ
 
         # Prevent loop in restart, wait for release
         if self.__preButPressed__ == -1 and ((pek_stu & (0x01 << 1)) or (pek_stu & 0x01)):
@@ -223,7 +223,6 @@ class AXP173:
 
         return ((Ichg_LSB << 5) + Ichg_MSB) * 0.5  # AXP173-DS PG27 0.5mA/div
 
-
     def getBatteryDischargeCurrent(self):
         Idcg_LSB = self.__read_reg(0x7C)
         Idcg_MSB = self.__read_reg(0x7D)
@@ -253,7 +252,8 @@ class AXP173:
 
     def setScreenBrightness(self, brightness):
         if brightness > 15 or brightness < 0:
-            raise OutOfRange("Range for brightness is from 0 to 15, but min 7 is the screen visible value")
+            raise OutOfRange(
+                "Range for brightness is from 0 to 15, but min 7 is the screen visible value")
         self.__write_reg(0x91, (int(brightness) & 0x0f) << 4)
 
     def getKeyStatus(self):  # -1: NoPress, 1: ShortPress, 2:LongPress
@@ -274,7 +274,6 @@ class AXP173:
             enten_set = enten_set & 0xFC
         return self.__write_reg(0x10, enten_set)
 
-
     def setEnterChargingControl(self, enable, volatge=_targevoltage_4200mV, current=_chargingCurrent_190mA):
         if enable == False:
             #1100_1000
@@ -283,7 +282,8 @@ class AXP173:
         else:
             #print("volatge" + hex((volatge<<4)))
             #print("current" + hex(current))
-            power_mode = ((enable << 7) + (volatge<<5) + (current))#1100_0001
+            power_mode = ((enable << 7) + (volatge << 5) +
+                          (current))  # 1100_0001
             # print("setChargingContorl:" + hex(power_mode))
             self.__write_reg(0x33, power_mode)  # Turn off other power source
 
@@ -311,6 +311,7 @@ class AXP173:
 
 # end of pmu_axp173.py
 
+
 if __name__ == "__main__":
 
     axp173 = AXP173()
@@ -335,7 +336,8 @@ if __name__ == "__main__":
 
         # 检测 电池充电电流
         BatteryChargeCurrent = axp173.getBatteryChargeCurrent()
-        tmp.append("BatChargeCurrent: {0:>4.1f}mA".format(BatteryChargeCurrent))
+        tmp.append("BatChargeCurrent: {0:>4.1f}mA".format(
+            BatteryChargeCurrent))
 
         # 检测 USB-ACIN 电压
         usb_voltage = axp173.getUSBVoltage()
@@ -371,9 +373,9 @@ if __name__ == "__main__":
             tmp.append("USB is not plugged in")
 
         for i in range(len(tmp)):
-            ui.img.draw_string(20, 20*i, "{0}".format(str(tmp[i])), mono_space=1)
+            ui.canvas.draw_string(
+                20, 20*i, "{0}".format(str(tmp[i])), mono_space=1)
         ui.display()
-
 
     import time
     last = time.ticks_ms()
@@ -386,4 +388,3 @@ if __name__ == "__main__":
         except Exception as e:
             gc.collect()
             print(e)
-

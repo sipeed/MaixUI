@@ -5,14 +5,20 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-from ui_maix import ui
+try:
+    from ui_maix import ui
+except ImportError:
+    from ui.ui_maix import ui
+
 
 class system_info:
 
   info = 'this is test text.\n change to system_info.info'
 
   def info_draw():
-    ui.img.draw_string(10, 120, system_info.info, color=(0, 255, 0), scale=2, mono_space=1)
+    ui.canvas.draw_string(10, 120, system_info.info,
+                          color=(0, 255, 0), scale=2, mono_space=1)
+
 
 if __name__ == "__main__":
 
@@ -27,4 +33,3 @@ if __name__ == "__main__":
         system_info.info = str(time.time())
         unit_test()
         time.sleep(1)
-

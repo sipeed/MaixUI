@@ -10,6 +10,7 @@ import time
 import sensor
 import lcd
 
+
 class obj:
 
     is_init = False
@@ -28,6 +29,7 @@ class obj:
             obj.init()
             obj.is_init = True
         return sensor.snapshot()
+
 
 if __name__ == "__main__":
 

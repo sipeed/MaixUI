@@ -5,7 +5,8 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import sys, time
+import sys
+import time
 
 from fpioa_manager import fm
 from Maix import FPIOA, GPIO
@@ -14,18 +15,19 @@ BACK = 11
 ENTER = 10
 NEXT = 16
 
-Limit = 1000 # 1s
+Limit = 1000  # 1s
 
 Match = [[None, (1, 0)], [(2, 1), None]]
+
 
 class cube_button:
     def __init__(self):
         self.home_last, self.next_last, self.back_last = 1, 1, 1
         self.last_time, self.bak_time = 0, 0
         self.cache = {
-            'home':0,
-            'next':0,
-            'back':0,
+            'home': 0,
+            'next': 0,
+            'back': 0,
         }
         self.pause_time = 0
 
@@ -85,12 +87,14 @@ class cube_button:
         # (monkey patch) long press home 0 - 1 - 2 - 0 - 1 - 2 - 0
         if self.home_last == 0 and self.bak_time != 0 and time.ticks_ms() - self.bak_time > Limit:
             #print(tmp, self.home_last, self.pause_time, time.ticks_ms())
-            self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms() - self.bak_time
+            self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms(
+            ) - self.bak_time
             self.pause_time = time.ticks_ms() + Limit
 
         if tmp == 1 and self.home_last == 0 and self.pause_time < time.ticks_ms():
             print(1)
-            self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms() - self.bak_time
+            self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms(
+            ) - self.bak_time
 
         tmp = self.back_button.value()
 
@@ -101,7 +105,8 @@ class cube_button:
             tmp = not tmp
 
         if tmp == 1 and self.back_last == 0:
-            self.cache['back'], self.back_last, self.last_time = 2, 1, time.ticks_ms() - self.bak_time
+            self.cache['back'], self.back_last, self.last_time = 2, 1, time.ticks_ms(
+            ) - self.bak_time
 
         tmp = self.next_button.value()
 
@@ -112,18 +117,19 @@ class cube_button:
             tmp = not tmp
 
         if tmp == 1 and self.next_last == 0:
-            self.cache['next'], self.next_last, self.last_time = 2, 1, time.ticks_ms() - self.bak_time
-
+            self.cache['next'], self.next_last, self.last_time = 2, 1, time.ticks_ms(
+            ) - self.bak_time
 
 
 PIR = 16
+
 
 class ttgo_button:
 
     def __init__(self):
         self.home_last = 1
         self.cache = {
-            'home':0,
+            'home': 0,
         }
 
         fm.register(PIR, fm.fpioa.GPIOHS16)
@@ -139,13 +145,14 @@ class ttgo_button:
         if tmp:
             self.cache['home'], self.home_last = tmp
 
+
 if __name__ == "__main__":
 
     #tmp = ttgo_button()
     #while True:
-        #tmp.event()
-        #time.sleep_ms(200)
-        #print(tmp.home())
+    #tmp.event()
+    #time.sleep_ms(200)
+    #print(tmp.home())
 
     tmp = cube_button()
     while True:

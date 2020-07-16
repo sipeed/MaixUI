@@ -10,12 +10,20 @@ import gc
 import math
 import random
 
-from ui_maix import ui
-from button import cube_button
-import camera
+try:
+    from ui_maix import ui
+    from button import cube_button
+    import camera
+    from face_reco import FaceReco
+except ImportError:
+    from ui.ui_maix import ui
+    from driver.button import cube_button
+    import driver.camera as camera
+    from driver.face_reco import FaceReco
+
 import KPU as kpu
-from face_reco import FaceReco
 from Maix import utils
+
 
 class ai_sample():
 
@@ -28,13 +36,15 @@ class ai_sample():
 
     def work(img):
         #print(ai_sample.work)
-        img.draw_string(20, 2, 'sample free %d kb' % (utils.heap_free() / 1024), (127, 255, 255), scale=2)
+        img.draw_string(20, 2, 'sample free %d kb' %
+                        (utils.heap_free() / 1024), (127, 255, 255), scale=2)
         return img
 
     def free():
         if ai_sample.is_load:
             #print(ai_sample.free)
             ai_sample.is_load = False
+
 
 class ai_camera():
 
@@ -66,7 +76,8 @@ class ai_camera():
         if ai_camera.model and ai_camera.model.is_load:
             ai_camera.model.work(tmp)
 
-        ui.img.draw_image(tmp, 0, 0)
+        ui.canvas.draw_image(tmp, 0, 0)
+
 
 ai_camera.reload()
 
