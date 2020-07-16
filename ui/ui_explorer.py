@@ -10,10 +10,12 @@ try:
     from ui_maix import ui
     from button import cube_button
     from fs import OS
+    from wdt import protect
 except ImportError:
     from ui.ui_maix import ui
     from driver.button import cube_button
     from driver.fs import OS
+    from driver.wdt import protect
 
 import os
 import machine
@@ -87,6 +89,11 @@ class explorer:
             list_lshift(explorer.files)
         else:
             explorer.info = tmp
+            protect.stop()
+            with open(explorer.get_path(explorer.paths) + '/' + tmp, 'rb') as target:
+                exec(target.read())
+            # execfile(explorer.get_path(explorer.paths) + '/' + tmp)
+            protect.start()
 
     ui.canvas.draw_rectangle((0, 0, 240, 240), fill=True, color=(50, 50, 50))
 

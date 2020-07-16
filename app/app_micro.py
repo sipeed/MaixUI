@@ -20,6 +20,7 @@ try:
     from ui_explorer import explorer
     from sample_shtxx import sample_shtxx
     from button import cube_button
+    from wdt import protect
 except ImportError:
     from lib.core import agent
     from ui.ui_maix import ui, print_mem_free
@@ -33,6 +34,7 @@ except ImportError:
     from ui.ui_explorer import explorer
     from ui.sample_shtxx import sample_shtxx
     from driver.button import cube_button
+    from driver.wdt import protect
 
 class app:
 
@@ -139,9 +141,6 @@ class app:
             app.exec_application()
 
     def run():
-        from machine import WDT
-
-        protect = WDT(id=0, timeout=6000) # protect.stop()
         #app.ctrl.event(100, lambda *args: time.sleep(1))
         #app.ctrl.event(10, app.btn.event)
         app.ctrl.event(10, app.draw)
@@ -153,7 +152,7 @@ class app:
                     #print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                     last = time.ticks_ms()
                     app.ctrl.cycle()
-                    protect.feed()
+                    protect.keep()
                     #time.sleep(0.1)
                 except KeyboardInterrupt:
                     protect.stop()
