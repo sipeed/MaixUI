@@ -1,6 +1,4 @@
-import os
-import lcd
-import image
+import os, lcd, image
 
 from Maix import GPIO
 from board import board_info

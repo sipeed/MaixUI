@@ -5,11 +5,7 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import image
-import lcd
-import math
-import gc
-import random
+import image, lcd, math, gc, random, os
 
 gc.collect()
 

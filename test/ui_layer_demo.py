@@ -7,9 +7,7 @@
 
 from core import Core
 
-import lcd
-import time
-import image
+import lcd, time, image, os
 
 lcd.init(freq=15000000)
 

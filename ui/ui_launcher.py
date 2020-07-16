@@ -5,8 +5,7 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import math
-import image
+import math, os, image
 
 try:
     from ui_maix import ui
