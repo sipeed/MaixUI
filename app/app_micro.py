@@ -17,6 +17,7 @@ from button import cube_button
 from ui_camera import ai_camera
 from ui_sample import sample_page
 from ui_explorer import explorer
+from sample_shtxx import sample_shtxx
 
 class app:
 
@@ -30,7 +31,7 @@ class app:
         ui.display()
 
     @ui.warp_template(ui.bg_in_draw)
-    @ui.warp_template(taskbar.mem_draw)
+    @ui.warp_template(taskbar.battery_draw)
     @ui.warp_template(launcher.draw)
     def draw_launcher():
         ui.display()
@@ -78,6 +79,7 @@ class app:
             #app.layer -= 1 # return last layer
             #raise Exception("Settings Unrealized.")
         elif selected == 3:
+            sample_page.add_sample(sample_shtxx())
             sample_page.add_demo()
             #system_info.info = '  selected:\n    %s' % (app.applist[selected])
 
@@ -89,7 +91,10 @@ class app:
         if launcher.app_select == 2:
             app.draw_explorer()
         if launcher.app_select == 3:
-            app.draw_samples()
+            try:
+                app.draw_samples()
+            except Exception as e:
+                app.layer -= 1
 
     @ui.warp_template(ui.blank_draw)
     @catch
