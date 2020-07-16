@@ -90,9 +90,9 @@ class explorer:
         else:
             explorer.info = tmp
             protect.stop()
-            with open(explorer.get_path(explorer.paths) + '/' + tmp, 'rb') as target:
-                exec(target.read())
-            # execfile(explorer.get_path(explorer.paths) + '/' + tmp)
+            # with open(explorer.get_path(explorer.paths) + '/' + tmp, 'rb') as target:
+            #     exec(target.read())
+            execfile(explorer.get_path(explorer.paths) + '/' + tmp, globals(), locals())
             protect.start()
 
     ui.canvas.draw_rectangle((0, 0, 240, 240), fill=True, color=(50, 50, 50))
