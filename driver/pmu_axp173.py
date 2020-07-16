@@ -70,7 +70,7 @@ class AXP173:
         if self.axp173Addr not in scan_list:
              raise Exception("Error: Unable connect pmu_axp173!")
         # enable timer by default
-        self.enablePMICSleepMode(True)
+        # self.enablePMICSleepMode(True)
 
     def set_on_pressed_listener(self, listener):
         self.onPressedListener = listener
@@ -212,8 +212,8 @@ class AXP173:
 
         # AXP173-DS PG26 0.625mA/div
         current = ((IinCnx_LSB << 4) + IinCnx_MSB) * 0.625
-        print("current data:" + hex(((IinCnx_LSB << 4) + IinCnx_MSB)))
-        print("current:" + str(current))
+        # print("current data:" + hex(((IinCnx_LSB << 4) + IinCnx_MSB)))
+        # print("current:" + str(current))
         return current
         #return ((IinCnx_LSB << 4) + IinCnx_MSB) * 0.625
 
