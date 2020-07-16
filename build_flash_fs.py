@@ -1,4 +1,4 @@
-import os, re
+import os, re, shutil
 
 def tree_files(dir_):
     if not os.path.isdir(dir_):
@@ -27,18 +27,14 @@ def extract_file_by_suffix(source_dir='/', exclude=[], goal_dir='result\\', file
         # print(fe, get_file_type(fe))
         if get_file_type(fe) in file_set:
             if not any(f in fe for f in exclude):
-                print(fe)
+                # print(fe)
                 path = os.path.basename(fe)
-                res = ''
-                with open(fe, 'rb') as f:
-                    res = f.read()
-                with open(goal_dir + path, 'wb') as f:
-                    (f.write(res))
+                shutil.copyfile(fe, goal_dir + path)
 
 if __name__ == "__main__":
     all_mkdir('./fs')
     extract_file_by_suffix(source_dir='./', exclude=['./app', './test', './fs', 'main.py', 'settings.json'], goal_dir='fs/', file_set=['.py', '.json'])
     # build flash fs
-    import shutil
     shutil.copyfile('./app/app_micro.py', './fs/main.py')
     # created main.py
+    shutil.copytree("./res","./fs/res")
