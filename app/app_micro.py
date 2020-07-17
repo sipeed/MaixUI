@@ -55,7 +55,7 @@ class app:
 
     @ui.warp_template(ui.anime_draw)
     @ui.warp_template(taskbar.mem_draw)
-    #@ui.warp_template(system_info.info_draw)
+    # @ui.warp_template(system_info.info_draw)
     def draw_pages():
         if app.current != None:
             app.current.draw()
@@ -68,6 +68,14 @@ class app:
 
     @ui.warp_template(explorer.draw)
     def draw_explorer():
+        if explorer.info != "":
+            protect.stop()
+            print(explorer.get_path(explorer.paths) + '/' + explorer.info)
+            # with open(explorer.get_path(explorer.paths) + '/' + tmp, 'rb') as target:
+            #     # exec(target.read(), locals())
+            #     exec(target.read())
+            execfile(explorer.get_path(explorer.paths) + '/' + explorer.info)
+            protect.start()
         ui.display()
 
     def draw_camera():
@@ -78,7 +86,6 @@ class app:
             app.layer = 1
             raise e
 
-    applist = ['Camera', 'Settings', 'Explorer', 'Statistics']
     current = None
 
     def load_application(selected):
@@ -87,7 +94,7 @@ class app:
             app.current = None
         if selected == 0:
             pass
-            #system_info.info = '  selected:\n    %s' % (app.applist[selected])
+
         elif selected == 1:
             app.current = pages()
         elif selected == 2:
@@ -97,7 +104,7 @@ class app:
         elif selected == 3:
             sample_page.add_sample(sample_shtxx())
             sample_page.add_demo()
-            #system_info.info = '  selected:\n    %s' % (app.applist[selected])
+
 
     def exec_application():
         if launcher.app_select == 0:
@@ -143,7 +150,7 @@ class app:
     def run():
         #app.ctrl.event(100, lambda *args: time.sleep(1))
         #app.ctrl.event(10, app.btn.event)
-        app.ctrl.event(10, app.draw)
+        app.ctrl.event(5, app.draw)
         while True:
             import time
             last = time.ticks_ms()
