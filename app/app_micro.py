@@ -68,14 +68,14 @@ class app:
 
     @ui.warp_template(explorer.draw)
     def draw_explorer():
-        if explorer.info != "":
-            protect.stop()
-            print(explorer.get_path(explorer.paths) + '/' + explorer.info)
-            # with open(explorer.get_path(explorer.paths) + '/' + tmp, 'rb') as target:
-            #     # exec(target.read(), locals())
-            #     exec(target.read())
-            execfile(explorer.get_path(explorer.paths) + '/' + explorer.info)
-            protect.start()
+        # if explorer.info != "":
+        #     protect.stop()
+        #     print(explorer.get_path(explorer.paths) + '/' + explorer.info)
+        #     # with open(explorer.get_path(explorer.paths) + '/' + tmp, 'rb') as target:
+        #     #     # exec(target.read(), locals())
+        #     #     exec(target.read())
+        #     execfile(explorer.get_path(explorer.paths) + '/' + explorer.info)
+        #     protect.start()
         ui.display()
 
     def draw_camera():
