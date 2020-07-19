@@ -17,7 +17,8 @@ NEXT = 16
 
 Limit = 1000  # 1s
 
-Match = [[None, (1, 0)], [(2, 1), None]]
+Match = [[(1, 0), (1, 0)], [(2, 1), None]] # 0 1 1 2 0
+#Match = [[None, (1, 0)], [(2, 1), None]]  # 0 1 0 0 2
 
 
 class cube_button:
@@ -157,7 +158,7 @@ if __name__ == "__main__":
     tmp = cube_button()
     while True:
         time.sleep_ms(200)
-        #tmp.event()
-        #print(tmp.back(), tmp.home(), tmp.next())
-        tmp.expand_event()
-        print(tmp.back(), tmp.home(), tmp.next(), tmp.interval())
+        tmp.event()
+        print(tmp.back(), tmp.home(), tmp.next())
+        #tmp.expand_event()
+        #print(tmp.back(), tmp.home(), tmp.next(), tmp.interval())
