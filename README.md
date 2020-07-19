@@ -41,7 +41,13 @@ Enjoy it! 🤡
 ![](./image/demo_04.gif)
 ![](./image/demo_05.gif)
 
-### Get-started
+## Get-started
+
+#### run build_flash_fs.py
+
+Use [/build_flash_fs.py](/build_flash_fs.py) to package all the files into fs folder and can move to Flash or SD card.
+
+#### Select dependent modules to develop
 
 Developers can sart from [ui/ui_maix.py](ui/ui_maix.py)
 
