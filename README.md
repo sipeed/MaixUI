@@ -120,6 +120,18 @@ look at this [ui/ui_taskbar.py](ui/ui_taskbar.py)
 
 ![](./image/ui_taskbar.gif)
 
+If you don't like to use decorators, you can choose to call actively, but pay attention to the order in which functions are called.
+
+The following example。
+
+```python
+  def app_main():
+      # first draw
+      ui.blank_draw()
+      # second draw
+      ui.display() # third display
+```
+
 ### Page design
 
 The difference is that it can be used multiple times, so object-oriented design is required.
