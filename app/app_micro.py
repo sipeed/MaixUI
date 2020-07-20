@@ -21,6 +21,7 @@ try:
     from sample_shtxx import sample_shtxx
     from button import cube_button
     from wdt import protect
+    from led import cube_led
 except ImportError:
     from lib.core import agent
     from ui.ui_maix import ui, print_mem_free
@@ -35,6 +36,7 @@ except ImportError:
     from ui.sample_shtxx import sample_shtxx
     from driver.button import cube_button
     from driver.wdt import protect
+    from driver.led import cube_led
 
 class app:
 
@@ -119,6 +121,12 @@ class app:
             except Exception as e:
                 app.layer -= 1
 
+    rgb = 0
+    def rgb_change(rgb):
+        cube_led.r.value(rgb & 0b001)
+        cube_led.g.value(rgb & 0b010)
+        cube_led.b.value(rgb & 0b100)
+
     @ui.warp_template(ui.grey_draw)
     @catch
     def draw():
@@ -139,6 +147,14 @@ class app:
             else:
                 app.layer += 1
                 # help into launcher
+
+        if app.btn.next() == 1:
+            app.rgb = (app.rgb + 1) % 8
+            app.rgb_change(app.rgb)
+
+        if app.btn.back() == 1:
+            app.rgb = (app.rgb - 1) % 8
+            app.rgb_change(app.rgb)
 
         if app.layer == 0:
             app.draw_load()

@@ -15,11 +15,13 @@ try:
     from button import cube_button
     import camera
     from face_reco import FaceReco
+    from led import cube_led
 except ImportError:
     from ui.ui_maix import ui
     from driver.button import cube_button
     import driver.camera as camera
     from driver.face_reco import FaceReco
+    from driver.led import cube_led
 
 import KPU as kpu
 from Maix import utils
@@ -50,6 +52,7 @@ class ai_camera():
 
     index, model, models = 0, ai_sample, [ai_sample, FaceReco]
     btn, replace = cube_button(), False
+    backlight = 1
 
     def reload():
         if ai_camera.model:
@@ -61,10 +64,14 @@ class ai_camera():
         ai_camera.btn.event()
         ai_camera.replace = False
 
-        if ai_camera.btn.back() == 1:
+        if ai_camera.btn.home() == 2:
+            ai_camera.backlight = not ai_camera.backlight
+            cube_led.w.value(ai_camera.backlight)
+
+        if ai_camera.btn.back() == 2:
             ai_camera.index -= 1
             ai_camera.replace = True
-        elif ai_camera.btn.next() == 1:
+        elif ai_camera.btn.next() == 2:
             ai_camera.index += 1
             ai_camera.replace = True
         ai_camera.index = ai_camera.index % len(ai_camera.models)

@@ -37,10 +37,10 @@ class sample_page():
         sample_page.btn.event()
         sample_page.replace = False
 
-        if sample_page.btn.back() == 1:
+        if sample_page.btn.back() == 2:
             sample_page.index -= 1
             sample_page.replace = True
-        elif sample_page.btn.next() == 1:
+        elif sample_page.btn.next() == 2:
             sample_page.index += 1
             sample_page.replace = True
         sample_page.index = sample_page.index % len(sample_page.samples)

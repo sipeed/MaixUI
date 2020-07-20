@@ -76,11 +76,11 @@ class explorer:
   def draw():
     explorer.btn.event()
 
-    if explorer.btn.back() == 1:
+    if explorer.btn.back() == 2:
         list_rshift(explorer.files)
-    elif explorer.btn.next() == 1:
+    elif explorer.btn.next() == 2:
         list_lshift(explorer.files)
-    elif explorer.btn.home() == 1:
+    elif explorer.btn.home() == 2:
         tmp = explorer.files[0]
         # if tmp == '/':
         #     raise Exception('exit explorer...')

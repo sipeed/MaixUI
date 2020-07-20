@@ -10,19 +10,19 @@ import math, os, image
 try:
     from ui_maix import ui
     from button import cube_button
+    from core import agent
 except ImportError:
     from ui.ui_maix import ui
     from driver.button import cube_button
-
+    from lib.core import agent
 
 class icon:
-
-  x, y, w, h, img = 0, 0, 0, 0, None
 
   def __init__(self, x, y, path):
     self.img = image.Image(path)  # 60ms ~ 90ms
     self.x, self.y = x, y
     self.w, self.h = self.img.width(), self.img.height()
+    self.last = 0
 
   def checked(self, color=(255, 0, 0)):
     ui.canvas.draw_rectangle(self.x - 2, self.y - 2,
@@ -32,7 +32,20 @@ class icon:
     tmp = self.img.copy()  # 1ms
     if is_check:
       self.checked(color)
-    ui.canvas.draw_image(tmp, self.x, self.y, alpha=int(alpha))  # 4ms
+
+    old = (tmp.width(), tmp.height())
+    new = (int(alpha / 50), int(alpha / 50))
+    tmp = tmp.resize(old[0] + new[0] - 3, old[1] + new[1] - 3)
+    #print(tmp)
+    #if self.last != new[0]:
+        ##print(old, new)
+        #tmp = tmp.resize(old[0] + new[0] - 8, old[1] + new[1] - 8)
+        #self.last = new[0]
+    #print(tmp)
+    ui.canvas.draw_image(tmp,
+        self.x - int(new[0] / 2),
+        self.y - int(new[1] / 2),
+        alpha=int(alpha))  # 4ms
     del tmp
 
   def title(self, string, color=(255, 255, 255)):
@@ -51,12 +64,13 @@ class launcher:
   ]
 
   btn = cube_button()
+  agent = agent()
 
-  def draw():
+  def init():
+    launcher.agent.event(150, launcher.key_event)
+
+  def key_event():
     launcher.btn.event()
-
-    value = math.cos(math.pi * launcher.alpha / 12) * 50 + 200
-    launcher.alpha = (launcher.alpha + 1) % 24
 
     if launcher.btn.back() == 1:
         launcher.app_select -= 1
@@ -68,10 +82,18 @@ class launcher:
 
     launcher.app_select = launcher.app_select % 4  # lock pos
 
+
+  def draw():
+    launcher.agent.cycle()
+
+    value = math.cos(math.pi * launcher.alpha / 12) * 50 + 200
+    launcher.alpha = (launcher.alpha + 1) % 24
+
     for pos in range(0, 4):
         checked = (pos == launcher.app_select)
         launcher.app_sets[pos].draw(checked, value if checked else 255)
 
+launcher.init()
 
 if __name__ == "__main__":
   from ui_maix import ui
@@ -80,9 +102,13 @@ if __name__ == "__main__":
   @ui.warp_template(ui.blank_draw)
   @ui.warp_template(ui.bg_in_draw)
   @ui.warp_template(taskbar.time_draw)
+  @ui.warp_template(launcher.draw)
   def unit_test():
-    launcher.draw()
     ui.display()
   import time
+  last = time.ticks_ms()
   while True:
+      print(time.ticks_ms() - last)
+      last = time.ticks_ms()
       unit_test()
+      #time.sleep(0.5)

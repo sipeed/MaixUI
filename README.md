@@ -148,9 +148,9 @@ class pages:
   def draw(self):
     self.btn.event()
 
-    if self.btn.back() == 1:
+    if self.btn.back() == 2:
         self.page -= 1
-    elif self.btn.next() == 1:
+    elif self.btn.next() == 2:
         self.page += 1
     self.page = self.page % 3
 
