@@ -139,7 +139,7 @@ class ES8374_CONFIG:
 
             self.mode       = self._ES8374_MODE_SLAVE
             self.fmt        = self._ES8374_I2S_NORMAL
-            self.samples    = self._ES8374_16K_SAMPLES
+            self.samples    = self._ES8374_44K_SAMPLES
             self.bits       = self._ES8374_BIT_LENGTH_16BITS
 
 #######################
@@ -230,7 +230,7 @@ class ES8374:
 
         self.codecCtrlSate(self.es8374_cfg.es8374_mode, ES_CTRL._ES8374_CTRL_START)
         # self.setVoiceVolume(30)
-        self.setVoiceVolume(96)
+        self.setVoiceVolume(80)
         self._writeReg(0x1E, 0xA4)
 
         # print("ES8374 |reg value: " + str(self._readREGAll()))
@@ -704,105 +704,124 @@ class ES8374:
             print("start default is decode mode:%d\r\n" % es_mode)
 
 
-##---------------------------------------
+#---------------------------------------
 
 #i2c_bus = I2C(I2C.I2C0, freq=400*1000, sda=31, scl=30)
-##es8374_addr = 0x10 # I2C 地址
-##es_es8374_dev = ES8374(i2c_bus, es8374_addr)
+#es8374_addr = 0x10 # I2C 地址
+#es_es8374_dev = ES8374(i2c_bus, es8374_addr)
 #es_es8374_dev = ES8374(i2c_bus)
-## ------------------------------------
-#es8374_dev = ES8374()
+# ------------------------------------
+es8374_dev = ES8374()
 
-#regAll = es8374_dev._readREGAll()
-#print("\r\n#----------------")
-#print("App |reg value: \r\n")
-#regAll_len  = len(regAll)
+regAll = es8374_dev._readREGAll()
+print("\r\n#----------------")
+print("App |reg value: \r\n")
+regAll_len  = len(regAll)
 
-#for i in range(regAll_len):
-    #if (i % 10 == 0):
-        #print("\r\n %2d" % (i//10), end=": ")
-    #print("0x%02X" % (regAll[i]), end="  ")
-#print("\r\n#----------------")
+for i in range(regAll_len):
+    if (i % 10 == 0):
+        print("\r\n %2d" % (i//10), end=": ")
+    print("0x%02X" % (regAll[i]), end="  ")
+print("\r\n#----------------")
 
-## print("App |get Voice Mute 1: " + str(es8374_dev.getVoiceMute()))
-## es8374_dev.setVoiceMute(False)
-## print("App |get Voice Mute 2: " + str(es8374_dev.getVoiceMute()))
-## es8374_dev.setVoiceMute(True)
-## print("App |get Voice Mute 3: " + str(es8374_dev.getVoiceMute()))
-## es8374_dev.setVoiceVolume(88)
-## print("App |get Voice Mute 4: " + str(es8374_dev.getVoiceMute()))
-## print("#----------------")
+# print("App |get Voice Mute 1: " + str(es8374_dev.getVoiceMute()))
+# es8374_dev.setVoiceMute(False)
+# print("App |get Voice Mute 2: " + str(es8374_dev.getVoiceMute()))
+# es8374_dev.setVoiceMute(True)
+# print("App |get Voice Mute 3: " + str(es8374_dev.getVoiceMute()))
+# es8374_dev.setVoiceVolume(88)
+# print("App |get Voice Mute 4: " + str(es8374_dev.getVoiceMute()))
+# print("#----------------")
 
-#print("App |Voice Volume [%s]: " % str(es8374_dev.getVoiceVolume()))
+print("App |Voice Volume [%s]: " % str(es8374_dev.getVoiceVolume()))
 #es8374_dev.setVoiceVolume(78)
 #print("App |Voice Volume [%s]: " % str(es8374_dev.getVoiceVolume()))
-##es8374_dev.setVoiceVolume(0)
-##print("App |Voice Volume [%s]: " % str(es8374_dev.getVoiceVolume()))
-## print("#----------------")
+#es8374_dev.setVoiceVolume(0)
+#print("App |Voice Volume [%s]: " % str(es8374_dev.getVoiceVolume()))
+# print("#----------------")
 
 
 
-#'''-----------------------------
-#1.测试 I2S 是否能够输出型号
-#2.测试 ES8374 是否初始化成功
-#3.测试 ES8374 是否配置正常
+'''-----------------------------
+1.测试 I2S 是否能够输出型号
+2.测试 ES8374 是否初始化成功
+3.测试 ES8374 是否配置正常
 
-#-----------------------------'''
+-----------------------------'''
 
-
-#from fpioa_manager import *
-#from Maix import I2S, GPIO
-#import audio, utime
-
-#print("#----------------")
-#import os, sys
-#sys.path
-#os.listdir()
-
-#fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
-#fm.register(18,fm.fpioa.I2S0_IN_D0, force=True)
-############ settings ############
-## register i2s(i2s0) pin
-#fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
-#fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
-#fm.register(33,fm.fpioa.I2S0_WS, force=True)
+if __name__ == "__main__":
 
 
-## init audio
-#player = audio.Audio(path = "/sd/music/eagles.wav")
-#player.volume(80)
+    from fpioa_manager import *
+    from Maix import I2S, GPIO
+    import audio, utime
 
+    es8374_dev = ES8374()
 
-## init i2s(i2s0)
-#play_dev = I2S(I2S.DEVICE_0)
+    fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
+    fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
+    fm.register(33,fm.fpioa.I2S0_WS, force=True)
+    fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
+    fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
 
-## read audio info
-#wav_info = player.play_process(play_dev)
-#print("wav file head information: ", wav_info)
+    # init i2s(i2s0)
+    i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
 
-## config i2s according to audio info
-#play_dev.channel_config(play_dev.CHANNEL_2, I2S.TRANSMITTER,
-    #resolution = I2S.RESOLUTION_16_BIT,
-    #cycles = I2S.SCLK_CYCLES_32,
-    #align_mode = I2S.RIGHT_JUSTIFYING_MODE)
-#play_dev.channel_config(play_dev.CHANNEL_0, I2S.TRANSMITTER,
-    #resolution = I2S.RESOLUTION_16_BIT,
-    #cycles = I2S.SCLK_CYCLES_32,
-    #align_mode = I2S.STANDARD_MODE)
+    # init audio
+    player = audio.Audio(path="/sd/1k.wav")
+    player.volume(80)
 
-#play_dev.set_sample_rate(int(wav_info[1]/2))
+    # config i2s according to audio info # STANDARD_MODE LEFT_JUSTIFYING_MODE RIGHT_JUSTIFYING_MODE
+    i2s.channel_config(I2S.CHANNEL_2, I2S.TRANSMITTER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
+    i2s.set_sample_rate(44100)
+    
+    # read audio info
+    wav_info = player.play_process(i2s)
+    print("wav file head information: ", wav_info)
+    #i2s.set_sample_rate(int(wav_info[2] / 2))
+    print('loop to play audio')
+    while True:
+        ret = player.play()
+        if ret == None:
+            print("format error")
+            break
+        elif ret == 0:
+            break
+    player.finish()
 
-## loop to play audio
-#while True:
-    #ret = player.play()
-    #if ret == None:
-        #print("format error")
-        #break
-    #elif ret==0:
-        #print("end")
-        #break
-    #else:
-        #print("...")
-    #utime.sleep(500)
-#player.finish()
+    del i2s, player
+
+    es8374_dev = ES8374()
+
+    i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
+
+    # record to wav
+    print('record to wav')
+    i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
+    i2s.set_sample_rate(22050)
+
+    # init audio
+    player = audio.Audio(path="/sd/record_2.wav", is_create=True, samplerate=22050)
+    queue = []
+    for i in range(400):
+        tmp = i2s.record(1024)
+        if len(queue) > 0:
+            print(time.ticks())
+            ret = player.record(queue[0])
+            queue.pop(0)
+        i2s.wait_record()
+        queue.append(tmp)
+    player.finish()
+
+    #not work
+    #queue = []
+    #i2s.set_sample_rate(22050)
+    #while True:
+        #tmp = i2s.record(1024)
+        #if len(queue) > 0:
+            #print(time.ticks())
+            ##i2s.play(queue[0])
+            #queue.pop(0)
+        #i2s.wait_record()
+        #queue.append(tmp)
 
