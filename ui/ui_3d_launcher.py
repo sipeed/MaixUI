@@ -25,15 +25,22 @@ class icon:
     self.x, self.y = x, y
     self.w, self.h = self.img.width(), self.img.height()
 
-  def checked(self, color=(255, 0, 0)):
-    ui.canvas.draw_rectangle(self.x - 2, self.y - 2,
+  def checked(self, color=(255, 0, 0), x = None, y = None):
+    ui.canvas.draw_rectangle(x - 2, y - 2,
                              self.w + 4, self.h + 4, color, thickness=1)
 
-  def draw(self, is_check=False, alpha=0, color=(255, 255, 255)):
+  def draw(self, is_check=False, alpha=0, color=(255, 255, 255), x = None, y = None, scale = 1.0):
     tmp = self.img.copy()  # 1ms
+    if x == None:
+        x = self.x
+    if y == None:
+        y = self.y
     if is_check:
-      self.checked(color)
-    ui.canvas.draw_image(tmp, self.x, self.y, alpha=int(alpha))  # 4ms
+      self.checked(color, x=x, y=y)
+
+    tmp = tmp.resize(int(tmp.width() * scale), int(tmp.height() * scale))
+
+    ui.canvas.draw_image(tmp, x, y, alpha=int(alpha))  # 4ms
     del tmp
 
   def title(self, string, color=(255, 255, 255)):
@@ -61,25 +68,60 @@ class launcher:
     launcher.btn.event()
 
     if launcher.btn.back() == 1:
-        launcher.app_select -= 1
+        if launcher.goal == 0:
+            launcher.goal = -20
     elif launcher.btn.next() == 1:
-        launcher.app_select += 1
+        if launcher.goal == 0:
+            launcher.goal = +20
     elif launcher.btn.home() == 1:
         print('start', launcher.app_select)
         # ui.canvas.draw_string(15, 120, '(%s)' % launcher.app_sets[launcher.app_select])
 
-    launcher.app_select = launcher.app_select % 4  # lock pos
+    #launcher.goal = launcher.goal % 120 # lock pos
 
+  pos, goal = 0, 0
+
+  def load(app_pos, app_select):
+    pos = app_pos * (math.pi / 60)
+    tmp = (120 * math.sin(pos), 80 * math.cos(pos + 0.2))
+
+    #ui.canvas.draw_line(120, 100, 120 + int(tmp[0]), 120 + int(tmp[1]), color=(150, 150, 150))
+
+    x, y = (120 + int(tmp[0] - 30)), (120 + int(tmp[1] - 30))
+    s = (y / 240) * 1.8
+    #if int(y * s - y - 60) > 0:
+    launcher.app_sets[app_select].draw(is_check=False, alpha=y+50, x=x-15, y=int(y * s - y + 40), scale=s)
 
   def draw():
     launcher.agent.cycle()
+    #launcher.app_select = (launcher.app_select + 1) % 120
 
-    value = math.cos(math.pi * launcher.alpha / 12) * 50 + 200
-    launcher.alpha = (launcher.alpha + 1) % 24
+    if launcher.goal == 0:
+        pass
+    elif launcher.goal > 0:
+        launcher.goal -= 1
+        launcher.pos += 1
+    elif launcher.goal < 0:
+        launcher.goal += 1
+        launcher.pos -= 1
 
-    for pos in range(0, 4):
-        checked = (pos == launcher.app_select)
-        launcher.app_sets[pos].draw(checked, value if checked else 255)
+    launcher.pos = launcher.pos % 120 # lock pos
+
+    ui.canvas.draw_ellipse(120, 160, 80, 30, -15, color=(
+                      150 - launcher.goal * 5, 150 - launcher.goal * 5, 150 - launcher.goal * 5), thickness=2, fill=True)
+    launcher.load(launcher.pos, 0)
+    launcher.load(launcher.pos - 20, 1)
+    launcher.load(launcher.pos - 40, 2)
+    launcher.load(launcher.pos - 60, 3)
+    launcher.load(launcher.pos - 80, 0)
+    launcher.load(launcher.pos - 100, 1)
+
+    #value = math.cos(math.pi * launcher.alpha / 12) * 50 + 200
+    #launcher.alpha = (launcher.alpha + 1) % 24
+
+    #for pos in range(0, 4):
+        #checked = (pos == launcher.app_select)
+        #launcher.app_sets[pos].draw(checked, value if checked else 255)
 
 launcher.init()
 
@@ -87,8 +129,8 @@ if __name__ == "__main__":
   from ui_maix import ui
   from ui_taskbar import taskbar
 
-  @ui.warp_template(ui.blank_draw)
-  @ui.warp_template(ui.bg_in_draw)
+  @ui.warp_template(ui.grey_draw)
+  #@ui.warp_template(ui.bg_in_draw)
   @ui.warp_template(taskbar.time_draw)
   @ui.warp_template(launcher.draw)
   def unit_test():
@@ -99,3 +141,4 @@ if __name__ == "__main__":
       print(time.ticks_ms() - last)
       last = time.ticks_ms()
       unit_test()
+      #time.sleep(0.01)
