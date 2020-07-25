@@ -85,7 +85,7 @@ class launcher:
 
   def load(app_pos, app_select):
     pos = app_pos * (math.pi / 60)
-    tmp = (120 * math.sin(pos), 30 * math.cos(pos + 0.2))
+    tmp = (120 * math.sin(pos), 30 * math.cos(pos + 0.3))
 
     #ui.canvas.draw_line(120, 100, 120 + int(tmp[0]), 120 + int(tmp[1]), color=(150, 150, 150))
     #ui.canvas.draw_circle((100, 60, 5), color=(255, 136, 210))
