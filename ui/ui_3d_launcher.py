@@ -69,12 +69,14 @@ class launcher:
 
     if launcher.btn.back() == 1:
         if launcher.goal == 0:
-            launcher.goal = -20
+            launcher.goal = -30
     elif launcher.btn.next() == 1:
         if launcher.goal == 0:
-            launcher.goal = +20
+            launcher.goal = +30
     elif launcher.btn.home() == 1:
+        launcher.app_select = int(launcher.pos / 30)
         print('start', launcher.app_select)
+
         # ui.canvas.draw_string(15, 120, '(%s)' % launcher.app_sets[launcher.app_select])
 
     #launcher.goal = launcher.goal % 120 # lock pos
@@ -83,7 +85,7 @@ class launcher:
 
   def load(app_pos, app_select):
     pos = app_pos * (math.pi / 60)
-    tmp = (120 * math.sin(pos), 80 * math.cos(pos + 0.2))
+    tmp = (120 * math.sin(pos), 30 * math.cos(pos + 0.2))
 
     #ui.canvas.draw_line(120, 100, 120 + int(tmp[0]), 120 + int(tmp[1]), color=(150, 150, 150))
     #ui.canvas.draw_circle((100, 60, 5), color=(255, 136, 210))
@@ -91,9 +93,9 @@ class launcher:
 
 
     x, y = (120 + int(tmp[0] - 30)), (120 + int(tmp[1] - 30))
-    s = (y / 240) * 1.8
+    s = (y / 120) * 1.5
     #if int(y * s - y - 60) > 0:
-    launcher.app_sets[app_select].draw(is_check=False, alpha=y+50, x=x-15, y=int(y * s - y + 40), scale=s)
+    launcher.app_sets[app_select].draw(is_check=False, alpha=y+50, x=x-15, y=int(y * s - y), scale=s)
 
   def draw():
     launcher.agent.cycle()
@@ -102,22 +104,22 @@ class launcher:
     if launcher.goal == 0:
         pass
     elif launcher.goal > 0:
-        launcher.goal -= 1
-        launcher.pos += 1
+        launcher.goal -= 5
+        launcher.pos += 5
     elif launcher.goal < 0:
-        launcher.goal += 1
-        launcher.pos -= 1
+        launcher.goal += 5
+        launcher.pos -= 5
 
     launcher.pos = launcher.pos % 120 # lock pos
 
-    ui.canvas.draw_ellipse(120, 150, 80, 30, -20, color=(
+    ui.canvas.draw_ellipse(130, 150, 80, 30, -10, color=(
                       150 - launcher.goal * 5, 150 - launcher.goal * 5, 150 - launcher.goal * 5), thickness=2, fill=False)
     launcher.load(launcher.pos, 0)
-    launcher.load(launcher.pos - 20, 1)
-    launcher.load(launcher.pos - 40, 2)
-    launcher.load(launcher.pos - 60, 3)
-    launcher.load(launcher.pos - 80, 0)
-    launcher.load(launcher.pos - 100, 1)
+    launcher.load(launcher.pos - 30, 1)
+    launcher.load(launcher.pos - 60, 2)
+    launcher.load(launcher.pos - 90, 3)
+    #launcher.load(launcher.pos - 80, 0)
+    #launcher.load(launcher.pos - 100, 1)
 
     #value = math.cos(math.pi * launcher.alpha / 12) * 50 + 200
     #launcher.alpha = (launcher.alpha + 1) % 24

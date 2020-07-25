@@ -12,6 +12,7 @@ try:
     from ui_maix import ui, print_mem_free
     from ui_taskbar import taskbar
     from ui_launcher import launcher
+    # from ui_3d_launcher import launcher
     from ui_system_info import system_info
     from ui_catch import catch
     from ui_pages import pages
@@ -27,6 +28,7 @@ except ImportError:
     from ui.ui_maix import ui, print_mem_free
     from ui.ui_taskbar import taskbar
     from ui.ui_launcher import launcher
+    # from ui.ui_3d_launcher import launcher
     from ui.ui_system_info import system_info
     from ui.ui_catch import catch
     from ui.ui_pages import pages
@@ -49,7 +51,7 @@ class app:
     def draw_load():
         ui.display()
 
-    @ui.warp_template(ui.bg_in_draw)
+    @ui.warp_template(ui.bg_in_draw) # ui_3d_launcher need remove
     @ui.warp_template(taskbar.battery_draw)
     @ui.warp_template(launcher.draw)
     def draw_launcher():
