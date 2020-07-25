@@ -86,6 +86,9 @@ class launcher:
     tmp = (120 * math.sin(pos), 80 * math.cos(pos + 0.2))
 
     #ui.canvas.draw_line(120, 100, 120 + int(tmp[0]), 120 + int(tmp[1]), color=(150, 150, 150))
+    #ui.canvas.draw_circle((100, 60, 5), color=(255, 136, 210))
+    #ui.canvas.draw_line(100, 60, 100, 100, color=(255, 136, 210))
+
 
     x, y = (120 + int(tmp[0] - 30)), (120 + int(tmp[1] - 30))
     s = (y / 240) * 1.8
@@ -107,8 +110,8 @@ class launcher:
 
     launcher.pos = launcher.pos % 120 # lock pos
 
-    ui.canvas.draw_ellipse(120, 160, 80, 30, -15, color=(
-                      150 - launcher.goal * 5, 150 - launcher.goal * 5, 150 - launcher.goal * 5), thickness=2, fill=True)
+    ui.canvas.draw_ellipse(120, 150, 80, 30, -20, color=(
+                      150 - launcher.goal * 5, 150 - launcher.goal * 5, 150 - launcher.goal * 5), thickness=2, fill=False)
     launcher.load(launcher.pos, 0)
     launcher.load(launcher.pos - 20, 1)
     launcher.load(launcher.pos - 40, 2)
