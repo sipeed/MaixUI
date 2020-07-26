@@ -4,14 +4,14 @@ from machine import I2C
 from Maix import I2S, GPIO
 from fpioa_manager import *
 import audio
-from machine import Timer
+# from machine import Timer
 
 class CubeAudio:
 
     i2c, i2s, dev = I2C(I2C.I2C0, freq=100*1000, sda=31,
                         scl=30), I2S(I2S.DEVICE_0, pll2=262144000, mclk=31), None
 
-    tim = Timer(Timer.TIMER0, Timer.CHANNEL0, start=False, mode=Timer.MODE_PERIODIC, period=22, callback=lambda:None)
+    # tim = Timer(Timer.TIMER0, Timer.CHANNEL0, start=False, mode=Timer.MODE_PERIODIC, period=15, callback=lambda:None)
 
     def check():
       return ES8374._ES8374_I2CADDR_DEFAULT in CubeAudio.i2c.scan()
@@ -45,21 +45,21 @@ class CubeAudio:
     def load(path, volume=80):
         if CubeAudio.player != None:
             CubeAudio.player.finish()
-            CubeAudio.tim.stop()
+            # CubeAudio.tim.stop()
         CubeAudio.player = audio.Audio(path=path)
         CubeAudio.player.volume(volume)
         wav_info = CubeAudio.player.play_process(CubeAudio.i2s)
         CubeAudio.set_player(int(wav_info[2] / 2))
         CubeAudio.is_load = True
-        CubeAudio.tim.callback(CubeAudio.event)
-        CubeAudio.tim.start()
+        # CubeAudio.tim.callback(CubeAudio.event)
+        # CubeAudio.tim.start()
 
     def event(arg=None):
         if CubeAudio.is_load:
             ret = CubeAudio.player.play()
             if ret == None or ret == 0:
                 CubeAudio.player.finish()
-                CubeAudio.tim.stop()
+                # CubeAudio.tim.stop()
                 CubeAudio.is_load = False
 
 if __name__ == "__main__":
@@ -69,7 +69,7 @@ if __name__ == "__main__":
         CubeAudio.ready()
         CubeAudio.load("/sd/1k.wav", 100)
         while CubeAudio.is_load:
-            #CubeAudio.event()
+            CubeAudio.event()
             time.sleep_ms(15)
             print(time.ticks_ms())
 
