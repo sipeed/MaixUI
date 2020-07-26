@@ -207,8 +207,8 @@ class ES8374:
 
         self.i2c_addr = i2c_addr
 
-        dev_list = self.i2c_bus.scan()
-        print("i2c devs_list:" + str(dev_list))
+        # dev_list = self.i2c_bus.scan()
+        # print("i2c devs_list:" + str(dev_list))
 
         self.clkdiv_cfg = ES8374_I2S_CLOCK()
         self.es8374_cfg = ES8374_CONFIG()
