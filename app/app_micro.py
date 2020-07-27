@@ -10,7 +10,6 @@ import time
 try:
     from core import agent
     from ui_maix import ui, print_mem_free
-    from ui_taskbar import taskbar
     from ui_launcher import launcher
     # from ui_3d_launcher import launcher
     from ui_system_info import system_info
@@ -20,13 +19,14 @@ try:
     from ui_sample import sample_page
     from ui_explorer import explorer
     from sample_shtxx import sample_shtxx
+    from sample_spmod import sample_spmod_test
     from button import cube_button
     from wdt import protect
     from led import cube_led
+    from ui_taskbar import taskbar
 except ImportError:
     from lib.core import agent
     from ui.ui_maix import ui, print_mem_free
-    from ui.ui_taskbar import taskbar
     from ui.ui_launcher import launcher
     # from ui.ui_3d_launcher import launcher
     from ui.ui_system_info import system_info
@@ -36,9 +36,11 @@ except ImportError:
     from ui.ui_sample import sample_page
     from ui.ui_explorer import explorer
     from ui.sample_shtxx import sample_shtxx
+    from ui.sample_spmod import sample_spmod_test
     from driver.button import cube_button
     from driver.wdt import protect
     from driver.led import cube_led
+    from ui.ui_taskbar import taskbar
 
 class app:
 
@@ -106,6 +108,7 @@ class app:
             #app.layer -= 1 # return last layer
             #raise Exception("Settings Unrealized.")
         elif selected == 3:
+            sample_page.add_sample(sample_spmod_test())
             sample_page.add_sample(sample_shtxx())
             sample_page.add_demo()
 
