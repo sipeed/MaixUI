@@ -24,14 +24,14 @@ class sample_spmod_test():
 
     def __init__(self):
         self.is_load = False
-        self.i2c = I2C(I2C.I2C0, freq=100*1000, scl=6, sda=7)
+        self.i2c = I2C(I2C.I2C1, freq=100*1000, scl=6, sda=7)
         self.config_bme = False
         self.config_qmcx = False
         self.cache_bme = (0, 0, 0)
         self.cache_qmcx = (0, 0, 0)
         self.agent = agent()
-        self.agent.event(500, self.check)
-        self.agent.event(50, self.read_data)
+        self.agent.event(1000, self.check)
+        self.agent.event(100, self.read_data)
 
     def load(self):
         if self.is_load == False:

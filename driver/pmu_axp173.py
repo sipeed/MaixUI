@@ -53,9 +53,9 @@ class AXP173:
         from machine import I2C
         if i2c_dev is None:
             try:
-                self.i2cDev = I2C(I2C.I2C0, freq=400000, scl=30, sda=31)
+                self.i2cDev = I2C(I2C.I2C1, freq=400000, scl=30, sda=31)
             except Exception:
-                raise PMUError("Unable to init I2C0 as Master")
+                raise PMUError("Unable to init I2C1 as Master")
         else:
             self.i2cDev = i2c_dev
 

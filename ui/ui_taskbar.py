@@ -10,9 +10,11 @@ import gc
 import image
 
 try:
+    from core import agent
     from ui_maix import ui
     from pmu_axp173 import AXP173
 except ImportError:
+    from lib.core import agent
     from ui.ui_maix import ui
     from driver.pmu_axp173 import AXP173
 
@@ -25,6 +27,15 @@ class taskbar:
     now, info, last, img = '', '', 0, None
 
     axp173 = AXP173()
+    ctrl = agent()
+
+    def init():
+        # config usb input limit 190ma
+        taskbar.axp173.enable_adc(True)
+        # 默认充电限制在 4.2V, 190mA 档位
+        taskbar.axp173.setEnterChargingControl(True)
+        taskbar.axp173.exten_output_enable()
+        taskbar.ctrl.event(3000, taskbar.battery_sync)
 
     def time_draw():
         now = 0 + time.ticks_ms() / 1000
@@ -36,32 +47,27 @@ class taskbar:
         info = 'Rmnng %s KB' % str(gc.mem_free() / 1024)
         ui.canvas.draw_string(10, 2, info, scale=2)
 
-    def battery_draw():
-        if taskbar.last + 3000 < time.ticks_ms():
-            taskbar.last = time.ticks_ms()
-            vbat_voltage = taskbar.axp173.getVbatVoltage() / 1000
-            taskbar.info = "{0:.2f}V".format(
-                vbat_voltage, taskbar.axp173.is_charging())
-            if taskbar.img != None:
-                del taskbar.img
-            pos = int((4.2 - vbat_voltage) / 0.2)
-            if pos < 6:
-                tmp = "charge" if taskbar.axp173.is_charging() else "normal"
-                taskbar.img = image.Image(
-                    "res/icons/battery/{0} ({1}).jpg".format(tmp, 6 - pos))
+    def battery_sync():
+        vbat_voltage = taskbar.axp173.getVbatVoltage() / 1000
+        taskbar.info = "{0:.2f}V".format(
+            vbat_voltage, taskbar.axp173.is_charging())
+        if taskbar.img != None:
+            del taskbar.img
+        pos = int((4.2 - vbat_voltage) / 0.2)
+        if pos < 6:
+            tmp = "charge" if taskbar.axp173.is_charging() else "normal"
+            taskbar.img = image.Image(
+                "res/icons/battery/{0} ({1}).jpg".format(tmp, 6 - pos))
 
+    def battery_draw():
+        taskbar.ctrl.cycle()
         if taskbar.img != None:
             #ui.canvas.draw_rectangle((0,0,240,25), fill=True, color=(50, 50, 50))
             ui.canvas.draw_image(taskbar.img, 208, 2, alpha=int(255))
         ui.canvas.draw_string(10, 1, taskbar.info,
                               scale=2, color=(50, 255, 50))
 
-
-# config usb input limit 190ma
-taskbar.axp173.enable_adc(True)
-# 默认充电限制在 4.2V, 190mA 档位
-taskbar.axp173.setEnterChargingControl(True)
-taskbar.axp173.exten_output_enable()
+taskbar.init()
 
 if __name__ == "__main__":
 

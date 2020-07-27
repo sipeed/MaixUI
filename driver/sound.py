@@ -8,7 +8,7 @@ import audio, time
 
 class CubeAudio:
 
-    i2c, i2s, dev = I2C(I2C.I2C0, freq=100*1000, sda=31,
+    i2c, i2s, dev = I2C(I2C.I2C1, freq=100*1000, sda=31,
                         scl=30), I2S(I2S.DEVICE_0, pll2=262144000, mclk=31), None
 
     # tim = Timer(Timer.TIMER0, Timer.CHANNEL0, start=False, mode=Timer.MODE_PERIODIC, period=15, callback=lambda:None)
