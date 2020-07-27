@@ -23,7 +23,7 @@ class agent:
     #print('self.event', tmp)
     self.msg.append(tmp)
 
-  def serial_cycle(self):
+  def cycle(self):
     if (len(self.msg)):
       tmp = self.msg[0]
       if (self.get_ms() >= tmp[0]):
