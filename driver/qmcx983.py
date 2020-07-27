@@ -70,7 +70,8 @@ class QMCX983:
         raw[0] = (read_data[1]<<8) | read_data[0]
         raw[1] = (read_data[3]<<8) | read_data[2]
         raw[2] = (read_data[5]<<8) | read_data[4]
-        return "({:.1f}|{:.1f}|{:.1f})".format(raw[0]/25.0, raw[1]/25.0, raw[2]/25.0)
+        return (raw[0], raw[1], raw[2])
+        # return "({:.1f}|{:.1f}|{:.1f})".format(raw[0]/25.0, raw[1]/25.0, raw[2]/25.0)
 
 if __name__ == "__main__":
 
