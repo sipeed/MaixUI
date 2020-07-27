@@ -18,7 +18,6 @@ except ImportError:
 
 from machine import I2C
 
-
 class sample_shtxx():
 
     def __init__(self):
@@ -45,7 +44,7 @@ class sample_shtxx():
                 self.isconnected = True
 
     def work(self):
-        self.agent.cycle()
+        self.agent.parallel_cycle()
         ui.canvas.draw_string(30, 30, "Test SHT3X", (0, 255, 127), scale=3)
         ui.canvas.draw_string(30, 120, "isconnected: %s" % (
             str)(self.isconnected), (255, 127, 0), scale=2)

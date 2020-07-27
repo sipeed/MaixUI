@@ -176,7 +176,7 @@ class app:
                 try:
                     #print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                     last = time.ticks_ms()
-                    app.ctrl.cycle()
+                    app.ctrl.parallel_cycle()
                     protect.keep()
                     #time.sleep(0.1)
                 except KeyboardInterrupt:

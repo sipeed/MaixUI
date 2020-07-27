@@ -98,7 +98,7 @@ class launcher:
     launcher.app_sets[app_select].draw(is_check=False, alpha=y+50, x=x-15, y=int(y * s - y), scale=s)
 
   def draw():
-    launcher.agent.cycle()
+    launcher.agent.parallel_cycle()
     #launcher.app_select = (launcher.app_select + 1) % 120
 
     if launcher.goal == 0:

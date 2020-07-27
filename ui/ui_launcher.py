@@ -84,7 +84,7 @@ class launcher:
 
 
   def draw():
-    launcher.agent.cycle()
+    launcher.agent.parallel_cycle()
 
     value = math.cos(math.pi * launcher.alpha / 12) * 50 + 200
     launcher.alpha = (launcher.alpha + 1) % 24
