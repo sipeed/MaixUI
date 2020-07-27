@@ -18,13 +18,14 @@ except ImportError:
     from driver.bme280 import BME280, BME280_I2CADDR
     from driver.qmcx983 import QMCX983, QMCX983_I2CADDR
 
+from fpioa_manager import fm
 from machine import I2C
 
 class sample_spmod_test():
 
     def __init__(self):
         self.is_load = False
-        self.i2c = I2C(I2C.I2C0, freq=100*1000, scl=6, sda=7)
+        self.i2c = I2C(I2C.I2C0, freq=100*1000)
         self.config_bme = False
         self.config_qmcx = False
         self.cache_bme = (0, 0, 0)
@@ -35,7 +36,9 @@ class sample_spmod_test():
 
     def load(self):
         if self.is_load == False:
-            # i2c init()
+            # i2c init(), scl=6, sda=7
+            fm.register(6, fm.fpioa.I2C0_SCLK, force=True)
+            fm.register(7, fm.fpioa.I2C0_SDA, force=True)
             self.is_load = True
 
     def free(self):

@@ -16,13 +16,14 @@ except ImportError:
     from ui.ui_sample import sample_page
     from driver.shtxx import SHT3x, SHT3x_ADDR
 
+from fpioa_manager import fm
 from machine import I2C
 
 class sample_shtxx():
 
     def __init__(self):
         self.is_load = False
-        self.i2c = I2C(I2C.I2C0, freq=100*1000, scl=24, sda=25)
+        self.i2c = I2C(I2C.I2C0, freq=100*1000)
         self.isconnected = False
         self.agent = agent()
         self.agent.event(1000, self.check)
@@ -30,6 +31,8 @@ class sample_shtxx():
     def load(self):
         if self.is_load == False:
             # i2c init()
+            fm.register(24, fm.fpioa.I2C0_SCLK, force=True)
+            fm.register(25, fm.fpioa.I2C0_SDA, force=True)
             self.is_load = True
 
     def free(self):
