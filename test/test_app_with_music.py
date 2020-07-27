@@ -11,8 +11,8 @@ try:
     from core import agent
     from ui_maix import ui, print_mem_free
     from ui_taskbar import taskbar
-    #from ui_launcher import launcher
-    from ui_3d_launcher import launcher
+    from ui_launcher import launcher
+    #from ui_3d_launcher import launcher
     from ui_system_info import system_info
     from ui_catch import catch
     from ui_pages import pages
@@ -20,6 +20,7 @@ try:
     from ui_sample import sample_page
     from ui_explorer import explorer
     from sample_shtxx import sample_shtxx
+    from sample_spmod import sample_spmod_test
     from button import cube_button
     from wdt import protect
     from led import cube_led
@@ -28,8 +29,8 @@ except ImportError:
     from lib.core import agent
     from ui.ui_maix import ui, print_mem_free
     from ui.ui_taskbar import taskbar
-    #from ui.ui_launcher import launcher
-    from ui.ui_3d_launcher import launcher
+    from ui.ui_launcher import launcher
+    #from ui.ui_3d_launcher import launcher
     from ui.ui_system_info import system_info
     from ui.ui_catch import catch
     from ui.ui_pages import pages
@@ -37,6 +38,7 @@ except ImportError:
     from ui.ui_sample import sample_page
     from ui.ui_explorer import explorer
     from ui.sample_shtxx import sample_shtxx
+    from ui.sample_spmod import sample_spmod_test
     from driver.button import cube_button
     from driver.wdt import protect
     from driver.led import cube_led
@@ -155,10 +157,10 @@ class app:
         if app.btn.home() == 2: # click button release to 2
             print('into', app.layer)
             if app.layer == 0:
+                #CubeAudio.load("/flash/one.wav", 75)
                 pass
             if app.layer == 1:
                 app.layer += 1
-                CubeAudio.load("/sd/1k.wav", 80)
                 # launcher into application
                 app.load_application(launcher.app_select)
             elif app.layer == 2:
@@ -186,7 +188,7 @@ class app:
 
     def run():
         CubeAudio.ready()
-        #CubeAudio.load("/flash/1k.wav", 100)
+        # CubeAudio.load("/flash/1k.wav", 100)
         #app.ctrl.event(100, lambda *args: time.sleep(1))
         app.ctrl.event(10, app.draw)
 
