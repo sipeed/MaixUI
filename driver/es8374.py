@@ -201,7 +201,7 @@ class ES8374:
 
     def __init__(self, i2c_bus=None, i2c_addr=_ES8374_I2CADDR_DEFAULT):
         if i2c_bus == None:
-            self.i2c_bus = I2C(I2C.I2C1, freq=400*1000, sda=31, scl=30)
+            self.i2c_bus = I2C(I2C.I2C1, freq=100*1000, sda=31, scl=30)
         else:
             self.i2c_bus = i2c_bus
 
@@ -706,7 +706,7 @@ class ES8374:
 
 #---------------------------------------
 
-#i2c_bus = I2C(I2C.I2C1, freq=400*1000, sda=31, scl=30)
+#i2c_bus = I2C(I2C.I2C1, freq=100*1000, sda=31, scl=30)
 #es8374_addr = 0x10 # I2C 地址
 #es_es8374_dev = ES8374(i2c_bus, es8374_addr)
 #es_es8374_dev = ES8374(i2c_bus)

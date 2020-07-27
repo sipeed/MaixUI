@@ -42,7 +42,7 @@ class SHT3x:
 
 if __name__ == "__main__":
 
-    sht3x = SHT3x(I2C(I2C.I2C0, freq=1000000, scl=24, sda=25))
+    sht3x = SHT3x(I2C(I2C.I2C0, freq=100*1000, scl=24, sda=25))
     while True:
         try:
             print(sht3x.read_temp_humd())

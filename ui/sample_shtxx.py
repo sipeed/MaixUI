@@ -22,7 +22,7 @@ class sample_shtxx():
 
     def __init__(self):
         self.is_load = False
-        self.i2c = I2C(I2C.I2C1, freq=1000000, scl=24, sda=25)
+        self.i2c = I2C(I2C.I2C0, freq=100*1000, scl=24, sda=25)
         self.isconnected = False
         self.agent = agent()
         self.agent.event(1000, self.check)

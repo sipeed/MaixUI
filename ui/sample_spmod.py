@@ -24,7 +24,7 @@ class sample_spmod_test():
 
     def __init__(self):
         self.is_load = False
-        self.i2c = I2C(I2C.I2C1, freq=100*1000, scl=6, sda=7)
+        self.i2c = I2C(I2C.I2C0, freq=100*1000, scl=6, sda=7)
         self.config_bme = False
         self.config_qmcx = False
         self.cache_bme = (0, 0, 0)
@@ -54,7 +54,6 @@ class sample_spmod_test():
                 self.config_qmcx = True
 
     def read_data(self):
-        print(time.ticks_ms())
         if self.config_bme:
             self.cache_bme = self.bme.read_compensated_data()
         if self.config_qmcx:
@@ -76,10 +75,10 @@ class sample_spmod_test():
 
     def work(self):
         self.agent.parallel_cycle()
-        ui.canvas.draw_string(30, 20, "BME280 & QMCX983", (127, 255, 0), scale=2)
-        ui.canvas.draw_string(30, 50, "config_bme: %s" % (
+        ui.canvas.draw_string(30, 30, "BME280 & QMCX983", (127, 255, 0), scale=2)
+        ui.canvas.draw_string(30, 60, "config_bme: %s" % (
             str)(self.config_bme), (255, 127, 0), scale=1)
-        ui.canvas.draw_string(30, 70, "config_qmcx: %s" % (
+        ui.canvas.draw_string(30, 80, "config_qmcx: %s" % (
             str)(self.config_qmcx), (255, 127, 0), scale=1)
         if self.config_bme:
             ui.canvas.draw_string(20, 100,
