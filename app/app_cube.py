@@ -165,12 +165,12 @@ class app:
         if app.btn.next() == 1:
             app.rgb = (app.rgb + 1) % 8
             app.rgb_change(app.rgb)
-            CubeAudio.load("/flash/res/one.wav", 100)
+            CubeAudio.load(os.getcwd() + "/res/one.wav", 100)
 
         if app.btn.back() == 1:
             app.rgb = (app.rgb - 1) % 8
             app.rgb_change(app.rgb)
-            CubeAudio.load("/flash/res/one.wav", 100)
+            CubeAudio.load(os.getcwd() + "/res/one.wav", 100)
 
         if app.layer == 0:
             app.draw_load()
