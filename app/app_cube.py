@@ -10,8 +10,8 @@ import time
 try:
     from core import agent
     from ui_maix import ui, print_mem_free
-    from ui_launcher import launcher
-    # from ui_3d_launcher import launcher
+    # from ui_launcher import launcher
+    from ui_3d_launcher import launcher
     from ui_system_info import system_info
     from ui_catch import catch
     from ui_pages import pages
@@ -20,6 +20,7 @@ try:
     from ui_explorer import explorer
     from sample_shtxx import sample_shtxx
     from sample_spmod import sample_spmod_test
+    from sample_msa301 import sample_msa301
     from button import cube_button
     from wdt import protect
     from led import cube_led
@@ -27,8 +28,8 @@ try:
 except ImportError:
     from lib.core import agent
     from ui.ui_maix import ui, print_mem_free
-    from ui.ui_launcher import launcher
-    # from ui.ui_3d_launcher import launcher
+    # from ui.ui_launcher import launcher
+    from ui.ui_3d_launcher import launcher
     from ui.ui_system_info import system_info
     from ui.ui_catch import catch
     from ui.ui_pages import pages
@@ -37,6 +38,7 @@ except ImportError:
     from ui.ui_explorer import explorer
     from ui.sample_shtxx import sample_shtxx
     from ui.sample_spmod import sample_spmod_test
+    from ui.sample_msa301 import sample_msa301
     from driver.button import cube_button
     from driver.wdt import protect
     from driver.led import cube_led
@@ -53,9 +55,9 @@ class app:
     def draw_load():
         ui.display()
 
-    @ui.warp_template(ui.bg_in_draw) # ui_3d_launcher need remove
-    @ui.warp_template(taskbar.battery_draw)
+    # @ui.warp_template(ui.bg_in_draw) # ui_3d_launcher need remove
     @ui.warp_template(launcher.draw)
+    @ui.warp_template(taskbar.battery_draw)
     def draw_launcher():
         ui.display()
 
@@ -108,6 +110,7 @@ class app:
             #app.layer -= 1 # return last layer
             #raise Exception("Settings Unrealized.")
         elif selected == 3:
+            sample_page.add_sample(sample_msa301())
             sample_page.add_sample(sample_spmod_test())
             sample_page.add_sample(sample_shtxx())
             sample_page.add_demo()

@@ -704,43 +704,6 @@ class ES8374:
             print("start default is decode mode:%d\r\n" % es_mode)
 
 
-#---------------------------------------
-
-#i2c_bus = I2C(I2C.I2C1, freq=100*1000, sda=31, scl=30)
-#es8374_addr = 0x10 # I2C 地址
-#es_es8374_dev = ES8374(i2c_bus, es8374_addr)
-#es_es8374_dev = ES8374(i2c_bus)
-# ------------------------------------
-#es8374_dev = ES8374()
-
-#regAll = es8374_dev._readREGAll()
-#print("\r\n#----------------")
-#print("App |reg value: \r\n")
-#regAll_len  = len(regAll)
-
-#for i in range(regAll_len):
-    #if (i % 10 == 0):
-        #print("\r\n %2d" % (i//10), end=": ")
-    #print("0x%02X" % (regAll[i]), end="  ")
-#print("\r\n#----------------")
-
-## print("App |get Voice Mute 1: " + str(es8374_dev.getVoiceMute()))
-## es8374_dev.setVoiceMute(False)
-## print("App |get Voice Mute 2: " + str(es8374_dev.getVoiceMute()))
-## es8374_dev.setVoiceMute(True)
-## print("App |get Voice Mute 3: " + str(es8374_dev.getVoiceMute()))
-## es8374_dev.setVoiceVolume(88)
-## print("App |get Voice Mute 4: " + str(es8374_dev.getVoiceMute()))
-## print("#----------------")
-
-#print("App |Voice Volume [%s]: " % str(es8374_dev.getVoiceVolume()))
-#es8374_dev.setVoiceVolume(78)
-#print("App |Voice Volume [%s]: " % str(es8374_dev.getVoiceVolume()))
-#es8374_dev.setVoiceVolume(0)
-#print("App |Voice Volume [%s]: " % str(es8374_dev.getVoiceVolume()))
-# print("#----------------")
-
-
 
 '''-----------------------------
 1.测试 I2S 是否能够输出型号
