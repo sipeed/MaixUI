@@ -9,7 +9,7 @@ import time
 
 try:
     from core import agent
-    from ui_maix import ui, print_mem_free
+    from ui_canvas import ui, print_mem_free
     from ui_taskbar import taskbar
     from ui_launcher import launcher
     #from ui_3d_launcher import launcher
@@ -27,7 +27,7 @@ try:
     from sound import CubeAudio
 except ImportError:
     from lib.core import agent
-    from ui.ui_maix import ui, print_mem_free
+    from ui.ui_canvas import ui, print_mem_free
     from ui.ui_taskbar import taskbar
     from ui.ui_launcher import launcher
     #from ui.ui_3d_launcher import launcher

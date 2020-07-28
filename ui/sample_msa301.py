@@ -7,12 +7,12 @@
 
 try:
     from core import agent
-    from ui_maix import ui
+    from ui_canvas import ui
     from ui_sample import sample_page
     from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
 except ImportError:
     from lib.core import agent
-    from ui.ui_maix import ui
+    from ui.ui_canvas import ui
     from ui.ui_sample import sample_page
     from driver.msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
 

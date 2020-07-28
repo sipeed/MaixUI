@@ -6,13 +6,13 @@
 #
 
 try:
-    from ui_maix import ui
+    from ui_canvas import ui
     from button import cube_button
     from shtxx import SHT3x, SHT3x_ADDR
     from core import agent
 except ImportError:
     from lib.core import agent
-    from ui.ui_maix import ui
+    from ui.ui_canvas import ui
     from ui.ui_sample import sample_page
     from driver.shtxx import SHT3x, SHT3x_ADDR
 

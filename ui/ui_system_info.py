@@ -6,9 +6,9 @@
 #
 
 try:
-    from ui_maix import ui
+    from ui_canvas import ui
 except ImportError:
-    from ui.ui_maix import ui
+    from ui.ui_canvas import ui
 
 
 class system_info:

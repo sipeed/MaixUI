@@ -7,13 +7,13 @@
 
 try:
     from core import agent
-    from ui_maix import ui
+    from ui_canvas import ui
     from ui_sample import sample_page
     from bme280 import BME280, BME280_I2CADDR
     from qmcx983 import QMCX983, QMCX983_I2CADDR
 except ImportError:
     from lib.core import agent
-    from ui.ui_maix import ui
+    from ui.ui_canvas import ui
     from ui.ui_sample import sample_page
     from driver.bme280 import BME280, BME280_I2CADDR
     from driver.qmcx983 import QMCX983, QMCX983_I2CADDR

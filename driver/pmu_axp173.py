@@ -320,7 +320,7 @@ if __name__ == "__main__":
     axp173.setEnterChargingControl(True)
     axp173.exten_output_enable()
 
-    from ui_maix import ui
+    from ui_canvas import ui
 
     @ui.warp_template(ui.blank_draw)
     def test_pmu_axp173_draw():

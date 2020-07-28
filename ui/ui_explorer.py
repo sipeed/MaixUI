@@ -7,12 +7,12 @@
 
 
 try:
-    from ui_maix import ui
+    from ui_canvas import ui
     from button import cube_button
     from fs import OS
     from wdt import protect
 except ImportError:
-    from ui.ui_maix import ui
+    from ui.ui_canvas import ui
     from driver.button import cube_button
     from driver.fs import OS
     from driver.wdt import protect

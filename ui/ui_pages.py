@@ -6,10 +6,10 @@
 #
 
 try:
-    from ui_maix import ui
+    from ui_canvas import ui
     from button import cube_button
 except ImportError:
-    from ui.ui_maix import ui
+    from ui.ui_canvas import ui
     from driver.button import cube_button
 
 import os

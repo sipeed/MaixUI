@@ -8,11 +8,11 @@
 import math, os, image
 
 try:
-    from ui_maix import ui
+    from ui_canvas import ui
     from button import cube_button
     from core import agent
 except ImportError:
-    from ui.ui_maix import ui
+    from ui.ui_canvas import ui
     from driver.button import cube_button
     from lib.core import agent
 
@@ -96,7 +96,7 @@ class launcher:
 launcher.init()
 
 if __name__ == "__main__":
-  from ui_maix import ui
+  from ui_canvas import ui
   from ui_taskbar import taskbar
 
   @ui.warp_template(ui.blank_draw)

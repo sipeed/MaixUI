@@ -11,11 +11,11 @@ import image
 
 try:
     from core import agent
-    from ui_maix import ui
+    from ui_canvas import ui
     from pmu_axp173 import AXP173
 except ImportError:
     from lib.core import agent
-    from ui.ui_maix import ui
+    from ui.ui_canvas import ui
     from driver.pmu_axp173 import AXP173
 
 levels = [4.13, 4.06, 3.98, 3.92, 3.87,

@@ -53,9 +53,9 @@ class FaceReco():
 
 if __name__ == "__main__":
     try:
-        from ui_maix import ui
+        from ui_canvas import ui
     except ImportError:
-        from ui.ui_maix import ui
+        from ui.ui_canvas import ui
 
 
     @ui.warp_template(ui.blank_draw)  # first draw

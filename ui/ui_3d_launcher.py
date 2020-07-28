@@ -5,14 +5,14 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import math, os, image
+import math, os, image, gc
 
 try:
-    from ui_maix import ui
+    from ui_canvas import ui
     from button import cube_button
     from core import agent
 except ImportError:
-    from ui.ui_maix import ui
+    from ui.ui_canvas import ui
     from driver.button import cube_button
     from lib.core import agent
 
@@ -91,12 +91,11 @@ class launcher:
     #ui.canvas.draw_circle((100, 60, 5), color=(255, 136, 210))
     #ui.canvas.draw_line(100, 60, 100, 100, color=(255, 136, 210))
 
-
     x, y = (120 + int(tmp[0] - 30)), (120 + int(tmp[1] - 30))
     s = (y / 120) * 1.5
     #if int(y * s - y - 60) > 0:
     alpha=int((y / 100) ** 4 * 100 + 40)
-    print('alpha', alpha)
+    # print('alpha', alpha)
     launcher.app_sets[app_select].draw(is_check=False, alpha=alpha, x=x-15, y=int(y * s - y), scale=s)
 
   def draw():
@@ -116,6 +115,7 @@ class launcher:
 
     ui.canvas.draw_ellipse(130, 150, 80, 30, -10, color=(
                       150 - launcher.goal * 5, 150 - launcher.goal * 5, 150 - launcher.goal * 5), thickness=2, fill=False)
+    gc.collect()
     launcher.load(launcher.pos, 0)
     launcher.load(launcher.pos - 30, 1)
     launcher.load(launcher.pos - 60, 2)
@@ -133,7 +133,7 @@ class launcher:
 launcher.init()
 
 if __name__ == "__main__":
-  from ui_maix import ui
+  from ui_canvas import ui
   from ui_taskbar import taskbar
 
   #@ui.warp_template(ui.grey_draw)

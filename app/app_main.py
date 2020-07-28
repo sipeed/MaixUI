@@ -15,7 +15,7 @@
 
 import time
 from core import agent
-from ui_maix import ui, print_mem_free
+from ui_canvas import ui, print_mem_free
 from ui_taskbar import taskbar
 from ui_launcher import launcher
 from ui_system_info import system_info

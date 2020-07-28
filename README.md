@@ -49,7 +49,7 @@ Use [/build_flash_fs.py](/build_flash_fs.py) to package all the files into fs fo
 
 #### Select dependent modules to develop
 
-Developers can sart from [ui/ui_maix.py](ui/ui_maix.py)
+Developers can sart from [ui/ui_canvas.py](ui/ui_canvas.py)
 
 1. Ready a sipeed maix-cube (hardware) and flash [sipeed/maxipy](github.com/sipeed/maxipy).
 
@@ -81,13 +81,13 @@ Let's look at an example.
       ui.display() # third display
 ```
 
-For example, implement a status(taskbar) bar base ui_maix.ui.
+For example, implement a status(taskbar) bar base ui_canvas.ui.
 
 ```python
 
 import time, gc
 
-from ui_maix import ui
+from ui_canvas import ui
 
 class taskbar:
 
@@ -334,7 +334,7 @@ Next up to you.
 
 Record the time and memory usage of each component.
 
-- ui_maix.py
+- ui_canvas.py
   - bg_draw
   - anime_draw
   - system_info

@@ -11,13 +11,13 @@ import math
 import random
 
 try:
-    from ui_maix import ui
+    from ui_canvas import ui
     from button import cube_button
     import camera
     from face_reco import FaceReco
     from led import cube_led
 except ImportError:
-    from ui.ui_maix import ui
+    from ui.ui_canvas import ui
     from driver.button import cube_button
     import driver.camera as camera
     from driver.face_reco import FaceReco

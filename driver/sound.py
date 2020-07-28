@@ -39,31 +39,25 @@ class CubeAudio:
         CubeAudio.is_ready = True
       return CubeAudio.is_ready
 
-    def set_record(sample_rate=22050):
-      CubeAudio.i2s.set_sample_rate(sample_rate)
-
-    def set_player(sample_rate=44100):
-      CubeAudio.i2s.set_sample_rate(sample_rate)
-
     def load(path, volume=80):
         if CubeAudio.player != None:
             CubeAudio.player.finish()
-            time.sleep_ms(10)
             # CubeAudio.tim.stop()
         CubeAudio.player = audio.Audio(path=path)
         CubeAudio.player.volume(volume)
         wav_info = CubeAudio.player.play_process(CubeAudio.i2s)
-        CubeAudio.set_player(int(wav_info[1]))
+        CubeAudio.i2s.set_sample_rate(int(wav_info[1]))
         CubeAudio.is_load = True
         # CubeAudio.tim.callback(CubeAudio.event)
         # CubeAudio.tim.start()
+        time.sleep_ms(20)
 
     def event(arg=None):
         if CubeAudio.is_load:
             ret = CubeAudio.player.play()
             if ret == None or ret == 0:
                 CubeAudio.player.finish()
-                time.sleep_ms(10)
+                time.sleep_ms(20)
                 # CubeAudio.tim.stop()
                 CubeAudio.is_load = False
 
@@ -73,9 +67,9 @@ if __name__ == "__main__":
 
         CubeAudio.ready()
         while True:
-            CubeAudio.load("/flash/183.wav", 50)
+            CubeAudio.load("/flash/one.wav", 80)
             while CubeAudio.is_load:
-                time.sleep_ms(22)
+                #time.sleep_ms(20)
                 CubeAudio.event()
                 print(time.ticks_ms())
 
@@ -85,7 +79,7 @@ if __name__ == "__main__":
         # read audio info
         wav_info = player.play_process(CubeAudio.i2s)
         print("wav file head information: ", wav_info)
-        CubeAudio.set_player(int(wav_info[1] / 2))
+        CubeAudio.i2s.set_sample_rate(int(wav_info[1] / 2))
         print('loop to play audio')
         while True:
           ret = player.play()
@@ -99,7 +93,7 @@ if __name__ == "__main__":
         # record to wav
         print('record to wav')
         CubeAudio.ready()
-        CubeAudio.set_record(22050)
+        CubeAudio.i2s.set_sample_rate(22050)
 
         # init audio
         player = audio.Audio(path="/sd/record_5.wav",
