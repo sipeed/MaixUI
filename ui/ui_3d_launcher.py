@@ -85,7 +85,7 @@ class launcher:
 
   def load(app_pos, app_select):
     pos = app_pos * (math.pi / 60)
-    tmp = (120 * math.sin(pos), 30 * math.cos(pos + 0.3))
+    tmp = (120 * math.sin(pos), 30 * math.cos(pos + 0.35))
 
     #ui.canvas.draw_line(120, 100, 120 + int(tmp[0]), 120 + int(tmp[1]), color=(150, 150, 150))
     #ui.canvas.draw_circle((100, 60, 5), color=(255, 136, 210))
@@ -95,7 +95,9 @@ class launcher:
     x, y = (120 + int(tmp[0] - 30)), (120 + int(tmp[1] - 30))
     s = (y / 120) * 1.5
     #if int(y * s - y - 60) > 0:
-    launcher.app_sets[app_select].draw(is_check=False, alpha=y+50, x=x-15, y=int(y * s - y), scale=s)
+    alpha=int((y / 100) ** 4 * 100 + 40)
+    print('alpha', alpha)
+    launcher.app_sets[app_select].draw(is_check=False, alpha=alpha, x=x-15, y=int(y * s - y), scale=s)
 
   def draw():
     launcher.agent.parallel_cycle()
@@ -134,10 +136,11 @@ if __name__ == "__main__":
   from ui_maix import ui
   from ui_taskbar import taskbar
 
-  @ui.warp_template(ui.grey_draw)
+  #@ui.warp_template(ui.grey_draw)
+  @ui.warp_template(ui.blank_draw)
   #@ui.warp_template(ui.bg_in_draw)
-  @ui.warp_template(taskbar.time_draw)
   @ui.warp_template(launcher.draw)
+  @ui.warp_template(taskbar.time_draw)
   def unit_test():
     ui.display()
   import time
