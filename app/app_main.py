@@ -5,14 +5,6 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-# !!! sipeed cube special !!!
-# This file is part of MaixUI
-# Copyright (c) sipeed.com
-#
-# Licensed under the MIT license:
-#   http://www.opensource.org/licenses/mit-license.php
-#
-
 import time
 from core import agent
 from ui_canvas import ui, print_mem_free
