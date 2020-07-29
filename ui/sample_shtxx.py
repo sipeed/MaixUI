@@ -8,13 +8,13 @@
 try:
     from ui_canvas import ui
     from button import cube_button
-    from shtxx import SHT3x, SHT3x_ADDR
+    from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
     from core import agent
 except ImportError:
     from lib.core import agent
     from ui.ui_canvas import ui
     from ui.ui_sample import sample_page
-    from driver.shtxx import SHT3x, SHT3x_ADDR
+    from driver.shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
 
 from fpioa_manager import fm
 from machine import I2C
@@ -43,7 +43,10 @@ class sample_shtxx():
     def check(self):
         if self.isconnected == False:
             if SHT3x_ADDR in self.i2c.scan():
-                self.sht3x = SHT3x(self.i2c)
+                self.sht3x = SHT3x(self.i2c, SHT3x_ADDR)
+                self.isconnected = True
+            if SHT31_ADDR in self.i2c.scan():
+                self.sht3x = SHT3x(self.i2c, SHT31_ADDR)
                 self.isconnected = True
 
     def work(self):

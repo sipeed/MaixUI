@@ -4,17 +4,17 @@ import time
 from machine import I2C
 
 SHT3x_ADDR = 0x45
-
+SHT31_ADDR = 0x44
 
 class SHT3x:
 
-    def __init__(self, i2c):
+    def __init__(self, i2c, addr = SHT31_ADDR):
         self.i2c = i2c
-        addrs = self.i2c.scan()
-        print(addrs)
-        if SHT3x_ADDR not in addrs:
-            raise Exception('no SHT3X found at bus on %s' % (str(self.i2c)))
-        self.addr = SHT3x_ADDR
+        #addrs = self.i2c.scan()
+        #print(addrs)
+        #if SHT3x_ADDR not in addrs or SHT31_ADDR not in addrs:
+            #raise Exception('no SHT3X found at bus on %s' % (str(self.i2c)))
+        self.addr = addr
         self.last = 0
         self.cache = [0, 0]
 
@@ -46,6 +46,6 @@ if __name__ == "__main__":
     while True:
         try:
             print(sht3x.read_temp_humd())
-            #utime.sleep(1)
+            time.sleep(1)
         except Exception as e:
             print(e)
