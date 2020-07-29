@@ -60,7 +60,7 @@ Developers can sart from [ui/ui_canvas.py](ui/ui_canvas.py)
     - lib
     - driver
 
-3. Rename [app/app_micro.py](app/app_micro.py) to `main.py`.
+3. Rename [app/app_cube.py](app/app_cube.py) to `main.py`.
 
 3. Move `main.py` to the root directory in SD card.
 
