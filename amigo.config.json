@@ -1,15 +1,15 @@
 {
     "config_name": "config.json",
     "lcd": {
-        "height": 320,
-        "width": 480,
+        "height": 480,
+        "width": 320,
         "invert": 0,
         "offset_x1": 0,
         "offset_y1": 0,
         "offset_x2": 0,
         "offset_y2": 0,
-        "dir": 0,
-        "lcd_type": 1
+        "dir": 72,
+        "lcd_type": 0
     },
     "sdcard":{
         "sclk":11,
