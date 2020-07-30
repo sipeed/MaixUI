@@ -1,18 +1,15 @@
 # -*- coding: UTF-8 -*-
 # Untitled - By: Echo - 周五 4月 2 2020
 # start of pmu_axp173.py
+import time
+import image
+import sensor
 from machine import I2C, Timer
 from Maix import GPIO
 from fpioa_manager import fm
 import lcd
 import utime
 import sensor
-
-
-#fm.register(44, fm.fpioa.GPIOHS1, force=True)
-#cam = GPIO(GPIO.GPIOHS1, GPIO.OUT)
-#cam.value(0)
-
 
 class AXP173:
 
@@ -25,9 +22,8 @@ class AXP173:
         pass
 
     class NotFoundError(PMUError):
-        def __init__(self):
-            print("Error: Unable connect pmu_axp173!")
-            # pass
+        print("Error: Unable connect pmu_axp173!")
+        # pass
 
     class OutOfRange(PMUError):
         pass
@@ -317,36 +313,65 @@ class AXP173:
 
 # end of pmu_axp173.py
 # ------------------------
-lcd.init()
-#lcd.rotation(1)
+lcd.init(type=2)
+lcd.rotation(1)
 
-#axp173 = AXP173()
+axp173 = AXP173()
 
-## 默认充电限制在 4.2V, 190mA 档位
-#axp173.setEnterChargingControl(True)
-#axp173.exten_output_enable()
+# 默认充电限制在 4.2V, 190mA 档位
+axp173.setEnterChargingControl(True)
+axp173.exten_output_enable()
 
-#axp173.writeREG(0x27, 0x20)
-#axp173.writeREG(0x28, 0x0C)
-##axp173.readREG(0x10)
-#time.sleep(1)
+axp173.writeREG(0x27, 0x20)
+axp173.writeREG(0x28, 0x0C)
+#axp173.readREG(0x10)
 
-print('test 44')
-fm.register(44, fm.fpioa.GPIOHS28, force=True)
-cam = GPIO(GPIO.GPIOHS28, GPIO.OUT)
-cam.value(0)
-print('test 44')
 
-sensor.reset()
-sensor.set_pixformat(sensor.YUV422)
-sensor.set_framesize(sensor.QVGA)
-sensor.run(1)
-sensor.skip_frames()
-lcd.display(sensor.snapshot())
+def old_set_front():
+    fm.register(35, fm.fpioa.GPIOHS29, force=True)
+    PWDN1 = GPIO(GPIO.GPIOHS29, GPIO.OUT)
+    fm.register(34, fm.fpioa.GPIOHS28, force=True)
+    PWDN2 = GPIO(GPIO.GPIOHS28, GPIO.OUT)
 
-#while(True):
-    #lcd.display(sensor.snapshot())
+    PWDN1.value(0)  # open
+    PWDN2.value(1)  # close
+    time.sleep(1)
 
-    #fm.register(44, fm.fpioa.GPIOHS28, force=True)
-    #cam = GPIO(GPIO.GPIOHS28, GPIO.OUT)
-    #cam.value(0)
+
+def old_set_back():
+    fm.register(35, fm.fpioa.GPIOHS29, force=True)
+    PWDN1 = GPIO(GPIO.GPIOHS29, GPIO.OUT)
+    fm.register(34, fm.fpioa.GPIOHS28, force=True)
+    PWDN2 = GPIO(GPIO.GPIOHS28, GPIO.OUT)
+
+    PWDN1.value(1)  # close
+    PWDN2.value(0)  # open
+    time.sleep(1)
+
+time.sleep(2)
+
+# 在 amigo 上 带有 logo 的一面接 gc0328 , 带有 芯片的 一面 接 ov7740
+
+while True:
+
+    #time.sleep(2)
+
+    sensor.reset()
+    sensor.set_pixformat(sensor.YUV422)
+    sensor.set_framesize(sensor.QVGA)
+    sensor.skip_frames(time=2000)
+
+    for i in range(10):
+        img = sensor.snapshot()
+        lcd.display(img)
+
+    #sensor.reset(choice=2)
+    #sensor.set_pixformat(sensor.YUV422)
+    #sensor.set_framesize(sensor.QVGA)
+    #sensor.skip_frames(time=2000)
+
+    #for i in range(10):
+        #img = sensor.snapshot()
+        #lcd.display(img)
+
+    #time.sleep(2)
