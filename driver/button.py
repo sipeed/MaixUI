@@ -93,7 +93,6 @@ class cube_button:
             self.pause_time = time.ticks_ms() + Limit
 
         if tmp == 1 and self.home_last == 0 and self.pause_time < time.ticks_ms():
-            print(1)
             self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms(
             ) - self.bak_time
 
