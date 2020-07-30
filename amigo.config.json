@@ -9,7 +9,7 @@
         "offset_x2": 0,
         "offset_y2": 0,
         "dir": 72,
-        "lcd_type": 0
+        "lcd_type": 1
     },
     "sdcard":{
         "sclk":11,
