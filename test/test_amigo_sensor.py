@@ -356,14 +356,20 @@ while True:
 
     #time.sleep(2)
 
-    sensor.reset()
-    sensor.set_pixformat(sensor.YUV422)
-    sensor.set_framesize(sensor.QVGA)
-    sensor.skip_frames(time=2000)
+    try:
+        time.sleep(2)
+        sensor.reset()
+        sensor.sleep(False)
+        sensor.set_pixformat(sensor.YUV422)
+        sensor.set_framesize(sensor.QVGA)
+        sensor.skip_frames(time=2000)
+        #for i in range(50):
+            #img = sensor.snapshot()
+            #lcd.display(img)
+    except Exception as e:
+        print(e)
 
-    for i in range(10):
-        img = sensor.snapshot()
-        lcd.display(img)
+
 
     #sensor.reset(choice=2)
     #sensor.set_pixformat(sensor.YUV422)
