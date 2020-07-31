@@ -11,7 +11,7 @@
 
 from machine import I2C, Timer
 import lcd
-import utime
+import time
 
 
 class AXP173:
@@ -54,6 +54,7 @@ class AXP173:
         if i2c_dev is None:
             try:
                 self.i2cDev = I2C(I2C.I2C1, freq=100*1000, scl=30, sda=31)
+                time.sleep(0.5)
             except Exception:
                 raise PMUError("Unable to init I2C1 as Master")
         else:
@@ -313,8 +314,9 @@ class AXP173:
 
 
 if __name__ == "__main__":
-
-    axp173 = AXP173()
+    import time
+    tmp = I2C(I2C.I2C1, freq=100*1000, scl=30, sda=31)
+    axp173 = AXP173(tmp)
     axp173.enable_adc(True)
     # 默认充电限制在 4.2V, 190mA 档位
     axp173.setEnterChargingControl(True)
