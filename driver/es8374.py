@@ -725,69 +725,73 @@ if __name__ == "__main__":
     fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
     fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
 
-    es8374_dev = ES8374()
+    while True:
 
-    # init i2s(i2s0)
-    i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
+        es8374_dev = ES8374()
 
-    # config i2s according to audio info # STANDARD_MODE LEFT_JUSTIFYING_MODE RIGHT_JUSTIFYING_MODE
-    i2s.channel_config(I2S.CHANNEL_2, I2S.TRANSMITTER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
+        i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
 
-    for i in range(10):
-
-        time.sleep_ms(10)
+        # record to wav
+        print('record to wav')
+        i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
+        i2s.set_sample_rate(22050)
 
         # init audio
-        player = audio.Audio(path="/flash/183.wav")
-        player.volume(50)
-
-        # read audio info
-        wav_info = player.play_process(i2s)
-        print("wav file head information: ", wav_info)
-        i2s.set_sample_rate(wav_info[1])
-        print('loop to play audio')
-        while True:
-            ret = player.play()
-            if ret == None:
-                print("format error")
-                break
-            elif ret == 0:
-                break
+        player = audio.Audio(path="/sd/record_2.wav", is_create=True, samplerate=22050)
+        queue = []
+        for i in range(400):
+            tmp = i2s.record(1024)
+            if len(queue) > 0:
+                print(time.ticks())
+                ret = player.record(queue[0])
+                queue.pop(0)
+            i2s.wait_record()
+            queue.append(tmp)
         player.finish()
 
-    del i2s, player
+        del i2s, player
 
-    #es8374_dev = ES8374()
+        es8374_dev = ES8374()
 
-    #i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
+        # init i2s(i2s0)
+        i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
 
-    ## record to wav
-    #print('record to wav')
-    #i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
-    #i2s.set_sample_rate(22050)
+        # config i2s according to audio info # STANDARD_MODE LEFT_JUSTIFYING_MODE RIGHT_JUSTIFYING_MODE
+        i2s.channel_config(I2S.CHANNEL_2, I2S.TRANSMITTER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
 
-    ## init audio
-    #player = audio.Audio(path="/sd/record_2.wav", is_create=True, samplerate=22050)
-    #queue = []
-    #for i in range(400):
-        #tmp = i2s.record(1024)
-        #if len(queue) > 0:
-            #print(time.ticks())
-            #ret = player.record(queue[0])
-            #queue.pop(0)
-        #i2s.wait_record()
-        #queue.append(tmp)
-    #player.finish()
+        for i in range(10):
 
-    ##not work
-    ##queue = []
-    ##i2s.set_sample_rate(22050)
-    ##while True:
-        ##tmp = i2s.record(1024)
-        ##if len(queue) > 0:
-            ##print(time.ticks())
-            ###i2s.play(queue[0])
-            ##queue.pop(0)
-        ##i2s.wait_record()
-        ##queue.append(tmp)
+            time.sleep_ms(10)
+
+            # init audio
+            player = audio.Audio(path="/sd/record_2.wav")
+            player.volume(50)
+
+            # read audio info
+            wav_info = player.play_process(i2s)
+            print("wav file head information: ", wav_info)
+            i2s.set_sample_rate(wav_info[1])
+            print('loop to play audio')
+            while True:
+                ret = player.play()
+                if ret == None:
+                    print("format error")
+                    break
+                elif ret == 0:
+                    break
+            player.finish()
+
+        del i2s, player
+
+        #not work
+        #queue = []
+        #i2s.set_sample_rate(22050)
+        #while True:
+            #tmp = i2s.record(1024)
+            #if len(queue) > 0:
+                #print(time.ticks())
+                ##i2s.play(queue[0])
+                #queue.pop(0)
+            #i2s.wait_record()
+            #queue.append(tmp)
 
