@@ -11,17 +11,20 @@ import time
 from fpioa_manager import fm
 from Maix import FPIOA, GPIO
 
-BACK = 11
-ENTER = 10
-NEXT = 16
-
-Limit = 1000  # 1s
-
 Match = [[(1, 0), (1, 0)], [(2, 1), None]] # 0 1 1 2 0
 #Match = [[None, (1, 0)], [(2, 1), None]]  # 0 1 0 0 2
 
-
 class cube_button:
+
+    Limit = 1000  # 1s
+
+    def config(self, ENTER=10, BACK=11, NEXT=16, Limit=1000):
+        fm.register(ENTER, fm.fpioa.GPIOHS10)
+        fm.register(BACK, fm.fpioa.GPIOHS11)
+        fm.register(NEXT, fm.fpioa.GPIOHS16)
+        cube_button.Limit = 1000  # 1s
+
+
     def __init__(self):
         self.home_last, self.next_last, self.back_last = 1, 1, 1
         self.last_time, self.bak_time = 0, 0
@@ -32,15 +35,14 @@ class cube_button:
         }
         self.pause_time = 0
 
-        fm.register(ENTER, fm.fpioa.GPIOHS10)
+        self.config()
+
         self.home_button = GPIO(GPIO.GPIOHS10, GPIO.IN, GPIO.PULL_UP)
         # if self.home_button.value() == 0:
         #     sys.exit()
 
-        fm.register(BACK, fm.fpioa.GPIOHS11)
         self.back_button = GPIO(GPIO.GPIOHS11, GPIO.IN, GPIO.PULL_UP)
 
-        fm.register(NEXT, fm.fpioa.GPIOHS16)
         self.next_button = GPIO(GPIO.GPIOHS16, GPIO.IN, GPIO.PULL_UP)
 
     def home(self):
@@ -86,11 +88,11 @@ class cube_button:
             self.cache['home'], self.home_last, self.bak_time = 1, 0, time.ticks_ms()
 
         # (monkey patch) long press home 0 - 1 - 2 - 0 - 1 - 2 - 0
-        if self.home_last == 0 and self.bak_time != 0 and time.ticks_ms() - self.bak_time > Limit:
+        if self.home_last == 0 and self.bak_time != 0 and time.ticks_ms() - self.bak_time > self.Limit:
             #print(tmp, self.home_last, self.pause_time, time.ticks_ms())
             self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms(
             ) - self.bak_time
-            self.pause_time = time.ticks_ms() + Limit
+            self.pause_time = time.ticks_ms() + self.Limit
 
         if tmp == 1 and self.home_last == 0 and self.pause_time < time.ticks_ms():
             self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms(
@@ -101,7 +103,7 @@ class cube_button:
         if tmp == 0 and self.back_last == 1:
             self.cache['back'], self.back_last, self.bak_time = 1, 0, time.ticks_ms()
 
-        if self.bak_time != 0 and time.ticks_ms() - self.bak_time > Limit:
+        if self.bak_time != 0 and time.ticks_ms() - self.bak_time > self.Limit:
             tmp = not tmp
 
         if tmp == 1 and self.back_last == 0:
@@ -113,7 +115,7 @@ class cube_button:
         if tmp == 0 and self.next_last == 1:
             self.cache['next'], self.next_last, self.bak_time = 1, 0, time.ticks_ms()
 
-        if self.bak_time != 0 and time.ticks_ms() - self.bak_time > Limit:
+        if self.bak_time != 0 and time.ticks_ms() - self.bak_time > self.Limit:
             tmp = not tmp
 
         if tmp == 1 and self.next_last == 0:
@@ -157,7 +159,7 @@ if __name__ == "__main__":
     tmp = cube_button()
     while True:
         time.sleep_ms(200)
-        tmp.event()
-        print(tmp.back(), tmp.home(), tmp.next())
-        #tmp.expand_event()
-        #print(tmp.back(), tmp.home(), tmp.next(), tmp.interval())
+        #tmp.event()
+        #print(tmp.back(), tmp.home(), tmp.next())
+        tmp.expand_event()
+        print(tmp.back(), tmp.home(), tmp.next(), tmp.interval())
