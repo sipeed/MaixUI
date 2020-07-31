@@ -40,8 +40,8 @@ while True:
     img = img.clear()
     x_shift = 0
     for i in range(hist_x_num):
-        hist_height = 240 if fft_amp[i] > 240 else fft_amp[i]
-        img = img.draw_rectangle((x_shift, 10, hist_width, hist_height), [255,255,255], 1,True)
+        hist_height = fft_amp[i]
+        img = img.draw_rectangle((x_shift, 0, hist_width, hist_height), [255,255,255], 1,True)
         #print((x_shift, 0, hist_width, hist_height))
         x_shift = x_shift + hist_width
     lcd.display(img)
