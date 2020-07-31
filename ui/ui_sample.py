@@ -11,9 +11,11 @@ import math
 import random
 
 try:
+    from lib.core import agent
     from ui.ui_canvas import ui
     from driver.button import cube_button
 except ImportError:
+    from core import agent
     from ui_canvas import ui
     from button import cube_button
 
@@ -23,17 +25,22 @@ class sample_page():
     index, case, samples = 0, None, []
     btn, replace = cube_button(), False
 
-    def add_sample(s):
-        sample_page.samples.insert(0, s)
-        sample_page.case = s
+    agent = agent()
 
-    def reload():
-        if sample_page.case:
-            sample_page.case.free()
-            sample_page.case = sample_page.samples[sample_page.index]
-            sample_page.case.load()
+    def init():
+        sample_page.agent.event(150, sample_page.key_event)
 
-    def sample_draw():
+    def next():
+        sample_page.index += 1
+        sample_page.index = sample_page.index % len(sample_page.samples)
+        sample_page.reload()
+
+    def back():
+        sample_page.index -= 1
+        sample_page.index = sample_page.index % len(sample_page.samples)
+        sample_page.reload()
+        
+    def key_event():
         sample_page.btn.event()
         sample_page.replace = False
 
@@ -47,6 +54,19 @@ class sample_page():
 
         if sample_page.replace:
             sample_page.reload()
+
+    def add_sample(s):
+        sample_page.samples.insert(0, s)
+        sample_page.case = s
+
+    def reload():
+        if sample_page.case:
+            sample_page.case.free()
+            sample_page.case = sample_page.samples[sample_page.index]
+            sample_page.case.load()
+
+    def sample_draw():
+        sample_page.agent.cycle()
 
         if sample_page.case:
             sample_page.case.work()
@@ -115,6 +135,7 @@ class sample_page():
         sample_page.add_sample(case1())
         sample_page.add_sample(case2())
 
+sample_page.init()
 
 if __name__ == "__main__":
 
