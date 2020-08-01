@@ -16,14 +16,11 @@ Match = [[(1, 0), (1, 0)], [(2, 1), None]] # 0 1 1 2 0
 
 class cube_button:
 
-    Limit = 1000  # 1s
-
     def config(self, ENTER=10, BACK=11, NEXT=16, Limit=1000):
         fm.register(ENTER, fm.fpioa.GPIOHS10)
         fm.register(BACK, fm.fpioa.GPIOHS11)
         fm.register(NEXT, fm.fpioa.GPIOHS16)
         cube_button.Limit = 1000  # 1s
-
 
     def __init__(self):
         self.home_last, self.next_last, self.back_last = 1, 1, 1
@@ -34,6 +31,7 @@ class cube_button:
             'back': 0,
         }
         self.pause_time = 0
+        self.enable = True
 
         self.config()
 
@@ -46,85 +44,96 @@ class cube_button:
         self.next_button = GPIO(GPIO.GPIOHS16, GPIO.IN, GPIO.PULL_UP)
 
     def home(self):
-        tmp, self.cache['home'] = self.cache['home'], 0
-        return tmp
+        if self.enable:
+            tmp, self.cache['home'] = self.cache['home'], 0
+            return tmp
+        return 0
 
     def next(self):
-        tmp, self.cache['next'] = self.cache['next'], 0
-        return tmp
+        if self.enable:
+            tmp, self.cache['next'] = self.cache['next'], 0
+            return tmp
+        return 0
 
     def back(self):
-        tmp, self.cache['back'] = self.cache['back'], 0
-        return tmp
+        if self.enable:
+            tmp, self.cache['back'] = self.cache['back'], 0
+            return tmp
+        return 0
 
     def interval(self):
-        tmp, self.last_time = self.last_time, 0
-        return tmp
+        if self.enable:
+            tmp, self.last_time = self.last_time, 0
+            return tmp
 
     def event(self):
-        self.bak_time = time.ticks_ms()
 
-        home_value = self.home_button.value()
+        if self.enable:
+        
+            self.bak_time = time.ticks_ms()
 
-        tmp = Match[home_value][self.home_last]
-        if tmp:
-            self.last_time = time.ticks_ms() - self.bak_time
-            self.cache['home'], self.home_last = tmp
+            home_value = self.home_button.value()
 
-        tmp = Match[self.back_button.value()][self.back_last]
-        if tmp:
-            self.last_time = time.ticks_ms() - self.bak_time
-            self.cache['back'], self.back_last = tmp
+            tmp = Match[home_value][self.home_last]
+            if tmp:
+                self.last_time = time.ticks_ms() - self.bak_time
+                self.cache['home'], self.home_last = tmp
 
-        tmp = Match[self.next_button.value()][self.next_last]
-        if tmp:
-            self.last_time = time.ticks_ms() - self.bak_time
-            self.cache['next'], self.next_last = tmp
+            tmp = Match[self.back_button.value()][self.back_last]
+            if tmp:
+                self.last_time = time.ticks_ms() - self.bak_time
+                self.cache['back'], self.back_last = tmp
+
+            tmp = Match[self.next_button.value()][self.next_last]
+            if tmp:
+                self.last_time = time.ticks_ms() - self.bak_time
+                self.cache['next'], self.next_last = tmp
 
     def expand_event(self):
 
-        tmp = self.home_button.value()
-        if tmp == 0 and self.home_last == 1 and self.pause_time < time.ticks_ms():
-            self.cache['home'], self.home_last, self.bak_time = 1, 0, time.ticks_ms()
+        if self.enable:
 
-        # (monkey patch) long press home 0 - 1 - 2 - 0 - 1 - 2 - 0
-        if self.home_last == 0 and self.bak_time != 0 and time.ticks_ms() - self.bak_time > self.Limit:
-            #print(tmp, self.home_last, self.pause_time, time.ticks_ms())
-            self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms(
-            ) - self.bak_time
-            self.pause_time = time.ticks_ms() + self.Limit
+            tmp = self.home_button.value()
+            if tmp == 0 and self.home_last == 1 and self.pause_time < time.ticks_ms():
+                self.cache['home'], self.home_last, self.bak_time = 1, 0, time.ticks_ms()
 
-        if tmp == 1 and self.home_last == 0 and self.pause_time < time.ticks_ms():
-            self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms(
-            ) - self.bak_time
+            # (monkey patch) long press home 0 - 1 - 2 - 0 - 1 - 2 - 0
+            if self.home_last == 0 and self.bak_time != 0 and time.ticks_ms() - self.bak_time > self.Limit:
+                #print(tmp, self.home_last, self.pause_time, time.ticks_ms())
+                self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms(
+                ) - self.bak_time
+                self.pause_time = time.ticks_ms() + self.Limit
 
-        tmp = self.back_button.value()
+            if tmp == 1 and self.home_last == 0 and self.pause_time < time.ticks_ms():
+                self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms(
+                ) - self.bak_time
 
-        if tmp == 0 and self.back_last == 1:
-            self.cache['back'], self.back_last, self.bak_time = 1, 0, time.ticks_ms()
+            tmp = self.back_button.value()
 
-        if self.bak_time != 0 and time.ticks_ms() - self.bak_time > self.Limit:
-            tmp = not tmp
+            if tmp == 0 and self.back_last == 1:
+                self.cache['back'], self.back_last, self.bak_time = 1, 0, time.ticks_ms()
 
-        if tmp == 1 and self.back_last == 0:
-            self.cache['back'], self.back_last, self.last_time = 2, 1, time.ticks_ms(
-            ) - self.bak_time
+            if self.bak_time != 0 and time.ticks_ms() - self.bak_time > self.Limit:
+                tmp = not tmp
 
-        tmp = self.next_button.value()
+            if tmp == 1 and self.back_last == 0:
+                self.cache['back'], self.back_last, self.last_time = 2, 1, time.ticks_ms(
+                ) - self.bak_time
 
-        if tmp == 0 and self.next_last == 1:
-            self.cache['next'], self.next_last, self.bak_time = 1, 0, time.ticks_ms()
+            tmp = self.next_button.value()
 
-        if self.bak_time != 0 and time.ticks_ms() - self.bak_time > self.Limit:
-            tmp = not tmp
+            if tmp == 0 and self.next_last == 1:
+                self.cache['next'], self.next_last, self.bak_time = 1, 0, time.ticks_ms()
 
-        if tmp == 1 and self.next_last == 0:
-            self.cache['next'], self.next_last, self.last_time = 2, 1, time.ticks_ms(
-            ) - self.bak_time
+            if self.bak_time != 0 and time.ticks_ms() - self.bak_time > self.Limit:
+                tmp = not tmp
+
+            if tmp == 1 and self.next_last == 0:
+                self.cache['next'], self.next_last, self.last_time = 2, 1, time.ticks_ms(
+                ) - self.bak_time
 
 
 PIR = 16
-
 
 class ttgo_button:
 
