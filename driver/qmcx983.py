@@ -5,9 +5,9 @@ from ustruct import unpack, unpack_from
 from array import array
 
 #I2C devices:[44, 118]
-i2c_bus = I2C(I2C.I2C0, freq=100*1000, scl=6, sda=7)
-i2c_devs_list = i2c_bus.scan()
-print("I2C devices:" + str(i2c_devs_list))
+# i2c_bus = I2C(I2C.I2C0, freq=100*1000, scl=6, sda=7)
+# i2c_devs_list = i2c_bus.scan()
+# print("I2C devices:" + str(i2c_devs_list))
 
 QMC6983_A1_D1       = 0
 QMC6983_E1          = 1
