@@ -40,6 +40,9 @@ Enjoy it! 🤡
 ![](./image/demo_03.gif)
 ![](./image/demo_04.gif)
 ![](./image/demo_05.gif)
+![](./image/demo_06.gif)
+![](./image/demo_07.gif)
+![](./image/demo_08.gif)
 
 ## Get-started
 
