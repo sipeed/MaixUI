@@ -606,6 +606,7 @@ if __name__ == "__main__":
 
         def __init__(self):
             self.is_load = False
+            self.isconnected = False
 
         def test_event(self):
             if self.get_image != None:
@@ -629,7 +630,7 @@ if __name__ == "__main__":
                         Report.isError = str(e)
                         print(e)
             except Exception as e:
-                Report.Msa301_Test = False
+                Report.Sensor_Test = False
                 Report.isError = str(e)
                 print(e)
 
@@ -638,7 +639,6 @@ if __name__ == "__main__":
                 sample_page.btn.enable = False
                 self.get_image = None
                 self.isError = None
-                self.isconnected = False
                 self.agent = agent()
                 self.agent.event(100, self.check)
                 self.agent.event(4000, self.test_event)
@@ -655,11 +655,11 @@ if __name__ == "__main__":
                 try:
                     self.get_image = sensor.snapshot()
                     ui.canvas.draw_image(self.get_image, 0, 0)
-                    ui.canvas.draw_string(30, 30, "Sensor Test", (127, 127, 255), scale=3)
-                    ui.canvas.draw_string(30, 70, "isconnected: %s" % (
-                        str)(self.isconnected), (255, 127, 0), scale=2)
                 except Exception as e:
                     print(e)
+            ui.canvas.draw_string(30, 30, "Sensor Test", (127, 127, 255), scale=3)
+            ui.canvas.draw_string(30, 70, "isconnected: %s" % (
+                str)(self.isconnected), (255, 127, 0), scale=2)
             if self.isError != None:
                 ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
                 sample_page.next()
@@ -702,6 +702,7 @@ if __name__ == "__main__":
                 self.state = 0
                 self.result = 0
                 self.fft_amp = None
+                self.es8374 = None
                 self.btn = cube_button()
                 self.btn.config(10, 11, 16)
                 self.agent = agent()
@@ -745,6 +746,8 @@ if __name__ == "__main__":
 
                     elif self.state == 1 and self.is_record == False:
                         self.is_record = True
+                        if self.es8374 != None:
+                            self.es8374.stop(0x02)
                         self.es8374 = ES8374(self.i2c)
                         self.i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
                         self.i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
@@ -801,8 +804,15 @@ if __name__ == "__main__":
     #Msa301_Test = False
     #Grove_Test = False
     #Spmod_Test = False
+    import time, gc
+    gc.collect()
+    if len(sample_page.samples) > 0:
+        sample_page.samples = []
+        gc.collect()
+        print('ram total : ' + str(gc.mem_free() / 1024) + ' kb')
 
-    sample_page.add_sample(Report())
+    sample_page.add_sample(Report()) # keep
+
     sample_page.add_sample(SpmodTest())
     sample_page.add_sample(GroveTest())
     sample_page.add_sample(Msa301Test())
@@ -810,7 +820,8 @@ if __name__ == "__main__":
     sample_page.add_sample(AudioTest())
     sample_page.add_sample(PowerTest())
     sample_page.add_sample(LedTest())
-    sample_page.add_sample(KeyTest())
+
+    sample_page.add_sample(KeyTest()) # keep
 
     @ui.warp_template(ui.blank_draw)
     @ui.warp_template(sample_page.sample_draw)
@@ -818,8 +829,6 @@ if __name__ == "__main__":
     def app_main():
         ui.display()
 
-    import time, gc
-    gc.collect()
     last = time.ticks_ms()
     while True:
         #app_main()
