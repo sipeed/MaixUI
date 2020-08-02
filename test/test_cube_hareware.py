@@ -20,7 +20,8 @@ from wdt import protect
 from led import cube_led
 from button import cube_button
 from pmu_axp173 import AXP173
-from es8374 import ES8374
+from sound import CubeAudio
+#from es8374 import ES8374
 from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
 from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
 from bme280 import BME280, BME280_I2CADDR
@@ -670,7 +671,6 @@ if __name__ == "__main__":
             self.is_load = False
             self.scl = scl
             self.sda = sda
-            #self.load()
             self.i2c = I2C(I2C.I2C1, freq=100*1000, scl=self.scl, sda=self.sda)
 
         def key_event(self):
@@ -702,20 +702,12 @@ if __name__ == "__main__":
                 self.state = 0
                 self.result = 0
                 self.fft_amp = None
-                self.es8374 = None
                 self.btn = cube_button()
                 self.btn.config(10, 11, 16)
                 self.agent = agent()
                 self.agent.event(150, self.key_event)
                 self.agent.event(500, self.check)
                 self.agent.event(6000, self.test_event)
-                fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
-                fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
-                fm.register(33,fm.fpioa.I2S0_WS, force=True)
-                fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
-                fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
-                fm.register(self.scl, fm.fpioa.I2C1_SCLK, force=True)
-                fm.register(self.sda, fm.fpioa.I2C1_SDA, force=True)
                 self.is_load = True
 
         def free(self):
@@ -727,32 +719,21 @@ if __name__ == "__main__":
         def check(self):
             try:
                 if self.isconnected == False:
-                    if ES8374._ES8374_I2CADDR_DEFAULT in self.i2c.scan():
-                        self.isconnected = True
+                    self.isconnected = CubeAudio.check()
                 else:
                     if self.state == 0 and self.is_play == False:
                         self.is_play = True
-                        self.es8374 = ES8374(self.i2c)
-                        self.i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
-                        self.i2s.channel_config(I2S.CHANNEL_2, I2S.TRANSMITTER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
-                        # init audio
-                        self.player = audio.Audio(path="/flash/one.wav")
-                        self.player.volume(80)
-                        # read audio info
-                        wav_info = self.player.play_process(self.i2s)
-                        print("wav file head information: ", wav_info)
-                        self.i2s.set_sample_rate(wav_info[1])
-                        print('loop to play audio')
-
+                        CubeAudio.i2c = self.i2c
+                        CubeAudio.ready()
+                        fm.register(19, fm.fpioa.I2S0_MCLK, force=True)
+                        fm.register(35, fm.fpioa.I2S0_SCLK, force=True)
+                        fm.register(33, fm.fpioa.I2S0_WS, force=True)
+                        fm.register(34, fm.fpioa.I2S0_IN_D0, force=True)
+                        fm.register(18, fm.fpioa.I2S0_OUT_D2, force=True)
                     elif self.state == 1 and self.is_record == False:
                         self.is_record = True
-                        if self.es8374 != None:
-                            self.es8374.stop(0x02)
-                        self.es8374 = ES8374(self.i2c)
-                        self.i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
-                        self.i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
-                        self.i2s.set_sample_rate(22050)
-
+                        CubeAudio.ready(True)
+                        CubeAudio.i2s.set_sample_rate(22050)
             except Exception as e:
                 Report.Audio_Test = False
                 Report.isError = str(e)
@@ -772,17 +753,11 @@ if __name__ == "__main__":
 
             if self.isconnected:
                 if self.state == 0 and self.is_play:
-                    ret = self.player.play()
-                    if ret == None or ret == 0:
-                        self.player.finish()
-                        # init audio
-                        self.player = audio.Audio(path="/flash/one.wav")
-                        self.player.volume(80)
-                        # read audio info
-                        wav_info = self.player.play_process(self.i2s)
-                        self.i2s.set_sample_rate(wav_info[1])
+                    if CubeAudio.event() == False:
+                        CubeAudio.load(os.getcwd() + "/one.wav", 80)
+                        #CubeAudio.i2s.set_sample_rate(22050)
                 elif self.state == 1 and self.is_record:
-                    tmp = self.i2s.record(1024)
+                    tmp = CubeAudio.i2s.record(1024)
                     fft_res = FFT.run(tmp.to_bytes(), 512)
                     fft_amp = FFT.amplitude(fft_res)
                     if fft_amp[50] > 100 and fft_amp[100] > 100:

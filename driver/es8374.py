@@ -208,11 +208,11 @@ class ES8374:
         self.i2c_addr = i2c_addr
 
         # dev_list = self.i2c_bus.scan()
-        # print("i2c devs_list:" + str(dev_list))
+        # # print("i2c devs_list:" + str(dev_list))
 
         self.clkdiv_cfg = ES8374_I2S_CLOCK()
         self.es8374_cfg = ES8374_CONFIG()
-        # print("self.es8374_cfg.es8374_mode:" + str(self.es8374_cfg.es8374_mode))
+        # # print("self.es8374_cfg.es8374_mode:" + str(self.es8374_cfg.es8374_mode))
         self.stop(self.es8374_cfg.es8374_mode)
         self.init_reg(self.es8374_cfg.i2s_iface.mode,
             ((ES_BITS_LENGTH._BIT_LENGTH_16BITS << 4) | self.es8374_cfg.i2s_iface.fmt),
@@ -233,7 +233,7 @@ class ES8374:
         self.setVoiceVolume(100)
         self._writeReg(0x1E, 0xA4)
 
-        # print("ES8374 |reg value: " + str(self._readREGAll()))
+        # # print("ES8374 |reg value: " + str(self._readREGAll()))
         # ---------------------
 
 
@@ -337,7 +337,7 @@ class ES8374:
 
             self.setVoiceMute(False)
 
-        print("mode is :%d \r\n" % mode)
+        # print("mode is :%d \r\n" % mode)
 
     def init_reg(self, ms_mode, fmt, cfg, out_channel, in_channel):
 
@@ -592,7 +592,7 @@ class ES8374:
     # set ADC DAC Volume
     def setADCDACVolume(self, mode, volume, dot):
         if ((volume < -96) or (volume>0)):
-            print("Warning: volume < -96! or > 0!")
+            # print("Warning: volume < -96! or > 0!")
             if (volume < -96):
                 volume = -96
             else:
@@ -657,7 +657,7 @@ class ES8374:
         reg = self._readReg(0x36)
         reg &= 0xdf
         reg = ( reg | (enable << 5))
-        print("SetVoiceMute[%s]:" % str(reg) )
+        # print("SetVoiceMute[%s]:" % str(reg) )
         self._writeReg(0x36, reg)
 
     # get voice mute
@@ -671,10 +671,10 @@ class ES8374:
             gain_n = 0
             gain_n = int(gain/3)
             reg = (gain_n | (gain_n<<4))
-            print("22H:0x%X" % reg)
+            # print("22H:0x%X" % reg)
             self._writeReg(0x22, reg) # MIC PGA
         else:
-            print("invalid micropython gain")
+            # print("invalid micropython gain")
 
     def setD2sePga(self, gain):
         if ((gain>D2SE_PGA._D2SE_PGA_GAIN_MIN) and (gain<D2SE_PGA._D2SE_PGA_GAIN_MAX)):
@@ -683,7 +683,7 @@ class ES8374:
             reg |= gain << 2
             self._writeReg(0x21, reg) # MIC PGA
         else:
-            print("invalid microphone gain!")
+            # print("invalid microphone gain!")
 
     def codecCtrlSate(self, mode, ctrl_state):
         mode_list = {
@@ -695,13 +695,13 @@ class ES8374:
         es_mode = mode_list.get(mode, None)
         if (es_mode == None):
             es_mode = ES_MODULE._ES_MODULE_DAC
-            print("Codec mode not support, default is decode mode\r\n")
+            # print("Codec mode not support, default is decode mode\r\n")
 
         if (ES_CTRL._ES8374_CTRL_STOP == ctrl_state):
             res = self.stop(es_mode)
         else:
             res = self.start(es_mode)
-            print("start default is decode mode:%d\r\n" % es_mode)
+            # print("start default is decode mode:%d\r\n" % es_mode)
 
 
 
@@ -732,7 +732,7 @@ if __name__ == "__main__":
         i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
 
         # record to wav
-        print('record to wav')
+        # print('record to wav')
         i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
         i2s.set_sample_rate(22050)
 
@@ -742,7 +742,7 @@ if __name__ == "__main__":
         for i in range(400):
             tmp = i2s.record(1024)
             if len(queue) > 0:
-                print(time.ticks())
+                # print(time.ticks())
                 ret = player.record(queue[0])
                 queue.pop(0)
             i2s.wait_record()
@@ -769,13 +769,13 @@ if __name__ == "__main__":
 
             # read audio info
             wav_info = player.play_process(i2s)
-            print("wav file head information: ", wav_info)
+            # print("wav file head information: ", wav_info)
             i2s.set_sample_rate(wav_info[1])
-            print('loop to play audio')
+            # print('loop to play audio')
             while True:
                 ret = player.play()
                 if ret == None:
-                    print("format error")
+                    # print("format error")
                     break
                 elif ret == 0:
                     break
@@ -789,7 +789,7 @@ if __name__ == "__main__":
         #while True:
             #tmp = i2s.record(1024)
             #if len(queue) > 0:
-                #print(time.ticks())
+                ## print(time.ticks())
                 ##i2s.play(queue[0])
                 #queue.pop(0)
             #i2s.wait_record()

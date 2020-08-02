@@ -60,6 +60,8 @@ class CubeAudio:
                 time.sleep_ms(20)
                 # CubeAudio.tim.stop()
                 CubeAudio.is_load = False
+            return True
+        return False
 
 if __name__ == "__main__":
 
