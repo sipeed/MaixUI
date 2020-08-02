@@ -87,6 +87,8 @@ if __name__ == "__main__":
             self.load()
 
         def load(self):
+            if Report.Key_Test:
+                sample_page.next()
             if self.is_load == False:
                 #print(case.load)
                 self.is_load = True
@@ -145,6 +147,8 @@ if __name__ == "__main__":
             #self.load()
 
         def load(self):
+            if Report.Led_Test:
+                sample_page.next()
             if self.is_load == False:
                 #print(case.load)
                 self.is_load = True
@@ -268,6 +272,8 @@ if __name__ == "__main__":
             sample_page.next()
 
         def load(self):
+            if Report.Power_Test:
+                sample_page.next()
             if self.is_load == False:
                 # i2c init()
                 sample_page.btn.enable = False
@@ -379,6 +385,8 @@ if __name__ == "__main__":
             sample_page.next()
 
         def load(self):
+            if Report.Grove_Test:
+                sample_page.next()
             if self.is_load == False:
                 # i2c init()
                 sample_page.btn.enable = False
@@ -448,6 +456,8 @@ if __name__ == "__main__":
             sample_page.next()
 
         def load(self):
+            if Report.Spmod_Test:
+                sample_page.next()
             if self.is_load == False:
                 # i2c init()
                 sample_page.btn.enable = False
@@ -545,6 +555,8 @@ if __name__ == "__main__":
             sample_page.next()
 
         def load(self):
+            if Report.Msa301_Test:
+                sample_page.next()
             if self.is_load == False:
                 # i2c init()
                 sample_page.btn.enable = False
@@ -636,13 +648,15 @@ if __name__ == "__main__":
                 print(e)
 
         def load(self):
+            if Report.Sensor_Test:
+                sample_page.next()
             if self.is_load == False:
                 sample_page.btn.enable = False
                 self.get_image = None
                 self.isError = None
                 self.agent = agent()
                 self.agent.event(100, self.check)
-                self.agent.event(4000, self.test_event)
+                self.agent.event(3000, self.test_event)
                 self.is_load = True
 
         def free(self):
@@ -690,6 +704,8 @@ if __name__ == "__main__":
             sample_page.next()
 
         def load(self):
+            if Report.Audio_Test:
+                sample_page.next()
             if self.is_load == False:
                 # i2c init()
                 sample_page.btn.enable = False
