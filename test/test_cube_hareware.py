@@ -371,11 +371,11 @@ if __name__ == "__main__":
 
     class GroveTest():
 
-        def __init__(self, scl=30, sda=31):
+        def __init__(self, scl=24, sda=25):
             self.is_load = False
             self.scl = scl
             self.sda = sda
-            self.i2c = I2C(I2C.I2C1, freq=100*1000, scl=self.scl, sda=self.sda)
+            self.i2c = I2C(I2C.I2C0, freq=100*1000, scl=self.scl, sda=self.sda)
             #fm.register(30, fm.fpioa.I2C1_SCLK, force=True)
             #fm.register(31, fm.fpioa.I2C1_SDA, force=True)
 
@@ -390,14 +390,14 @@ if __name__ == "__main__":
             if self.is_load == False:
                 # i2c init()
                 sample_page.btn.enable = False
-                fm.register(self.scl, fm.fpioa.I2C1_SCLK, force=True)
-                fm.register(self.sda, fm.fpioa.I2C1_SDA, force=True)
+                fm.register(self.scl, fm.fpioa.I2C0_SCLK, force=True)
+                fm.register(self.sda, fm.fpioa.I2C0_SDA, force=True)
                 self.isconnected = False
                 self.isError = None
                 self.work_info = []
                 self.work_data = None
                 self.agent = agent()
-                self.agent.event(500, self.check)
+                self.agent.event(250, self.check)
                 self.agent.event(3000, self.test_event)
                 self.is_load = True
 
@@ -410,6 +410,7 @@ if __name__ == "__main__":
         def check(self):
             try:
                 if self.isconnected == False:
+                    # print(self.i2c.scan())
                     if SHT3x_ADDR in self.i2c.scan():
                         self.sht3x = SHT3x(self.i2c, SHT3x_ADDR)
                         self.isconnected = True
@@ -430,12 +431,12 @@ if __name__ == "__main__":
             self.agent.parallel_cycle()
 
             ui.canvas.draw_string(30, 10, "Grove Test SHT3X", (0, 255, 127), scale=2)
-            ui.canvas.draw_string(30, 40, "isconnected: %s" % (
+            ui.canvas.draw_string(30, 50, "isconnected: %s" % (
                 str)(self.isconnected), (255, 127, 0), scale=2)
             if self.isconnected:
                 for i in range(len(self.work_info)):
                     ui.canvas.draw_string(
-                        20, 20*i + 60, "{0}".format(str(self.work_info[i])), mono_space=1)
+                        20, 20*i + 90, "{0}".format(str(self.work_info[i])), scale=2)
             if self.isError != None:
                 ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
                 sample_page.next()
@@ -446,12 +447,12 @@ if __name__ == "__main__":
             self.is_load = False
             self.scl = scl
             self.sda = sda
-            self.i2c = I2C(I2C.I2C1, freq=100*1000, scl=self.scl, sda=self.sda)
-            #fm.register(30, fm.fpioa.I2C1_SCLK, force=True)
-            #fm.register(31, fm.fpioa.I2C1_SDA, force=True)
+            self.i2c = I2C(I2C.I2C0, freq=100*1000, scl=self.scl, sda=self.sda)
+            #fm.register(30, fm.fpioa.I2C0_SCLK, force=True)
+            #fm.register(31, fm.fpioa.I2C0_SDA, force=True)
 
         def test_event(self):
-            if self.isconnected and self.config_bme and self.config_qmcx and self.cache_bme[0] != 0  and self.config_qmcx[0] != 0:
+            if self.isconnected and self.config_bme and self.config_qmcx and self.cache_bme[0] != 0  and self.cache_qmcx[0] != 0:
                 Report.Spmod_Test = True
             sample_page.next()
 
@@ -461,8 +462,8 @@ if __name__ == "__main__":
             if self.is_load == False:
                 # i2c init()
                 sample_page.btn.enable = False
-                fm.register(self.scl, fm.fpioa.I2C1_SCLK, force=True)
-                fm.register(self.sda, fm.fpioa.I2C1_SDA, force=True)
+                fm.register(self.scl, fm.fpioa.I2C0_SCLK, force=True)
+                fm.register(self.sda, fm.fpioa.I2C0_SDA, force=True)
                 self.isconnected = False
                 self.isError = None
                 self.config_bme = False
@@ -482,6 +483,7 @@ if __name__ == "__main__":
 
         def check(self):
             try:
+                # print(self.isconnected)
                 if self.isconnected == False:
                     if self.config_bme == False:
                         if BME280_I2CADDR in self.i2c.scan():
@@ -491,11 +493,15 @@ if __name__ == "__main__":
                         if QMCX983_I2CADDR in self.i2c.scan():
                             self.qmcx = QMCX983(i2c=self.i2c)
                             self.config_qmcx = True
+                    if self.config_bme and self.config_qmcx:
+                        self.isconnected = True
                 else:
                     if self.config_bme:
                         self.cache_bme = self.bme.read_compensated_data()
+                        #print('self.cache_bme', self.cache_bme)
                     if self.config_qmcx:
                         self.cache_qmcx = self.qmcx.read_xyz()
+                        #print('self.cache_qmcx', self.cache_qmcx)
             except Exception as e:
                 Report.Spmod_Test = False
                 Report.isError = str(e)
@@ -826,8 +832,9 @@ if __name__ == "__main__":
         #import time
         #last = time.ticks_ms()
         while True:
-            # app_main()
-            # protect.keep()
+            app_main()
+            protect.keep()
+            continue
             try:
                 #print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                 #last = time.ticks_ms()
