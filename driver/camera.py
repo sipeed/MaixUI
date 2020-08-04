@@ -34,6 +34,7 @@ class obj:
 if __name__ == "__main__":
 
     import KPU as kpu
+    import gc
 
     kpu.memtest()
 
