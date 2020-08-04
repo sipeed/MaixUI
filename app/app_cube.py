@@ -5,7 +5,7 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import time
+import time, gc
 
 try:
     from core import agent
@@ -59,12 +59,15 @@ class app:
 
     # @ui.warp_template(ui.bg_in_draw) # ui_3d_launcher need remove
     @ui.warp_template(launcher.draw)
+    #@ui.warp_template(taskbar.mem_draw)
     @ui.warp_template(taskbar.battery_draw)
     # @ui.warp_template(taskbar.mem_draw)
     def draw_launcher():
         ui.display()
 
+    @ui.warp_template(CubeAudio.event)
     @ui.warp_template(ui.anime_draw)
+    @ui.warp_template(CubeAudio.event)
     @ui.warp_template(taskbar.mem_draw)
     # @ui.warp_template(system_info.info_draw)
     def draw_pages():
@@ -110,12 +113,14 @@ class app:
             pass
 
         elif selected == 1:
+            CubeAudio.load(os.getcwd() + "/res/alarm.wav", 100)
             app.current = pages()
         elif selected == 2:
             pass
             #app.layer -= 1 # return last layer
             #raise Exception("Settings Unrealized.")
         elif selected == 3:
+            CubeAudio.load(os.getcwd() + "/res/one.wav", 100)
             sample_page.add_sample(sample_msa301())
             sample_page.add_sample(sample_spmod_test())
             sample_page.add_sample(sample_shtxx())
@@ -141,6 +146,7 @@ class app:
         cube_led.g.value(rgb & 0b010)
         cube_led.b.value(rgb & 0b100)
 
+    @ui.warp_template(ui.blank_draw)
     @ui.warp_template(ui.grey_draw)
     @catch
     def draw():
@@ -165,16 +171,15 @@ class app:
         if app.btn.next() == 1:
             app.rgb = (app.rgb + 1) % 8
             app.rgb_change(app.rgb)
-            CubeAudio.load(os.getcwd() + "/res/one.wav", 100)
 
         if app.btn.back() == 1:
             app.rgb = (app.rgb - 1) % 8
             app.rgb_change(app.rgb)
-            CubeAudio.load(os.getcwd() + "/res/one.wav", 100)
 
         if app.layer == 0:
             app.draw_load()
         elif app.layer == 1:
+            gc.collect()
             app.draw_launcher()
         elif app.layer == 2:
             app.exec_application()
@@ -191,7 +196,7 @@ class app:
                 try:
                     #print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                     #last = time.ticks_ms()
-                    app.ctrl.parallel_cycle()
+                    app.ctrl.cycle()
                     protect.keep()
                     #time.sleep(0.1)
                 except KeyboardInterrupt:
@@ -204,5 +209,6 @@ class app:
 
 
 if __name__ == "__main__":
+    gc.collect()
     print_mem_free()
     app.run()

@@ -68,7 +68,7 @@ class sys_info:
       # y += 16
       img.draw_string(x, y, "FirmwareVersion:", (255, 0, 0))
       y += 16
-      img.draw_string(x, y, self.system_uname.version[:35], (0, 255, 0))
+      img.draw_string(x, y, self.system_uname.version[:34], (0, 255, 0))
       y += 20
       #img.draw_string(x, y, "-----------------------------", (255, 255, 255))
       # y += 16
@@ -112,12 +112,16 @@ if __name__ == "__main__":
     tmp = pages()
 
     @ui.warp_template(ui.blank_draw)
-    @ui.warp_template(ui.bg_in_draw)
-    @ui.warp_template(ui.anime_in_draw)
+    @ui.warp_template(ui.grey_draw)
+    #@ui.warp_template(ui.bg_in_draw)
+    @ui.warp_template(ui.anime_draw)
     @ui.warp_template(tmp.draw)
     def unit_test():
+      print('1 display : ' + str(gc.mem_free() / 1024) + ' kb')
       ui.display()
+      print('2 display : ' + str(gc.mem_free() / 1024) + ' kb')
 
     import time
     while True:
+        print('while True : ' + str(gc.mem_free() / 1024) + ' kb')
         unit_test()
