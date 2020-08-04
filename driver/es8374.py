@@ -674,6 +674,7 @@ class ES8374:
             # print("22H:0x%X" % reg)
             self._writeReg(0x22, reg) # MIC PGA
         else:
+            pass
             # print("invalid micropython gain")
 
     def setD2sePga(self, gain):
@@ -683,6 +684,7 @@ class ES8374:
             reg |= gain << 2
             self._writeReg(0x21, reg) # MIC PGA
         else:
+            pass
             # print("invalid microphone gain!")
 
     def codecCtrlSate(self, mode, ctrl_state):
