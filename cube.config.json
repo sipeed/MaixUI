@@ -4,10 +4,6 @@
         "height": 240,
         "width": 240,
         "invert": 1,
-        "offset_h1": 0,
-        "offset_w1": 0,
-        "offset_h2": 0,
-        "offset_w2": 0,
         "dir": 96
     },
     "freq_cpu": 416000000,

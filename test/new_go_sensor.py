@@ -1,3 +1,12 @@
+# Hello World Example
+#
+# Welcome to the MaixPy IDE!
+# 1. Conenct board to computer
+# 2. Select board at the top of MaixPy IDE: `tools->Select Board`
+# 3. Click the connect buttion below to connect board
+# 4. Click on the green run arrow button below to run the script!
+
+import sensor, image, time, lcd
 # -*- coding: UTF-8 -*-
 # Untitled - By: Echo - 周五 4月 2 2020
 # start of pmu_axp173.py
@@ -39,15 +48,20 @@ print(i2cDev.scan())
 axp173 = AXP173()
 axp173.writeREG(0x27, 0x20)
 axp173.writeREG(0x28, 0x0C)
-fm.register(44, fm.fpioa.GPIOHS3)
-led_r = GPIO(GPIO.GPIOHS3, GPIO.OUT)
-led_r.value(0)
 
-sensor.reset()
-sensor.set_pixformat(sensor.RGB565)
-sensor.set_framesize(sensor.QVGA)
-#sensor.skip_frames(time = 2000)
+lcd.init(freq=20000000)
+
+sensor.reset(dual_buff=True)                      # Reset and initialize the sensor. It will
+                                    # run automatically, call sensor.run(0) to stop
+sensor.set_pixformat(sensor.YUV422) # Set pixel format to RGB565 (or GRAYSCALE)
+sensor.set_framesize(sensor.VGA)   # Set frame size to QVGA (320x240)
+
+sensor.skip_frames(time = 3000)     # Wait for settings take effect.
+clock = time.clock()                # Create a clock object to track the FPS.
 
 while(True):
-    img = sensor.snapshot()
-    lcd.display(img)
+    clock.tick()                    # Update the FPS clock.
+    img = sensor.snapshot()         # Take a picture and return the image.
+    lcd.display(img)                # Display on LCD
+    print(clock.fps())              # Note: MaixPy's Cam runs about half as fast when connected
+                                    # to the IDE. The FPS should increase once disconnected.
