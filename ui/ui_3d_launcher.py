@@ -38,9 +38,7 @@ class icon:
       self.checked(img, color, x=x, y=y)
     try:
       tmp = img.resize(int(img.width() * scale), int(img.height() * scale))
-
       ui.canvas.draw_image(tmp, x, y, alpha=int(alpha))  # 4ms
-
       del tmp
     except MemoryError as e:
       print('resize uncertain', (int(img.width() * scale), int(img.height() * scale)))
@@ -75,8 +73,8 @@ class launcher:
     elif launcher.btn.next() == 1:
         if launcher.goal == 0:
             launcher.goal = +30
-    elif launcher.btn.home() == 2:
-        print('start', launcher.app_select)
+    # elif launcher.btn.home() == 2:
+    #     print('start', launcher.app_select)
 
         # ui.canvas.draw_string(15, 120, '(%s)' % launcher.app_sets[launcher.app_select])
 
