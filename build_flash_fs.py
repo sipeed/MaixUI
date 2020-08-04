@@ -33,7 +33,7 @@ def extract_file_by_suffix(source_dir='/', exclude=[], goal_dir='result\\', file
 
 if __name__ == "__main__":
     all_mkdir('./fs')
-    extract_file_by_suffix(source_dir='./', exclude=['./app', './test', './fs', 'main.py', 'settings.json', './build_flash_fs.py'], goal_dir='fs/', file_set=['.py', '.json'])
+    extract_file_by_suffix(source_dir='./', exclude=['./app', './test', './fs', 'main.py', 'settings.json', './build_flash_fs.py', 'cube.config.json', 'amigo.config.json'], goal_dir='fs/', file_set=['.py', '.json'])
     # build flash fs
     shutil.copyfile('./app/app_cube.py', './fs/main.py')
     # created main.py
