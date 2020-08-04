@@ -42,6 +42,11 @@ class icon:
       del tmp
     except MemoryError as e:
       print('resize uncertain', (int(img.width() * scale), int(img.height() * scale)))
+      try:
+        ui.canvas.draw_image(img, x, y, alpha=int(alpha))  # 4ms
+      except MemoryError as e:
+        print('resize fail')
+        pass
 
   def title(self, string, color=(255, 255, 255)):
     ui.canvas.draw_string(self.x, self.y, string)

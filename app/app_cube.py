@@ -113,7 +113,6 @@ class app:
             pass
 
         elif selected == 1:
-            CubeAudio.load(os.getcwd() + "/res/alarm.wav", 100)
             app.current = pages()
         elif selected == 2:
             pass
@@ -163,6 +162,8 @@ class app:
             elif app.layer == 2:
                 if app.btn.interval() > 1000: # long press
                     app.layer -= 1
+                    if launcher.app_select == 1:
+                        ui.anime = None # Clear
                 # application return launcher
             else:
                 app.layer += 1
@@ -171,10 +172,16 @@ class app:
         if app.btn.next() == 1:
             app.rgb = (app.rgb + 1) % 8
             app.rgb_change(app.rgb)
+            if launcher.app_select == 1:
+                CubeAudio.load(os.getcwd() + "/res/jump.wav", 100)
+
 
         if app.btn.back() == 1:
             app.rgb = (app.rgb - 1) % 8
             app.rgb_change(app.rgb)
+            if launcher.app_select == 1:
+                CubeAudio.load(os.getcwd() + "/res/alarm.wav", 100)
+
 
         if app.layer == 0:
             app.draw_load()
