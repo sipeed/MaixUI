@@ -12,15 +12,10 @@ class cube_led:
         fm.register(b, fm.fpioa.GPIOHS14)
         fm.register(w, fm.fpioa.GPIOHS3)
 
-        cube_led.r = GPIO(GPIO.GPIOHS13, GPIO.OUT)
-        cube_led.g = GPIO(GPIO.GPIOHS12, GPIO.OUT)
-        cube_led.b = GPIO(GPIO.GPIOHS14, GPIO.OUT)
-        cube_led.w = GPIO(GPIO.GPIOHS3, GPIO.OUT)
-
-        cube_led.r.value(1)
-        cube_led.g.value(1)
-        cube_led.b.value(1)
-        cube_led.w.value(1)
+        cube_led.r = GPIO(GPIO.GPIOHS13, GPIO.OUT, value=1)
+        cube_led.g = GPIO(GPIO.GPIOHS12, GPIO.OUT, value=1)
+        cube_led.b = GPIO(GPIO.GPIOHS14, GPIO.OUT, value=1)
+        cube_led.w = GPIO(GPIO.GPIOHS3, GPIO.OUT, value=1)
 
     def unit_test():
         import time
@@ -37,9 +32,10 @@ class cube_led:
         time.sleep(1)
         cube_led.w.value(1)
 
-cube_led.init()
+# cube_led.init() # cube
+cube_led.init(15, 14, 17, 32) # amigo
 
 if __name__ == "__main__":
-
-    cube_led.unit_test()
+    while True:
+        cube_led.unit_test()
 

@@ -638,7 +638,8 @@ class MSA301:  # pylint: disable=too-many-instance-attributes
 
 if __name__ == "__main__":
     from machine import I2C
-    i2c = I2C(I2C.I2C1, freq=100*1000, sda=31, scl=30)
+     i2c = I2C(I2C.I2C1, freq=100*1000, sda=31, scl=30) # cube
+    #i2c = I2C(I2C.I2C1, freq=100*1000, sda=27, scl=24) # amigo
     dev_list = i2c.scan()
     print(_MSA301_I2CADDR_DEFAULT in dev_list)
     accel = MSA301(i2c)

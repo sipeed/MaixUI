@@ -60,9 +60,9 @@ import lcd, image
 #rst.value(1)
 #time.sleep_ms(100)
 
-lcd.init(type=1, width=480, height=320, freq=20000000)
+lcd.init()
 #lcd.direction(0xA8)#修改颜色模式
-lcd.direction(0xe8)#修改颜色模式
+#lcd.direction(0xe8)#修改颜色模式
 
 i2c = I2C(I2C.I2C0, freq=100*1000, scl=24, sda=27)
 print("scan...")
@@ -83,7 +83,8 @@ data = 0
 data_buf = 0
 x = 0
 y = 0
-img = image.Image(size=(480,320))
+img = image.Image(size=(lcd.width(), lcd.height()))
+img.draw_rectangle(0,   0,  lcd.width(),lcd.height(), fill=True, color=(255, 255, 255))
 img.draw_rectangle(0,   0,  10, 80, fill=True, color=lcd.RED)
 img.draw_rectangle(60,  0,  10, 160, fill=True, color=lcd.GREEN)
 img.draw_rectangle(120, 0,  10, 240, fill=True, color=lcd.BLUE)
@@ -92,7 +93,7 @@ lcd.display(img)
 
 lcd.draw_string(lcd.width()//2-68,lcd.height()//2-24, "Welcome to MaixPy", lcd.WHITE, lcd.RED)
 while 1:
-    #time.sleep_ms(10)
+    time.sleep_ms(10)
     data = ft6x36_read_reg(0x02, 1)
     #print("reg:" + str(data))
     if (data[0] == 0x1):

@@ -727,9 +727,12 @@ if __name__ == "__main__":
     fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
     fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
 
+    i2c = I2C(I2C.I2C1, freq=100*1000, sda=31, scl=30)
+    # i2c = I2C(I2C.I2C1, freq=100*1000, sda=27, scl=24) # amigo
+
     while True:
 
-        es8374_dev = ES8374()
+        es8374_dev = ES8374(i2c)
 
         i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
 
@@ -753,7 +756,7 @@ if __name__ == "__main__":
 
         del i2s, player
 
-        es8374_dev = ES8374()
+        es8374_dev = ES8374(i2c)
 
         # init i2s(i2s0)
         i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)

@@ -69,7 +69,7 @@ class cube_button:
     def event(self):
 
         if self.enable:
-        
+
             self.bak_time = time.ticks_ms()
 
             home_value = self.home_button.value()
@@ -166,6 +166,8 @@ if __name__ == "__main__":
     #print(tmp.home())
 
     tmp = cube_button()
+    #tmp.config(10, 11, 16) # cube
+    tmp.config(23, 20, 31) # amigo
     while True:
         time.sleep_ms(200)
         #tmp.event()
