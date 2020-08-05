@@ -315,7 +315,8 @@ class AXP173:
 
 if __name__ == "__main__":
     import time
-    tmp = I2C(I2C.I2C1, freq=100*1000, scl=30, sda=31)
+    # tmp = I2C(I2C.I2C1, freq=100*1000, scl=30, sda=31)
+    tmp = I2C(I2C.I2C1, freq=100*1000, scl=24, sda=27)
     axp173 = AXP173(tmp)
     axp173.enable_adc(True)
     # 默认充电限制在 4.2V, 190mA 档位
@@ -324,6 +325,7 @@ if __name__ == "__main__":
 
     from ui_canvas import ui
 
+    ui.height, ui.weight = int(lcd.width()), int(lcd.height() / 2)
     @ui.warp_template(ui.blank_draw)
     def test_pmu_axp173_draw():
         global axp173
@@ -369,14 +371,17 @@ if __name__ == "__main__":
 
         # 检测 USB 是否连接
         if axp173.is_usb_plugged_in() == 1:
-            tmp.append("Cube USB plugged ....")
+            tmp.append("USB plugged ....")
 
         else:
             tmp.append("USB is not plugged in")
 
+
         for i in range(len(tmp)):
+            print(tmp[i])
             ui.canvas.draw_string(
-                20, 20*i, "{0}".format(str(tmp[i])), mono_space=1)
+                20, 20 + 20*i, "{0}".format(str(tmp[i])), mono_space=1)
+
         ui.display()
 
     import time
