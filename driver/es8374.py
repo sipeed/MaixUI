@@ -721,40 +721,78 @@ if __name__ == "__main__":
     from Maix import I2S, GPIO
     import audio, utime
 
-    fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
-    fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
-    fm.register(33,fm.fpioa.I2S0_WS, force=True)
-    fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
-    fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
+    # cube
+    #fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
+    #fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
+    #fm.register(33,fm.fpioa.I2S0_WS, force=True)
+    #fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
+    #fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
 
-    i2c = I2C(I2C.I2C1, freq=100*1000, sda=31, scl=30)
-    # i2c = I2C(I2C.I2C1, freq=100*1000, sda=27, scl=24) # amigo
+    # amigo
+    fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
+    fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
+    fm.register(18,fm.fpioa.I2S0_WS, force=True)
+    fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
+    fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
+
+    #i2c = I2C(I2C.I2C1, freq=100*1000, sda=31, scl=30)
+    i2c = I2C(I2C.I2C1, freq=600*1000, sda=27, scl=24) # amigo
+
+    from Maix import GPIO, I2S, FFT
 
     while True:
 
+        #es8374_dev = ES8374(i2c)
+
+        #i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
+
+        ## record to wav
+        ## print('record to wav')
+        #i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.RIGHT_JUSTIFYING_MODE)
+        #i2s.set_sample_rate(22050)
+
+        ## init audio
+        #player = audio.Audio(path="/sd/record_2.wav", is_create=True, samplerate=22050)
+        #queue = []
+        #for i in range(400):
+            #tmp = i2s.record(1024)
+            #if len(queue) > 0:
+                #print(time.ticks())
+                #ret = player.record(queue[0])
+                #queue.pop(0)
+            #i2s.wait_record()
+            #queue.append(tmp)
+        #player.finish()
+
+        #del i2s, player
+
         es8374_dev = ES8374(i2c)
 
+        # init i2s(i2s0)
         i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
 
-        # record to wav
-        # print('record to wav')
+        # config i2s according to audio info # STANDARD_MODE LEFT_JUSTIFYING_MODE RIGHT_JUSTIFYING_MODE
         i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
+
         i2s.set_sample_rate(22050)
 
-        # init audio
-        player = audio.Audio(path="/sd/record_2.wav", is_create=True, samplerate=22050)
-        queue = []
-        for i in range(400):
-            tmp = i2s.record(1024)
-            if len(queue) > 0:
-                # print(time.ticks())
-                ret = player.record(queue[0])
-                queue.pop(0)
-            i2s.wait_record()
-            queue.append(tmp)
-        player.finish()
-
-        del i2s, player
+        img = image.Image(size=(240, 240))
+        hist_width = 1 #changeable
+        x_shift = 0
+        while True:
+            audio = i2s.record(1024)
+            fft_res = FFT.run(audio.to_bytes(), 512)
+            fft_amp = FFT.amplitude(fft_res)
+            #print(fft_amp)
+            img = img.clear()
+            x_shift = 0
+            for i in range(240):
+                hist_height = fft_amp[i]
+                img = img.draw_rectangle((x_shift, 0, 1, hist_height), [255,255,255], 1, True)
+                #print((x_shift, 0, 1, hist_height))
+                x_shift = x_shift + 1
+            lcd.display(img)
+            fft_amp.clear()
 
         es8374_dev = ES8374(i2c)
 
@@ -769,7 +807,7 @@ if __name__ == "__main__":
             time.sleep_ms(10)
 
             # init audio
-            player = audio.Audio(path="/sd/record_2.wav")
+            player = audio.Audio(path="/sd/ido.wav")
             player.volume(50)
 
             # read audio info
