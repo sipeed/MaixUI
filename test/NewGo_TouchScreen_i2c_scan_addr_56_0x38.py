@@ -60,54 +60,56 @@ import lcd, image
 #rst.value(1)
 #time.sleep_ms(100)
 
-lcd.init()
-#lcd.direction(0xA8)#修改颜色模式
-#lcd.direction(0xe8)#修改颜色模式
+try:
 
-i2c = I2C(I2C.I2C0, freq=100*1000, scl=24, sda=27)
-print("scan...")
-devices = i2c.scan()
-print(devices)
-print("------")
+    lcd.init()
+    #lcd.direction(0xA8)#修改颜色模式
+    #lcd.direction(0xe8)#修改颜色模式
 
-def ft6x36_write_reg(reg_addr, buf):
-    i2c.writeto_mem(0x38, reg_addr, buf, mem_size=8)
+    i2c = I2C(I2C.I2C0, freq=100*1000, scl=24, sda=27)
+    print("scan...")
+    devices = i2c.scan()
+    print(devices)
+    print("------")
 
-def ft6x36_read_reg(reg_addr, buf_len):
-    return i2c.readfrom_mem(0x38, reg_addr, buf_len, mem_size=8)
+    def ft6x36_write_reg(reg_addr, buf):
+        i2c.writeto_mem(0x38, reg_addr, buf, mem_size=8)
 
-ft6x36_write_reg(0x00, 0x0)
-ft6x36_write_reg(0x80, 0xC)
-ft6x36_write_reg(0x88, 0xC)
-data = 0
-data_buf = 0
-x = 0
-y = 0
-img = image.Image(size=(lcd.width(), lcd.height()))
-img.draw_rectangle(0,   0,  lcd.width(),lcd.height(), fill=True, color=(255, 255, 255))
-img.draw_rectangle(0,   0,  10, 80, fill=True, color=lcd.RED)
-img.draw_rectangle(60,  0,  10, 160, fill=True, color=lcd.GREEN)
-img.draw_rectangle(120, 0,  10, 240, fill=True, color=lcd.BLUE)
-print("lcd[{}:{}]".format(lcd.width(),lcd.height()))
-lcd.display(img)
+    def ft6x36_read_reg(reg_addr, buf_len):
+        return i2c.readfrom_mem(0x38, reg_addr, buf_len, mem_size=8)
 
-lcd.draw_string(lcd.width()//2-68,lcd.height()//2-24, "Welcome to MaixPy", lcd.WHITE, lcd.RED)
-while 1:
-    time.sleep_ms(10)
-    data = ft6x36_read_reg(0x02, 1)
-    #print("reg:" + str(data))
-    if (data[0] == 0x1):
-        data_buf =  ft6x36_read_reg(0x03, 4)
-        y = ((data_buf[0]&0x0f)<<8) | (data_buf[1])
-        x = ((data_buf[2]&0x0f)<<8) | (data_buf[3])
-        if ((data_buf[0]&0xc0) == 0x80):
-            #print("point[{}:{}]".format(x,y))
-            print("point[({},{}):({},{})]".format(x,y,  lcd.width()-x,lcd.height()-y))
-            img.draw_rectangle( lcd.width()-x-20,lcd.height()-y-20, 40, 40, fill=True, color=(0x00, 0x00, 0xff))
+    ft6x36_write_reg(0x00, 0x0)
+    ft6x36_write_reg(0x80, 0xC)
+    ft6x36_write_reg(0x88, 0xC)
+    data = 0
+    data_buf = 0
+    x = 0
+    y = 0
+    img = image.Image(size=(lcd.width(), lcd.height()))
+    img.draw_rectangle(0,   0,  lcd.width(),lcd.height(), fill=True, color=(255, 255, 255))
+    img.draw_rectangle(0,   0,  10, 80, fill=True, color=lcd.RED)
+    img.draw_rectangle(60,  0,  10, 160, fill=True, color=lcd.GREEN)
+    img.draw_rectangle(120, 0,  10, 240, fill=True, color=lcd.BLUE)
+    print("lcd[{}:{}]".format(lcd.width(),lcd.height()))
+    lcd.display(img)
+
+    lcd.draw_string(lcd.width()//2-68,lcd.height()//2-24, "Welcome to MaixPy", lcd.WHITE, lcd.RED)
+    while 1:
+        #time.sleep_ms(10)
+        data = ft6x36_read_reg(0x02, 1)
+        #print("reg:" + str(data))
+        #if sta & 0x0f: # 读取触摸点的状态
+        if (data[0] == 0x1): # 读取触摸点 1 的状态
+            data_buf =  ft6x36_read_reg(0x03, 4)
+            x = ((data_buf[0]&0x0f)<<8) | (data_buf[1])
+            y = ((data_buf[2]&0x0f)<<8) | (data_buf[3])
+            #if ((data_buf[0]&0xc0) == 0x80): # 松开
+            print("point[{}:{}]".format(x,y))
+            #img.draw_rectangle(x + 1, y + 1, x, y, fill=True, color=(0x00, 0x00, 0xff))
+            img.draw_circle(x, y, 25, fill=True, color=(0x00, 0x00, 0xff))
             lcd.display(img)
-            if (x<=40 and y<=40):
+            if (x<=20 and y<=20):
                 img.clear()
 
-
-
-
+finally:
+    del img
