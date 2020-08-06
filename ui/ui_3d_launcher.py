@@ -117,8 +117,11 @@ class launcher:
 
     launcher.pos = launcher.pos % 120 # lock pos
 
-    ui.canvas.draw_ellipse(130, 150, 80, 30, -10, color=(
-                      150 - launcher.goal * 5, 150 - launcher.goal * 5, 150 - launcher.goal * 5), thickness=2, fill=False)
+    value = (launcher.pos % 30)
+
+    color = (100 + 5 *value, 100 + 5 *value, 100 + 5 * value)
+    #print(color)
+    ui.canvas.draw_ellipse(130, 150, 90 + (value % 20 - 10), 40 + (value % 20 - 10), -10, color=color, thickness=2 + value % 5, fill=False)
     gc.collect()
     launcher.load(launcher.pos, 0)
     launcher.load(launcher.pos - 30, 1)
