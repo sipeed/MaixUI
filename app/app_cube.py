@@ -192,6 +192,7 @@ class app:
             app.exec_application()
 
     def run():
+        cube_led.init(13, 12, 14, 32)
         CubeAudio.ready()
         #app.ctrl.event(100, lambda *args: time.sleep(1))
         #app.ctrl.event(10, app.btn.event)

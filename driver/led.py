@@ -32,10 +32,10 @@ class cube_led:
         time.sleep(1)
         cube_led.w.value(1)
 
-# cube_led.init() # cube
-cube_led.init(15, 14, 17, 32) # amigo
-
 if __name__ == "__main__":
+    cube_led.init(13, 12, 14, 32) # cube
+    # cube_led.init(15, 14, 17, 32) # amigo
+
     while True:
         cube_led.unit_test()
 
