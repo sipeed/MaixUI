@@ -743,9 +743,6 @@ if __name__ == "__main__":
     #fm.register(30,fm.fpioa.I2C1_SCLK, force=True)
     #fm.register(31,fm.fpioa.I2C1_SDA, force=True)
 
-    fm.register(24,fm.fpioa.I2C1_SCLK, force=True)
-    fm.register(27,fm.fpioa.I2C1_SDA, force=True)
-
     while True:
         #time.sleep_ms(100)
 
@@ -790,11 +787,14 @@ if __name__ == "__main__":
 
         #dev.stop(ES_MODULE._ES_MODULE_DAC)
 
+        fm.register(24,fm.fpioa.I2C1_SCLK, force=True)
+        fm.register(27,fm.fpioa.I2C1_SDA, force=True)
+
         time.sleep_ms(100)
 
         dev = ES8374(i2c)
 
-        dev.setVoiceVolume(100)
+        dev.setVoiceVolume(80)
 
         dev.start(ES_MODULE._ES_MODULE_ADC_DAC)
 
@@ -822,8 +822,8 @@ if __name__ == "__main__":
 
             # init audio
             #player = audio.Audio(path="/flash/res/one.wav")
-            player = audio.Audio(path="/flash/1k.wav")
-            player.volume(50)
+            player = audio.Audio(path="/sd/boot.wav")
+            player.volume(100)
 
             # read audio info
             wav_info = player.play_process(i2s)
@@ -841,6 +841,23 @@ if __name__ == "__main__":
 
         del i2s, player
 
-        print("ES8374 |reg value: " + str(dev._readREGAll()))
+        fm.register(24, fm.fpioa.GPIOHS11)
+        fm.register(27, fm.fpioa.GPIOHS16)
+
+        scl = GPIO(GPIO.GPIOHS11, GPIO.OUT)
+        sda = GPIO(GPIO.GPIOHS16, GPIO.OUT)
+
+        scl.value(0)
+        sda.value(0)
+
+        time.sleep_ms(100)
+
+        scl.value(1)
+        sda.value(1)
+
+        time.sleep_ms(100)
+
+
+        #print("ES8374 |reg value: " + str(dev._readREGAll()))
 
         #dev.stop(ES_MODULE._ES_MODULE_ADC_DAC)
