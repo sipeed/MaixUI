@@ -242,12 +242,31 @@ class ES8374:
 
     # read reg value
     def _readReg(self, regAddr):
-        self.i2c_bus.writeto(self.i2c_addr, bytes([regAddr]))
-        return (self.i2c_bus.readfrom(self.i2c_addr, 1))[0]
+        while True:
+            try:
+                self.i2c_bus.writeto(self.i2c_addr, bytes([regAddr]))
+                return (self.i2c_bus.readfrom(self.i2c_addr, 1))[0]
+            except OSError as e:
+                #print(e)
+                tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
+                fm.register(tmp, fm.fpioa.GPIOHS11)
+                sda = GPIO(GPIO.GPIOHS11, GPIO.OUT)
+                sda.value(1)
+                fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
 
     # write value to reg
     def _writeReg(self, regAddr, data):
-        return self.i2c_bus.writeto_mem(self.i2c_addr, regAddr, data, mem_size=8)
+        while True:
+            try:
+                return self.i2c_bus.writeto_mem(self.i2c_addr, regAddr, data, mem_size=8)
+            except OSError as e:
+                #print(e)
+                tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
+                fm.register(tmp, fm.fpioa.GPIOHS11)
+                sda = GPIO(GPIO.GPIOHS11, GPIO.OUT)
+                sda.value(1)
+                fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
+
 
     # read all reg value
     def _readREGAll(self):
@@ -736,128 +755,131 @@ if __name__ == "__main__":
     #fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
     #fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
 
-    i2c = I2C(I2C.I2C1, freq=500*1000) # , sda=31, scl=30
+    i2c = I2C(I2C.I2C1, freq=100*1000) # , sda=31, scl=30
     #i2c = I2C(I2C.I2C1, freq=600*1000, sda=27, scl=24) # amigo
-    print(i2c.scan())
 
     #fm.register(30,fm.fpioa.I2C1_SCLK, force=True)
     #fm.register(31,fm.fpioa.I2C1_SDA, force=True)
 
+    fm.register(24,fm.fpioa.I2C1_SCLK, force=True)
+    fm.register(27,fm.fpioa.I2C1_SDA, force=True)
+
     while True:
-        #time.sleep_ms(100)
 
-        #dev = ES8374(i2c)
+        try:
+            print(i2c.scan())
 
-        #dev.setVoiceVolume(100)
+            #time.sleep_ms(2000)
 
-        #dev.start(ES_MODULE._ES_MODULE_DAC)
+            #dev = ES8374(i2c)
 
-        ## init i2s(i2s0)
-        #i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
+            #dev.setVoiceVolume(100)
 
-        ## config i2s according to audio info # STANDARD_MODE LEFT_JUSTIFYING_MODE RIGHT_JUSTIFYING_MODE
-        #i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
+            #dev.start(ES_MODULE._ES_MODULE_ADC_DAC)
 
-        #fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
-        #fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
-        #fm.register(33,fm.fpioa.I2S0_WS, force=True)
-        #fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
-        #fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
+            ## init i2s(i2s0)
+            #i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
 
-        #i2s.set_sample_rate(22050)
+            ## config i2s according to audio info # STANDARD_MODE LEFT_JUSTIFYING_MODE RIGHT_JUSTIFYING_MODE
+            #i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
 
-        #img = image.Image(size=(240, 240))
-        #hist_width = 1 #changeable
-        #x_shift = 0
-        #for i in range(500):
-            #temp = i2s.record(1024)
-            #fft_res = FFT.run(temp.to_bytes(), 512)
-            #fft_amp = FFT.amplitude(fft_res)
-            ##print(fft_amp)
-            #img = img.clear()
+            #fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
+            #fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
+            #fm.register(18,fm.fpioa.I2S0_WS, force=True)
+            #fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
+            #fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
+
+            #i2s.set_sample_rate(22050)
+
+            #player = audio.Audio(path="/sd/record_2.wav", is_create=True, samplerate=22050)
+            #queue = []
+            #for i in range(600):
+             #tmp = i2s.record(1024)
+             #if len(queue) > 0:
+                 #print(time.ticks())
+                 #ret = player.record(queue[0])
+                 #queue.pop(0)
+             #i2s.wait_record()
+             #queue.append(tmp)
+            #player.finish()
+
+            #del i2s, player
+
+            #time.sleep_ms(2000)
+
+            dev = ES8374(i2c)
+
+            dev.setVoiceVolume(90)
+
+            dev.start(ES_MODULE._ES_MODULE_ADC_DAC)
+
+            # init i2s(i2s0)
+            i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
+
+            # config i2s according to audio info # STANDARD_MODE LEFT_JUSTIFYING_MODE RIGHT_JUSTIFYING_MODE
+            i2s.channel_config(I2S.CHANNEL_2, I2S.TRANSMITTER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
+
+            #fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
+            #fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
+            #fm.register(33,fm.fpioa.I2S0_WS, force=True)
+            #fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
+            #fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
+
+            fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
+            fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
+            fm.register(18,fm.fpioa.I2S0_WS, force=True)
+            fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
+            fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
+
+            for i in range(1):
+
+                time.sleep_ms(10)
+
+                # init audio
+                player = audio.Audio(path="/sd/12802.wav")
+                #player = audio.Audio(path="/sd/record_2.wav")
+                player.volume(100)
+
+                # read audio info
+                wav_info = player.play_process(i2s)
+                # print("wav file head information: ", wav_info)
+                i2s.set_sample_rate(wav_info[1])
+                # print('loop to play audio')
+                while True:
+                    ret = player.play()
+                    if ret == None:
+                        # print("format error")
+                        break
+                    elif ret == 0:
+                        break
+                player.finish()
+
+            del i2s, player
+
+            #img = image.Image(size=(240, 240))
+            #hist_width = 1 #changeable
             #x_shift = 0
-            #for i in range(240):
-                #hist_height = fft_amp[i]
-                #img = img.draw_rectangle((x_shift, 0, 1, hist_height), [255,255,255], 1, True)
-                ##print((x_shift, 0, 1, hist_height))
-                #x_shift = x_shift + 1
-            #lcd.display(img)
-            #fft_amp.clear()
-        #del img
+            #for i in range(100):
+                #temp = i2s.record(1024)
+                #time.sleep_ms(10)
+                #fft_res = FFT.run(temp.to_bytes(), 512)
+                #fft_amp = FFT.amplitude(fft_res)
+                ##print(len(fft_amp))
+                ##print(fft_amp)
+                #img = img.clear()
+                #x_shift = 0
+                #for i in range(512):
+                    #hist_height = fft_amp[i]
+                    #img = img.draw_rectangle((x_shift, 0, 1, hist_height), [255,255,255], 1, True)
+                    ##print((x_shift, 0, 1, hist_height))
+                    #x_shift = x_shift + 1
+                #lcd.display(img)
+                #fft_amp.clear()
 
-        #dev.stop(ES_MODULE._ES_MODULE_DAC)
+            #del img, i2s
+            #time.sleep_ms(2000)
 
-        fm.register(24,fm.fpioa.I2C1_SCLK, force=True)
-        fm.register(27,fm.fpioa.I2C1_SDA, force=True)
-
-        time.sleep_ms(100)
-
-        dev = ES8374(i2c)
-
-        dev.setVoiceVolume(80)
-
-        dev.start(ES_MODULE._ES_MODULE_ADC_DAC)
-
-        # init i2s(i2s0)
-        i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
-
-        # config i2s according to audio info # STANDARD_MODE LEFT_JUSTIFYING_MODE RIGHT_JUSTIFYING_MODE
-        i2s.channel_config(I2S.CHANNEL_2, I2S.TRANSMITTER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
-
-        #fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
-        #fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
-        #fm.register(33,fm.fpioa.I2S0_WS, force=True)
-        #fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
-        #fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
-
-        fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
-        fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
-        fm.register(18,fm.fpioa.I2S0_WS, force=True)
-        fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
-        fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
-
-        for i in range(2):
-
-            time.sleep_ms(10)
-
-            # init audio
-            #player = audio.Audio(path="/flash/res/one.wav")
-            player = audio.Audio(path="/sd/boot.wav")
-            player.volume(100)
-
-            # read audio info
-            wav_info = player.play_process(i2s)
-            # print("wav file head information: ", wav_info)
-            i2s.set_sample_rate(wav_info[1])
-            # print('loop to play audio')
-            while True:
-                ret = player.play()
-                if ret == None:
-                    # print("format error")
-                    break
-                elif ret == 0:
-                    break
-            player.finish()
-
-        del i2s, player
-
-        fm.register(24, fm.fpioa.GPIOHS11)
-        fm.register(27, fm.fpioa.GPIOHS16)
-
-        scl = GPIO(GPIO.GPIOHS11, GPIO.OUT)
-        sda = GPIO(GPIO.GPIOHS16, GPIO.OUT)
-
-        scl.value(0)
-        sda.value(0)
-
-        time.sleep_ms(100)
-
-        scl.value(1)
-        sda.value(1)
-
-        time.sleep_ms(100)
+        finally:
+            pass
 
 
-        #print("ES8374 |reg value: " + str(dev._readREGAll()))
-
-        #dev.stop(ES_MODULE._ES_MODULE_ADC_DAC)
