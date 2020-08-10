@@ -193,7 +193,16 @@ class app:
 
     def run():
         cube_led.init(13, 12, 14, 32)
-        CubeAudio.ready()
+        fm.register(30,fm.fpioa.I2C1_SCLK, force=True)
+        fm.register(31,fm.fpioa.I2C1_SDA, force=True)
+        if CubeAudio.check():
+            CubeAudio.ready()
+            fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
+            fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
+            fm.register(33,fm.fpioa.I2S0_WS, force=True)
+            fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
+            fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
+
         #app.ctrl.event(100, lambda *args: time.sleep(1))
         #app.ctrl.event(10, app.btn.event)
         app.ctrl.event(5, app.draw)
