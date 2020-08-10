@@ -72,7 +72,7 @@ class Report():
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
         ui.canvas.draw_string(120, y, "Touch", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "6  " + str(Report.Led_Test), (0, 255, 0) if (Report.Led_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_string(20, y, "6  " + str(Report.Touch_Test), (0, 255, 0) if (Report.Touch_Test) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
         ui.canvas.draw_string(120, y, "FrontSensor", (127, 255, 255), scale=2)
@@ -80,11 +80,11 @@ class Report():
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
         ui.canvas.draw_string(120, y, "RearSensor", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "7  " + str(Report.RearSensor_Test), (0, 255, 0) if (Report.RearSensor_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_string(20, y, "8  " + str(Report.RearSensor_Test), (0, 255, 0) if (Report.RearSensor_Test) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
         ui.canvas.draw_string(120, y, "Audio", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "8  " + str(Report.Audio_Test), (0, 255, 0) if (Report.Audio_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_string(20, y, "9  " + str(Report.Audio_Test), (0, 255, 0) if (Report.Audio_Test) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
     def free(self):
@@ -583,126 +583,214 @@ class RearSensorTest():
             ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
             sample_page.next()
 
-if __name__ == "__main__":
+class AudioTest():
 
-    class AudioTest():
+    def __init__(self, scl=24, sda=27):
+        self.is_load = False
+        self.scl = scl
+        self.sda = sda
+        self.i2c = I2C(I2C.I2C1, freq=100*1000)
+        self.count = 0
 
-        def __init__(self, scl=24, sda=27):
-            self.is_load = False
-            self.scl = scl
-            self.sda = sda
-            self.i2c = I2C(I2C.I2C1, freq=100*1000)
+    def key_event(self):
+        self.btn.expand_event()
 
-        def key_event(self):
-            self.btn.expand_event()
-
-            if self.btn.back() == 2:
-                self.result -= 1
-                self.state += 1
-            elif self.btn.next() == 2:
-                self.result += 1
-                self.state += 1
-
-        def test_event(self):
-            if self.isconnected and self.result == 2:
-                self.result = 0
+        if self.btn.back() == 2:
+            self.result -= 1
+            self.state += 1
+        elif self.btn.next() == 2:
+            self.result += 1
+            self.state += 1
+        elif self.btn.home() == 2:
+            #print('self.btn.home()')
+            self.state += 1
+            if self.state > 1:
                 Report.Audio_Test = True
+                sample_page.next()
+
+
+    def test_event(self):
+        if self.isconnected and self.result == 2:
+            self.result = 0
+            Report.Audio_Test = True
+        sample_page.next()
+
+    def load(self):
+        if Report.Audio_Test:
+            sample_page.next()
+        if self.is_load == False:
+            # i2c init()
+            sample_page.btn.enable = False
+            from fpioa_manager import fm
+            fm.register(self.scl,fm.fpioa.I2C1_SCLK, force=True)
+            fm.register(self.sda,fm.fpioa.I2C1_SDA, force=True)
+            self.isconnected = False
+            self.isError = None
+            self.is_play = False
+            self.is_record = False
+            self.state = 0
+            self.result = 0
+            self.fft_amp = None
+            self.btn = cube_button()
+            self.btn.config(23, 20, 31)
+            self.count += 1
+            self.agent = agent()
+            self.agent.event(200, self.key_event)
+            self.agent.event(500, self.check)
+            self.agent.event(15000, self.test_event)
+            self.is_load = True
+
+    def free(self):
+        if self.is_load:
+            # i2c deinit()
+            sample_page.btn.enable = True
+            self.is_load = False
+
+    def check(self):
+        try:
+            if self.isconnected == False:
+                self.isconnected = CubeAudio.check()
+            else:
+                if self.state == 0 and self.is_play == False:
+                    self.is_play = True
+                    CubeAudio.i2c = self.i2c
+                    CubeAudio.ready()
+                    from fpioa_manager import fm
+                    fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
+                    fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
+                    fm.register(18,fm.fpioa.I2S0_WS, force=True)
+                    fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
+                    fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
+                    #CubeAudio.i2s.set_sample_rate(22050)
+                elif self.state == 1 and self.is_record == False:
+                    self.is_record = True
+                    CubeAudio.ready(True)
+                    CubeAudio.i2s.set_sample_rate(22050)
+        except Exception as e:
+            Report.Audio_Test = False
+            Report.isError = str(e)
+            print(e)
+
+    def work(self):
+        self.agent.parallel_cycle()
+
+        ui.canvas.draw_string(30, 30, "Audio Test", (127, 127, 255), scale=3)
+        ui.canvas.draw_string(30, 70, "isconnected: %s" % (
+            str)(self.isconnected), (255, 127, 0), scale=2)
+
+        ui.canvas.draw_string(30, 100, "Home-Key is Confirm\n", (127, 127, 255), scale=2)
+
+        ui.canvas.draw_string(30, 150, "state: %s" %
+            ('Test play' if self.state == 0 else 'Test record'), (255, 127, 0), scale=2)
+
+        if self.isconnected:
+            if self.state == 0 and self.is_play:
+                if CubeAudio.event() == False:
+                    CubeAudio.load(os.getcwd() + "/res/loop.wav", 100)
+                    if self.count > 1:
+                        #print('self.count', self.count)
+                        CubeAudio.i2s.set_sample_rate(22050)
+            elif self.state == 2 and self.is_record:
+                tmp = CubeAudio.i2s.record(1024)
+                fft_res = FFT.run(tmp.to_bytes(), 512)
+                fft_amp = FFT.amplitude(fft_res)
+                if fft_amp[50] > 100 and fft_amp[100] > 100:
+                    Report.Audio_Test = True
+                    sample_page.next()
+                for x_shift in range(240):
+                    hist_height = fft_amp[x_shift]
+                    ui.canvas.draw_rectangle((x_shift, 0, 1, hist_height), [255,255,255], 1, True)
+                    #print((x_shift, 0, 1, hist_height))
+        if self.isError != None:
+            ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
             sample_page.next()
 
-        def load(self):
-            if Report.Audio_Test:
-                sample_page.next()
-            if self.is_load == False:
-                # i2c init()
-                sample_page.btn.enable = False
-                from fpioa_manager import fm
-                fm.register(self.scl,fm.fpioa.I2C1_SCLK, force=True)
-                fm.register(self.sda,fm.fpioa.I2C1_SDA, force=True)
-                self.isconnected = False
-                self.isError = None
-                self.is_play = False
-                self.is_record = False
-                self.state = 0
-                self.result = 0
-                self.fft_amp = None
-                self.btn = cube_button()
-                self.btn.config(10, 11, 16)
-                self.agent = agent()
-                self.agent.event(150, self.key_event)
-                self.agent.event(500, self.check)
-                self.agent.event(6000, self.test_event)
-                self.is_load = True
+class TouchTest():
 
-        def free(self):
-            if self.is_load:
-                # i2c deinit()
-                sample_page.btn.enable = True
-                self.is_load = False
+    def __init__(self, scl=24, sda=27):
+        self.is_load = False
+        self.scl = scl
+        self.sda = sda
+        self.i2c = I2C(I2C.I2C1, freq=100*1000)
+        #fm.register(30, fm.fpioa.I2C1_SCLK, force=True)
+        #fm.register(31, fm.fpioa.I2C1_SDA, force=True)
 
-        def check(self):
-            try:
-                if self.isconnected == False:
-                    self.isconnected = CubeAudio.check()
-                else:
-                    if self.state == 0 and self.is_play == False:
-                        self.is_play = True
-                        CubeAudio.i2c = self.i2c
-                        CubeAudio.ready()
-                        from fpioa_manager import fm
-                        fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
-                        fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
-                        fm.register(18,fm.fpioa.I2S0_WS, force=True)
-                        fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
-                        fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
-                    elif self.state == 1 and self.is_record == False:
-                        self.is_record = True
-                        CubeAudio.ready(True)
-                        CubeAudio.i2s.set_sample_rate(22050)
-            except Exception as e:
-                Report.Audio_Test = False
-                Report.isError = str(e)
-                print(e)
+    def ft6x36_write_reg(self, reg_addr, buf):
+        self.i2c.writeto_mem(0x38, reg_addr, buf, mem_size=8)
 
-        def work(self):
-            self.agent.parallel_cycle()
+    def ft6x36_read_reg(self, reg_addr, buf_len):
+        return self.i2c.readfrom_mem(0x38, reg_addr, buf_len, mem_size=8)
 
-            ui.canvas.draw_string(30, 30, "Audio Test", (127, 127, 255), scale=3)
-            ui.canvas.draw_string(30, 70, "isconnected: %s" % (
-                str)(self.isconnected), (255, 127, 0), scale=2)
+    def test_event(self):
+        if self.isconnected and self.work_data != None and self.work_data[0] > 0 and self.work_data[1] > 0:
+            Report.Touch_Test = True
+        sample_page.next()
 
-            ui.canvas.draw_string(30, 100, "Home-Key is Confirm\n", (127, 127, 255), scale=2)
+    def load(self):
+        if Report.Touch_Test:
+            sample_page.next()
+        if self.is_load == False:
+            # i2c init()
+            sample_page.btn.enable = False
+            fm.register(self.scl, fm.fpioa.I2C1_SCLK, force=True)
+            fm.register(self.sda, fm.fpioa.I2C1_SDA, force=True)
+            self.isconnected = False
+            self.isError = None
+            self.work_data = None
+            self.agent = agent()
+            self.agent.event(250, self.check)
+            self.agent.event(3000, self.test_event)
+            self.is_load = True
 
-            ui.canvas.draw_string(30, 150, "state: %s" %
-                ('Test play' if self.state == 0 else 'Test record'), (255, 127, 0), scale=2)
+    def free(self):
+        if self.is_load:
+            # i2c deinit()
+            sample_page.btn.enable = True
+            self.is_load = False
 
-            if self.isconnected:
-                if self.state == 0 and self.is_play:
-                    if CubeAudio.event() == False:
-                        CubeAudio.load(os.getcwd() + "/res/loop.wav", 80)
-                        #CubeAudio.i2s.set_sample_rate(22050)
-                elif self.state == 2 and self.is_record:
-                    tmp = CubeAudio.i2s.record(1024)
-                    fft_res = FFT.run(tmp.to_bytes(), 512)
-                    fft_amp = FFT.amplitude(fft_res)
-                    if fft_amp[50] > 100 and fft_amp[100] > 100:
-                        Report.Audio_Test = True
-                        sample_page.next()
-                    for x_shift in range(240):
-                        hist_height = fft_amp[x_shift]
-                        ui.canvas.draw_rectangle((x_shift, 0, 1, hist_height), [255,255,255], 1, True)
-                        #print((x_shift, 0, 1, hist_height))
-            if self.isError != None:
-                ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
-                sample_page.next()
+    def check(self):
+        try:
+            #print(self.i2c.scan())
+            #self.isconnected = True
+            if self.isconnected == False:
+                #print(self.i2c.scan())
+                if 0x38 in self.i2c.scan():
+                    self.ft6x36_write_reg(0x00, 0x0)
+                    self.ft6x36_write_reg(0x80, 0xC)
+                    self.ft6x36_write_reg(0x88, 0xC)
+                    self.isconnected = True
+        except Exception as e:
+            Report.Touch_Test = False
+            Report.isError = str(e)
+            print(e)
 
-    #Key_Test = False
-    #Led_Test = False
-    #Power_Test = False
-    #Audio_Test = False
-    #Touch_Test = False
-    #Msa301_Test = False
-    #Grove_Test = False
-    #Spmod_Test = False
+    def work(self):
+        self.agent.parallel_cycle()
+
+        ui.canvas.draw_string(30, 10, "Touch Test", (0, 255, 127), scale=2)
+        ui.canvas.draw_string(30, 50, "isconnected: %s" % (
+            str)(self.isconnected), (255, 127, 0), scale=2)
+        if self.isconnected:
+            #time.sleep_ms(10)
+            data = self.ft6x36_read_reg(0x02, 1)
+            #print("reg:" + str(data))
+            #if sta & 0x0f: # 读取触摸点的状态
+            if (data[0] == 0x1): # 读取触摸点 1 的状态
+                data_buf = self.ft6x36_read_reg(0x03, 4)
+                y = ((data_buf[0]&0x0f)<<8) | (data_buf[1])
+                x = ((data_buf[2]&0x0f)<<8) | (data_buf[3])
+                #if ((data_buf[0]&0xc0) == 0x80): # 松开
+                #print("point[{}:{}]".format(x,y))
+                self.work_data = [x, y]
+                #img.draw_rectangle(x + 1, y + 1, x, y, fill=True, color=(0x00, 0x00, 0xff))
+                ui.canvas.draw_circle(x - 80, 320 - y, 25, fill=True, color=(0x00, 0x00, 0xff))
+                ui.canvas.draw_string(int(320 / 2), int(320 / 2), "point[{}:{}]".format(x,y), (255, 255, 255), scale=2)
+        if self.isError != None:
+            ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
+            sample_page.next()
+
+if __name__ == "__main__":
+
     import time, gc
     gc.collect()
     gc.collect()
@@ -713,15 +801,14 @@ if __name__ == "__main__":
     sample_page.btn.config(23, 20, 31)
     sample_page.add_sample(Report()) # keep
 
-    #sample_page.add_sample(SpmodTest())
-    #sample_page.add_sample(Touch_Test())
     sample_page.add_sample(AudioTest())
-
-    #sample_page.add_sample(FrontSensorTest())
-    #sample_page.add_sample(RearSensorTest())
-    #sample_page.add_sample(KeyTest())
-    #sample_page.add_sample(GroveTest())
-    #sample_page.add_sample(Msa301Test())
+    sample_page.add_sample(FrontSensorTest())
+    sample_page.add_sample(RearSensorTest())
+    sample_page.add_sample(TouchTest())
+    sample_page.add_sample(KeyTest())
+    sample_page.add_sample(GroveTest())
+    #sample_page.add_sample(SpmodTest())
+    sample_page.add_sample(Msa301Test())
     sample_page.add_sample(PowerTest()) # keep
 
     #ui.height, ui.weight = int(lcd.width() / 2), int(lcd.height())
@@ -739,14 +826,14 @@ if __name__ == "__main__":
     while True:
         #app_main()
         #import time
-        #last = time.ticks_ms()
+        last = time.ticks_ms() - 1
         while True:
             #app_main()
             #protect.keep()
             #continue
             try:
-                #print((int)(1000 / (time.ticks_ms() - last)), 'fps')
-                #last = time.ticks_ms()
+                print((int)(1000 / (time.ticks_ms() - last)), 'fps')
+                last = time.ticks_ms()
                 app_main()
                 protect.keep()
                 #print(time.ticks_ms(), 'ram total : ' + str(gc.mem_free() / 1024) + ' kb')
