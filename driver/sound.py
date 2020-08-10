@@ -24,18 +24,12 @@ class CubeAudio:
         if CubeAudio.dev != None:
             CubeAudio.dev.stop(0x02)
         CubeAudio.dev = ES8374()
-        fm.register(19, fm.fpioa.I2S0_MCLK, force=True)
-        fm.register(35, fm.fpioa.I2S0_SCLK, force=True)
-        fm.register(33, fm.fpioa.I2S0_WS, force=True)
-        fm.register(34, fm.fpioa.I2S0_IN_D0, force=True)
-        fm.register(18, fm.fpioa.I2S0_OUT_D2, force=True)
         if is_record:
             CubeAudio.i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT,
                 cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
         else:
             CubeAudio.i2s.channel_config(I2S.CHANNEL_2, I2S.TRANSMITTER, resolution=I2S.RESOLUTION_16_BIT,
                 cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
-
         CubeAudio.is_ready = True
       return CubeAudio.is_ready
 
@@ -47,6 +41,13 @@ class CubeAudio:
         CubeAudio.player.volume(volume)
         wav_info = CubeAudio.player.play_process(CubeAudio.i2s)
         CubeAudio.i2s.set_sample_rate(int(wav_info[1]))
+        
+        fm.register(19, fm.fpioa.I2S0_MCLK, force=True)
+        fm.register(35, fm.fpioa.I2S0_SCLK, force=True)
+        fm.register(33, fm.fpioa.I2S0_WS, force=True)
+        fm.register(34, fm.fpioa.I2S0_IN_D0, force=True)
+        fm.register(18, fm.fpioa.I2S0_OUT_D2, force=True)
+
         CubeAudio.is_load = True
         # CubeAudio.tim.callback(CubeAudio.event)
         # CubeAudio.tim.start()

@@ -1,0 +1,759 @@
+# This file is part of MaixUI
+# Copyright (c) sipeed.com
+#
+# Licensed under the MIT license:
+#   http://www.opensource.org/licenses/mit-license.php
+#
+
+import time, gc, math, random, sensor, audio
+
+from fpioa_manager import fm
+from machine import I2C
+from Maix import I2S, GPIO, FFT
+
+from ui_catch import catch
+from ui_canvas import ui
+from ui_sample import sample_page
+from core import agent
+from wdt import protect
+
+from led import cube_led
+from button import cube_button
+from pmu_axp173 import AXP173
+from sound import CubeAudio
+#from es8374 import ES8374
+from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
+from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
+from bme280 import BME280, BME280_I2CADDR
+from qmcx983 import QMCX983, QMCX983_I2CADDR
+
+class Report():
+
+    Key_Test = False
+    Led_Test = False
+    Touch_Test = False
+    Power_Test = False
+    Audio_Test = False
+    FrontSensor_Test = False
+    RearSensor_Test = False
+    Msa301_Test = False
+    Grove_Test = False
+    Spmod_Test = False
+
+    def __init__(self):
+        self.is_load = False
+
+    def load(self):
+        if self.is_load == False:
+            #print(case.load)
+            self.is_load = True
+
+    def work(self):
+        #print(case.work)
+        y = 0
+        ui.canvas.draw_string(120, y, "Power", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(20, y, "1  " + str(Report.Power_Test), (0, 255, 0) if (Report.Power_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        y += 30
+        ui.canvas.draw_string(120, y, "Msa301", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(20, y, "2  " + str(Report.Msa301_Test), (0, 255, 0) if (Report.Msa301_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        y += 30
+        ui.canvas.draw_string(120, y, "Grove", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(20, y, "3  " + str(Report.Grove_Test), (0, 255, 0) if (Report.Grove_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        y += 30
+        ui.canvas.draw_string(120, y, "Spmod", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(20, y, "4  " + str(Report.Spmod_Test), (0, 255, 0) if (Report.Spmod_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        y += 30
+        ui.canvas.draw_string(120, y, "Key + RGB", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(20, y, "5  " + str(Report.Key_Test), (0, 255, 0) if (Report.Key_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        y += 30
+        ui.canvas.draw_string(120, y, "Touch", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(20, y, "6  " + str(Report.Led_Test), (0, 255, 0) if (Report.Led_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        y += 30
+        ui.canvas.draw_string(120, y, "FrontSensor", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(20, y, "7  " + str(Report.FrontSensor_Test), (0, 255, 0) if (Report.FrontSensor_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        y += 30
+        ui.canvas.draw_string(120, y, "RearSensor", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(20, y, "7  " + str(Report.RearSensor_Test), (0, 255, 0) if (Report.RearSensor_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        y += 30
+        ui.canvas.draw_string(120, y, "Audio", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(20, y, "8  " + str(Report.Audio_Test), (0, 255, 0) if (Report.Audio_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        y += 30
+    def free(self):
+        if self.is_load:
+            #print(sample.free)
+            self.is_load = False
+
+class PowerTest():
+
+    def __init__(self):
+        self.is_load = False
+        self.i2c = I2C(I2C.I2C1, freq=100*1000)
+        #fm.register(30, fm.fpioa.I2C1_SCLK, force=True)
+        #fm.register(31, fm.fpioa.I2C1_SDA, force=True)
+        self.load()
+
+    def test_event(self):
+        if self.isconnected and self.vbat_voltage > 0 and self.usb_voltage:
+            Report.Power_Test = True
+
+        sample_page.next()
+
+    def load(self):
+        if Report.Power_Test:
+            sample_page.next()
+        if self.is_load == False:
+            # i2c init()
+            sample_page.btn.enable = False
+            fm.register(24, fm.fpioa.I2C1_SCLK, force=True)
+            fm.register(27, fm.fpioa.I2C1_SDA, force=True)
+            self.isconnected = False
+            self.isError = None
+            self.work_info = []
+            self.agent = agent()
+            self.agent.event(500, self.check)
+            self.agent.event(2500, self.test_event)
+            self.is_load = True
+
+    def free(self):
+        if self.is_load:
+            # i2c deinit()
+            sample_page.btn.enable = True
+            self.is_load = False
+
+    def check(self):
+        try:
+            if self.isconnected == False:
+                if _MSA301_I2CADDR_DEFAULT in self.i2c.scan():
+                    self.axp173 = AXP173(self.i2c)
+                    self.isconnected = True
+                    self.axp173.enable_adc(True)
+                    # 默认充电限制在 4.2V, 190mA 档位
+                    self.axp173.setEnterChargingControl(True)
+                    self.axp173.exten_output_enable()
+                    # amigo sensor config.
+                    self.axp173.writeREG(0x27, 0x20)
+                    self.axp173.writeREG(0x28, 0x0C)
+            else:
+                tmp = []
+                self.work_mode = self.axp173.getPowerWorkMode()
+                tmp.append("WorkMode:" + hex(self.work_mode))
+
+                # 检测 电池电压
+                self.vbat_voltage = self.axp173.getVbatVoltage()
+                tmp.append("vbat_voltage: {0} V".format(self.vbat_voltage))
+
+                # 检测 电池充电电流
+                self.BatteryChargeCurrent = self.axp173.getBatteryChargeCurrent()
+                tmp.append("BatChargeCurrent: {0:>4.1f}mA".format(
+                    self.BatteryChargeCurrent))
+
+                # 检测 USB-ACIN 电压
+                self.usb_voltage = self.axp173.getUSBVoltage()
+                tmp.append("usb_voltage: {0:>4}mV".format(self.usb_voltage))
+
+                # 检测 USB-ACIN 电流
+                self.USBInputCurrent = self.axp173.getUSBInputCurrent()
+                tmp.append("USBInputCurrent: {0:>4.1f}mA".format(self.USBInputCurrent))
+
+                ### 检测 VBUS 电压
+                #usb_voltage = self.axp173.getConnextVoltage()
+                #print("6 VUBS_voltage: " + str(usb_voltage))
+
+                ### 检测 VBUS 电流
+                #USBInputCurrent = self.axp173.getConnextInputCurrent()
+                #print("7 VUBSInputCurrent: " + str(USBInputCurrent) + "mA")
+
+                self.getChargingControl = self.axp173.getChargingControl()
+                tmp.append("ChargingControl: {}".format(hex(self.getChargingControl)))
+
+                # 检测 是否正在充电
+                if self.axp173.is_charging() == True:
+                    tmp.append("Charging....")
+                else:
+                    tmp.append("Not Charging")
+                tmp.append(self.axp173.is_charging())
+
+                # 检测 USB 是否连接
+                if self.axp173.is_usb_plugged_in() == 1:
+                    tmp.append("USB plugged ....")
+                else:
+                    tmp.append("USB is not plugged in")
+
+                self.work_info = tmp
+        except Exception as e:
+            Report.Power_Test = False
+            Report.isError = str(e)
+            print(e)
+
+    def work(self):
+        self.agent.parallel_cycle()
+
+        ui.canvas.draw_string(30, 10, "Power Test", (127, 127, 255), scale=2)
+        ui.canvas.draw_string(30, 40, "isconnected: %s" % (
+            str)(self.isconnected), (255, 127, 0), scale=1)
+        if self.isconnected:
+            for i in range(len(self.work_info)):
+                ui.canvas.draw_string(
+                    20, 20*i + 60, "{0}".format(str(self.work_info[i])), mono_space=1)
+        if self.isError != None:
+            ui.canvas.draw_string(40, 60, self.isError, (255, 255, 255), scale=2)
+            sample_page.next()
+
+class Msa301Test():
+
+    def __init__(self, scl=24, sda=27):
+        self.is_load = False
+        self.scl = scl
+        self.sda = sda
+        self.i2c = I2C(I2C.I2C1, freq=100*1000, scl=self.scl, sda=self.sda)
+        #fm.register(30, fm.fpioa.I2C1_SCLK, force=True)
+        #fm.register(31, fm.fpioa.I2C1_SDA, force=True)
+
+    def test_event(self):
+        if self.isconnected and self.acceleration[0] != 0 and self.acceleration[1] != 0 and self.acceleration[2] != 0:
+            Report.Msa301_Test = True
+        sample_page.next()
+
+    def load(self):
+        if Report.Msa301_Test:
+            sample_page.next()
+        if self.is_load == False:
+            # i2c init()
+            sample_page.btn.enable = False
+            fm.register(self.scl, fm.fpioa.I2C1_SCLK, force=True)
+            fm.register(self.sda, fm.fpioa.I2C1_SDA, force=True)
+            self.isconnected = False
+            self.isError = None
+            self.tapped = False
+            self.acceleration = (0, 0, 0)
+            self.agent = agent()
+            self.agent.event(500, self.check)
+            self.agent.event(3000, self.test_event)
+            self.is_load = True
+
+    def free(self):
+        if self.is_load:
+            # i2c deinit()
+            sample_page.btn.enable = True
+            self.is_load = False
+
+    def check(self):
+        try:
+            if self.isconnected == False:
+                if _MSA301_I2CADDR_DEFAULT in self.i2c.scan():
+                    self.msa301 = MSA301(self.i2c)
+                    self.isconnected = True
+            else:
+                self.tapped = self.msa301.tapped
+                self.acceleration = self.msa301.acceleration
+        except Exception as e:
+            Report.Msa301_Test = False
+            Report.isError = str(e)
+            print(e)
+
+    def work(self):
+        self.agent.parallel_cycle()
+
+        ui.canvas.draw_string(30, 30, "MSA301 Test", (127, 127, 255), scale=3)
+        ui.canvas.draw_string(30, 80, "isconnected: %s" % (
+            str)(self.isconnected), (255, 127, 0), scale=2)
+        if self.isconnected:
+            ui.canvas.draw_string(30, 120, "tapped: %s" % (
+                str)(self.tapped), (0, 214, 126), scale=2)
+
+            ui.canvas.draw_string(10, 140, "x", (255, 0, 0), scale=2)
+            ui.canvas.draw_line(120, 150, 120 + int(self.acceleration[0] * 8), 150, color=(41, 131, 255))
+            ui.canvas.draw_string(10, 160, "y", (0, 255, 0), scale=2)
+            ui.canvas.draw_line(120, 170, 120 + int(self.acceleration[1] * 8), 170, color=(141, 31, 255))
+            ui.canvas.draw_string(10, 180, "z", (0, 0, 255), scale=2)
+            ui.canvas.draw_line(120, 190, 120 + int(self.acceleration[2] * 8), 190, color=(241, 131, 55))
+
+            ui.canvas.draw_string(40, 210,
+                str(("%-02.2f %-02.2f %-02.2f" % self.acceleration)), (127, 255, 255), scale=2)
+
+        if self.isError != None:
+            ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
+            sample_page.next()
+
+class GroveTest():
+
+    def __init__(self, scl=9, sda=7):
+        self.is_load = False
+        self.scl = scl
+        self.sda = sda
+        self.i2c = I2C(I2C.I2C0, freq=100*1000, scl=self.scl, sda=self.sda)
+        #fm.register(30, fm.fpioa.I2C1_SCLK, force=True)
+        #fm.register(31, fm.fpioa.I2C1_SDA, force=True)
+
+    def test_event(self):
+        if self.isconnected and self.work_data != None and self.work_data[0] > 0 and self.work_data[1] > 1:
+            Report.Grove_Test = True
+        sample_page.next()
+
+    def load(self):
+        if Report.Grove_Test:
+            sample_page.next()
+        if self.is_load == False:
+            # i2c init()
+            sample_page.btn.enable = False
+            fm.register(self.scl, fm.fpioa.I2C0_SCLK, force=True)
+            fm.register(self.sda, fm.fpioa.I2C0_SDA, force=True)
+            self.isconnected = False
+            self.isError = None
+            self.work_info = []
+            self.work_data = None
+            self.agent = agent()
+            self.agent.event(250, self.check)
+            self.agent.event(3000, self.test_event)
+            self.is_load = True
+
+    def free(self):
+        if self.is_load:
+            # i2c deinit()
+            sample_page.btn.enable = True
+            self.is_load = False
+
+    def check(self):
+        try:
+            if self.isconnected == False:
+                # print(self.i2c.scan())
+                if SHT3x_ADDR in self.i2c.scan():
+                    self.sht3x = SHT3x(self.i2c, SHT3x_ADDR)
+                    self.isconnected = True
+                if SHT31_ADDR in self.i2c.scan():
+                    self.sht3x = SHT3x(self.i2c, SHT31_ADDR)
+                    self.isconnected = True
+            else:
+                tmp = []
+                self.work_data = self.sht3x.read_temp_humd()
+                tmp.append("data:" + str(self.work_data))
+                self.work_info = tmp
+        except Exception as e:
+            Report.Grove_Test = False
+            Report.isError = str(e)
+            print(e)
+
+    def work(self):
+        self.agent.parallel_cycle()
+
+        ui.canvas.draw_string(30, 10, "Grove Test SHT3X", (0, 255, 127), scale=2)
+        ui.canvas.draw_string(30, 50, "isconnected: %s" % (
+            str)(self.isconnected), (255, 127, 0), scale=2)
+        if self.isconnected:
+            for i in range(len(self.work_info)):
+                ui.canvas.draw_string(
+                    20, 20*i + 90, "{0}".format(str(self.work_info[i])), scale=2)
+        if self.isError != None:
+            ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
+            sample_page.next()
+
+class KeyTest():
+
+    def __init__(self):
+        self.is_load = False
+        #self.load()
+
+    def load(self):
+        if Report.Key_Test:
+            sample_page.next()
+        if self.is_load == False:
+            #print(case.load)
+            self.is_load = True
+            sample_page.btn.enable = False
+            cube_led.init(14, 15, 17, 32)
+            self.btn = cube_button()
+            self.btn.config(23, 20, 31)
+            self.agent = agent()
+            self.agent.event(150, self.key_event)
+            self.agent.event(6000, lambda :sample_page.next())
+            self.home_click = 0
+            self.back_click = 0
+            self.next_click = 0
+
+    def key_event(self):
+        self.btn.expand_event()
+
+        if self.btn.back() == 2:
+            self.back_click += 1
+            cube_led.r.value(0)
+            cube_led.g.value(1)
+            cube_led.b.value(1)
+        elif self.btn.next() == 2:
+            self.next_click += 1
+            cube_led.r.value(1)
+            cube_led.g.value(1)
+            cube_led.b.value(0)
+        elif self.btn.home() == 2:
+            self.home_click += 1
+            cube_led.r.value(1)
+            cube_led.g.value(0)
+            cube_led.b.value(1)
+            if self.btn.interval() > 2000: # long press
+                sample_page.next()
+        if self.home_click > 1 and self.back_click > 1 and self.next_click > 1:
+            Report.Key_Test = True
+            sample_page.next()
+
+    def work(self):
+        self.agent.parallel_cycle()
+        y = 40
+        ui.canvas.draw_string(20, y,
+            'home_click %d' % self.home_click, (255, 0, 0), scale=2)
+        y += 40
+        ui.canvas.draw_string(20, y,
+            'back_click %d' % self.back_click, (0, 255, 0), scale=2)
+        y += 40
+        ui.canvas.draw_string(20, y,
+            'next_click %d' % self.next_click, (0, 0, 255), scale=2)
+        y += 40
+        ui.canvas.draw_string(10, y,
+            ' center (home) key \nPress 2s or Wait 3s \n  into next test', (255, 255, 255), scale=2)
+
+    def free(self):
+        if self.is_load:
+            #print(sample.free)
+            self.is_load = False
+            sample_page.btn.enable = True
+            if self.home_click > 0 and self.back_click > 0 and self.next_click > 0:
+                Report.Key_Test = True
+            cube_led.r.value(1)
+            cube_led.g.value(1)
+            cube_led.b.value(1)
+
+class FrontSensorTest():
+
+    def __init__(self):
+        self.is_load = False
+        self.isconnected = False
+
+    def test_event(self):
+        if self.get_image != None:
+            Report.FrontSensor_Test = True
+        sample_page.next()
+
+    def check(self):
+        try:
+            self.btn.expand_event()
+
+            if self.btn.home() == 2:
+                cube_led.w.value(0)
+                Report.FrontSensor_Test = True
+                sample_page.next()
+
+            if self.isconnected == False:
+                try:
+                    sensor.reset(choice=2)
+                    sensor.set_pixformat(sensor.YUV422)
+                    sensor.set_framesize(sensor.QVGA)
+                    sensor.run(1)
+                    sensor.skip_frames()
+                    self.isconnected = True
+                    cube_led.w.value(0)
+                except Exception as e:
+                    Report.FrontSensor_Test = False
+                    Report.isError = str(e)
+                    print(e)
+        except Exception as e:
+            Report.FrontSensor_Test = False
+            Report.isError = str(e)
+            print(e)
+
+    def load(self):
+        if Report.FrontSensor_Test:
+            sample_page.next()
+        if self.is_load == False:
+            cube_led.init(14, 15, 17, 32)
+            cube_led.w.value(1)
+            sample_page.btn.enable = False
+            self.btn = cube_button()
+            self.btn.config(23, 20, 31)
+            self.get_image = None
+            self.isError = None
+            self.agent = agent()
+            self.agent.event(100, self.check)
+            self.agent.event(5000, self.test_event)
+            self.is_load = True
+
+    def free(self):
+        if self.is_load:
+            sample_page.btn.enable = True
+            self.is_load = False
+            cube_led.w.value(1)
+
+    def work(self):
+        self.agent.parallel_cycle()
+        if self.isconnected:
+            try:
+                self.get_image = sensor.snapshot().rotation_corr(x_rotation = 180, z_rotation = +90)
+                #ui.canvas.draw_image(self.get_image, 0, 0)
+                ui.canvas = self.get_image
+            except Exception as e:
+                print(e)
+        ui.canvas.draw_string(30, 30, "FrontSensor Test", (127, 127, 255), scale=3)
+        ui.canvas.draw_string(30, 70, "isconnected: %s" % (
+            str)(self.isconnected), (255, 127, 0), scale=2)
+        if self.isError != None:
+            ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
+            sample_page.next()
+
+class RearSensorTest():
+
+    def __init__(self):
+        self.is_load = False
+        self.isconnected = False
+
+    def test_event(self):
+        if self.get_image != None:
+            Report.RearSensor_Test = True
+        sample_page.next()
+
+    def check(self):
+        try:
+            self.btn.expand_event()
+
+            if self.btn.home() == 2:
+                cube_led.w.value(0)
+                Report.RearSensor_Test = True
+                sample_page.next()
+
+            if self.isconnected == False:
+                try:
+                    sensor.reset(choice=1)
+                    sensor.set_pixformat(sensor.YUV422)
+                    sensor.set_framesize(sensor.QVGA)
+                    sensor.set_hmirror(1)
+                    sensor.set_vflip(1)
+                    sensor.run(1)
+                    sensor.skip_frames()
+                    self.isconnected = True
+                    cube_led.w.value(0)
+                except Exception as e:
+                    Report.RearSensor_Test = False
+                    Report.isError = str(e)
+                    print(e)
+        except Exception as e:
+            Report.RearSensor_Test = False
+            Report.isError = str(e)
+            print(e)
+
+    def load(self):
+        if Report.RearSensor_Test:
+            sample_page.next()
+        if self.is_load == False:
+            cube_led.init(14, 15, 17, 32)
+            cube_led.w.value(1)
+            sample_page.btn.enable = False
+            self.btn = cube_button()
+            self.btn.config(23, 20, 31)
+            self.get_image = None
+            self.isError = None
+            self.agent = agent()
+            self.agent.event(100, self.check)
+            self.agent.event(5000, self.test_event)
+            self.is_load = True
+
+    def free(self):
+        if self.is_load:
+            sample_page.btn.enable = True
+            self.is_load = False
+            cube_led.w.value(1)
+
+    def work(self):
+        self.agent.parallel_cycle()
+        if self.isconnected:
+            try:
+                self.get_image = sensor.snapshot()
+                #ui.canvas.draw_image(self.get_image, 0, 0)
+                ui.canvas = (self.get_image)
+            except Exception as e:
+                print(e)
+        ui.canvas.draw_string(30, 30, "RearSensor Test", (127, 127, 255), scale=3)
+        ui.canvas.draw_string(30, 70, "isconnected: %s" % (
+            str)(self.isconnected), (255, 127, 0), scale=2)
+        if self.isError != None:
+            ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
+            sample_page.next()
+
+if __name__ == "__main__":
+
+    class AudioTest():
+
+        def __init__(self, scl=24, sda=27):
+            self.is_load = False
+            self.scl = scl
+            self.sda = sda
+            self.i2c = I2C(I2C.I2C1, freq=100*1000)
+
+        def key_event(self):
+            self.btn.expand_event()
+
+            if self.btn.back() == 2:
+                self.result -= 1
+                self.state += 1
+            elif self.btn.next() == 2:
+                self.result += 1
+                self.state += 1
+
+        def test_event(self):
+            if self.isconnected and self.result == 2:
+                self.result = 0
+                Report.Audio_Test = True
+            sample_page.next()
+
+        def load(self):
+            if Report.Audio_Test:
+                sample_page.next()
+            if self.is_load == False:
+                # i2c init()
+                sample_page.btn.enable = False
+                from fpioa_manager import fm
+                fm.register(self.scl,fm.fpioa.I2C1_SCLK, force=True)
+                fm.register(self.sda,fm.fpioa.I2C1_SDA, force=True)
+                self.isconnected = False
+                self.isError = None
+                self.is_play = False
+                self.is_record = False
+                self.state = 0
+                self.result = 0
+                self.fft_amp = None
+                self.btn = cube_button()
+                self.btn.config(10, 11, 16)
+                self.agent = agent()
+                self.agent.event(150, self.key_event)
+                self.agent.event(500, self.check)
+                self.agent.event(6000, self.test_event)
+                self.is_load = True
+
+        def free(self):
+            if self.is_load:
+                # i2c deinit()
+                sample_page.btn.enable = True
+                self.is_load = False
+
+        def check(self):
+            try:
+                if self.isconnected == False:
+                    self.isconnected = CubeAudio.check()
+                else:
+                    if self.state == 0 and self.is_play == False:
+                        self.is_play = True
+                        CubeAudio.i2c = self.i2c
+                        CubeAudio.ready()
+                        from fpioa_manager import fm
+                        fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
+                        fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
+                        fm.register(18,fm.fpioa.I2S0_WS, force=True)
+                        fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
+                        fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
+                    elif self.state == 1 and self.is_record == False:
+                        self.is_record = True
+                        CubeAudio.ready(True)
+                        CubeAudio.i2s.set_sample_rate(22050)
+            except Exception as e:
+                Report.Audio_Test = False
+                Report.isError = str(e)
+                print(e)
+
+        def work(self):
+            self.agent.parallel_cycle()
+
+            ui.canvas.draw_string(30, 30, "Audio Test", (127, 127, 255), scale=3)
+            ui.canvas.draw_string(30, 70, "isconnected: %s" % (
+                str)(self.isconnected), (255, 127, 0), scale=2)
+
+            ui.canvas.draw_string(30, 100, "Home-Key is Confirm\n", (127, 127, 255), scale=2)
+
+            ui.canvas.draw_string(30, 150, "state: %s" %
+                ('Test play' if self.state == 0 else 'Test record'), (255, 127, 0), scale=2)
+
+            if self.isconnected:
+                if self.state == 0 and self.is_play:
+                    if CubeAudio.event() == False:
+                        CubeAudio.load(os.getcwd() + "/res/loop.wav", 80)
+                        #CubeAudio.i2s.set_sample_rate(22050)
+                elif self.state == 2 and self.is_record:
+                    tmp = CubeAudio.i2s.record(1024)
+                    fft_res = FFT.run(tmp.to_bytes(), 512)
+                    fft_amp = FFT.amplitude(fft_res)
+                    if fft_amp[50] > 100 and fft_amp[100] > 100:
+                        Report.Audio_Test = True
+                        sample_page.next()
+                    for x_shift in range(240):
+                        hist_height = fft_amp[x_shift]
+                        ui.canvas.draw_rectangle((x_shift, 0, 1, hist_height), [255,255,255], 1, True)
+                        #print((x_shift, 0, 1, hist_height))
+            if self.isError != None:
+                ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
+                sample_page.next()
+
+    #Key_Test = False
+    #Led_Test = False
+    #Power_Test = False
+    #Audio_Test = False
+    #Touch_Test = False
+    #Msa301_Test = False
+    #Grove_Test = False
+    #Spmod_Test = False
+    import time, gc
+    gc.collect()
+    gc.collect()
+    if len(sample_page.samples) > 0:
+        sample_page.samples = []
+        gc.collect()
+
+    sample_page.btn.config(23, 20, 31)
+    sample_page.add_sample(Report()) # keep
+
+    #sample_page.add_sample(SpmodTest())
+    #sample_page.add_sample(Touch_Test())
+    sample_page.add_sample(AudioTest())
+
+    #sample_page.add_sample(FrontSensorTest())
+    #sample_page.add_sample(RearSensorTest())
+    #sample_page.add_sample(KeyTest())
+    #sample_page.add_sample(GroveTest())
+    #sample_page.add_sample(Msa301Test())
+    sample_page.add_sample(PowerTest()) # keep
+
+    #ui.height, ui.weight = int(lcd.width() / 2), int(lcd.height())
+
+    ui.height, ui.weight = 320, 320
+
+    @ui.warp_template(ui.blank_draw)
+    @ui.warp_template(ui.grey_draw)
+    @ui.warp_template(sample_page.sample_draw)
+    @catch
+    def app_main():
+        ui.display()
+
+    last = time.ticks_ms()
+    while True:
+        #app_main()
+        #import time
+        #last = time.ticks_ms()
+        while True:
+            #app_main()
+            #protect.keep()
+            #continue
+            try:
+                #print((int)(1000 / (time.ticks_ms() - last)), 'fps')
+                #last = time.ticks_ms()
+                app_main()
+                protect.keep()
+                #print(time.ticks_ms(), 'ram total : ' + str(gc.mem_free() / 1024) + ' kb')
+                #time.sleep(0.1)
+            except KeyboardInterrupt:
+                protect.stop()
+                raise KeyboardInterrupt()
+            except MemoryError as e:
+                print(time.ticks_ms(), 'ram total : ' + str(gc.mem_free() / 1024) + ' kb')
+                #print(e)

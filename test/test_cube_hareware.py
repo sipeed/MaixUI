@@ -747,11 +747,6 @@ if __name__ == "__main__":
                         self.is_play = True
                         CubeAudio.i2c = self.i2c
                         CubeAudio.ready()
-                        fm.register(19, fm.fpioa.I2S0_MCLK, force=True)
-                        fm.register(35, fm.fpioa.I2S0_SCLK, force=True)
-                        fm.register(33, fm.fpioa.I2S0_WS, force=True)
-                        fm.register(34, fm.fpioa.I2S0_IN_D0, force=True)
-                        fm.register(18, fm.fpioa.I2S0_OUT_D2, force=True)
                     elif self.state == 1 and self.is_record == False:
                         self.is_record = True
                         CubeAudio.ready(True)
@@ -777,6 +772,11 @@ if __name__ == "__main__":
                 if self.state == 0 and self.is_play:
                     if CubeAudio.event() == False:
                         CubeAudio.load(os.getcwd() + "/one.wav", 80)
+                        fm.register(19, fm.fpioa.I2S0_MCLK, force=True)
+                        fm.register(35, fm.fpioa.I2S0_SCLK, force=True)
+                        fm.register(33, fm.fpioa.I2S0_WS, force=True)
+                        fm.register(34, fm.fpioa.I2S0_IN_D0, force=True)
+                        fm.register(18, fm.fpioa.I2S0_OUT_D2, force=True)
                         #CubeAudio.i2s.set_sample_rate(22050)
                 elif self.state == 1 and self.is_record:
                     tmp = CubeAudio.i2s.record(1024)

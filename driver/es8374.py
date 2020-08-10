@@ -242,12 +242,30 @@ class ES8374:
 
     # read reg value
     def _readReg(self, regAddr):
-        self.i2c_bus.writeto(self.i2c_addr, bytes([regAddr]))
-        return (self.i2c_bus.readfrom(self.i2c_addr, 1))[0]
+        for i in range(0xFF):
+            try:
+                self.i2c_bus.writeto(self.i2c_addr, bytes([regAddr]))
+                return (self.i2c_bus.readfrom(self.i2c_addr, 1))[0]
+            except OSError as e:
+                #print(e)
+                tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
+                fm.register(tmp, fm.fpioa.GPIOHS11)
+                sda = GPIO(GPIO.GPIOHS11, GPIO.OUT)
+                sda.value(1)
+                fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
 
     # write value to reg
     def _writeReg(self, regAddr, data):
-        return self.i2c_bus.writeto_mem(self.i2c_addr, regAddr, data, mem_size=8)
+        for i in range(0xFF):
+            try:
+                return self.i2c_bus.writeto_mem(self.i2c_addr, regAddr, data, mem_size=8)
+            except OSError as e:
+                #print(e)
+                tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
+                fm.register(tmp, fm.fpioa.GPIOHS11)
+                sda = GPIO(GPIO.GPIOHS11, GPIO.OUT)
+                sda.value(1)
+                fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
 
     # read all reg value
     def _readREGAll(self):

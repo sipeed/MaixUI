@@ -34,7 +34,7 @@ class cube_led:
 
 if __name__ == "__main__":
     cube_led.init(13, 12, 14, 32) # cube
-    # cube_led.init(15, 14, 17, 32) # amigo
+    # cube_led.init(14, 15, 17, 32) # amigo
 
     while True:
         cube_led.unit_test()
