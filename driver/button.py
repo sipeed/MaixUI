@@ -22,6 +22,15 @@ class sipeed_button:
         fm.register(NEXT, fm.fpioa.GPIOHS6)
         sipeed_button.Limit = 1000  # 1s
 
+        self.home_button = GPIO(GPIO.GPIOHS0, GPIO.IN, GPIO.PULL_UP)
+        # if self.home_button.value() == 0:
+        #     sys.exit()
+
+        self.back_button = GPIO(GPIO.GPIOHS1, GPIO.IN, GPIO.PULL_UP)
+
+        self.next_button = GPIO(GPIO.GPIOHS6, GPIO.IN, GPIO.PULL_UP)
+
+
     def __init__(self):
         self.home_last, self.next_last, self.back_last = 1, 1, 1
         self.last_time, self.bak_time = 0, 0
@@ -32,16 +41,6 @@ class sipeed_button:
         }
         self.pause_time = 0
         self.enable = True
-
-        self.config()
-
-        self.home_button = GPIO(GPIO.GPIOHS0, GPIO.IN, GPIO.PULL_UP)
-        # if self.home_button.value() == 0:
-        #     sys.exit()
-
-        self.back_button = GPIO(GPIO.GPIOHS1, GPIO.IN, GPIO.PULL_UP)
-
-        self.next_button = GPIO(GPIO.GPIOHS6, GPIO.IN, GPIO.PULL_UP)
 
     def home(self):
         if self.enable:
@@ -167,10 +166,13 @@ if __name__ == "__main__":
 
     tmp = sipeed_button()
     #tmp.config(10, 11, 16) # cube
+    print(os.listdir())
     tmp.config(23, 20, 31) # amigo
+    print(os.listdir())
     while True:
         time.sleep_ms(200)
         #tmp.event()
         #print(tmp.back(), tmp.home(), tmp.next())
         tmp.expand_event()
         print(tmp.back(), tmp.home(), tmp.next(), tmp.interval())
+        print(os.listdir())
