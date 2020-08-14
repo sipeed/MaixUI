@@ -13,6 +13,7 @@ from machine import I2C, Timer
 import lcd
 import time
 
+AXP173_ADDR = 0x34
 
 class AXP173:
 
@@ -49,7 +50,7 @@ class AXP173:
     _targevoltage_4200mV = 2
     _targevoltage_4360mV = 3
 
-    def __init__(self, i2c_dev=None, i2c_addr=0x34):
+    def __init__(self, i2c_dev=None, i2c_addr=AXP173_ADDR):
         from machine import I2C
         if i2c_dev is None:
             try:

@@ -19,7 +19,7 @@ from wdt import protect
 
 from led import cube_led
 from button import cube_button
-from pmu_axp173 import AXP173
+from pmu_axp173 import AXP173, AXP173_ADDR
 from sound import CubeAudio
 #from es8374 import ES8374
 from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
@@ -132,7 +132,7 @@ class PowerTest():
     def check(self):
         try:
             if self.isconnected == False:
-                if _MSA301_I2CADDR_DEFAULT in self.i2c.scan():
+                if AXP173_ADDR in self.i2c.scan():
                     self.axp173 = AXP173(self.i2c)
                     self.isconnected = True
                     self.axp173.enable_adc(True)
@@ -798,7 +798,9 @@ if __name__ == "__main__":
         sample_page.samples = []
         gc.collect()
 
-    sample_page.btn.config(23, 20, 31)
+    btn = cube_button()
+    btn.config(23, 20, 31)
+    sample_page.key_init(btn)
     sample_page.add_sample(Report()) # keep
 
     sample_page.add_sample(AudioTest())

@@ -251,8 +251,8 @@ class ES8374:
                 from fpioa_manager import fm
                 from Maix import GPIO
                 tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
-                fm.register(tmp, fm.fpioa.GPIOHS11)
-                sda = GPIO(GPIO.GPIOHS11, GPIO.OUT)
+                fm.register(tmp, fm.fpioa.GPIOHS15)
+                sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
                 sda.value(1)
                 fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
 
@@ -266,8 +266,8 @@ class ES8374:
                 from fpioa_manager import fm
                 from Maix import GPIO
                 tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
-                fm.register(tmp, fm.fpioa.GPIOHS11)
-                sda = GPIO(GPIO.GPIOHS11, GPIO.OUT)
+                fm.register(tmp, fm.fpioa.GPIOHS15)
+                sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
                 sda.value(1)
                 fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
 

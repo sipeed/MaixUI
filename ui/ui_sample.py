@@ -23,11 +23,12 @@ except ImportError:
 class sample_page():
 
     index, case, samples = 0, None, []
-    btn, replace = cube_button(), False
+    btn, replace = None, False
 
     agent = agent()
 
-    def init():
+    def key_init(btn):
+        sample_page.btn = btn
         sample_page.agent.event(150, sample_page.key_event)
 
     def next():
@@ -39,7 +40,7 @@ class sample_page():
         sample_page.index -= 1
         sample_page.index = sample_page.index % len(sample_page.samples)
         sample_page.reload()
-        
+
     def key_event():
         sample_page.btn.event()
         sample_page.replace = False
@@ -135,10 +136,10 @@ class sample_page():
         sample_page.add_sample(case1())
         sample_page.add_sample(case2())
 
-sample_page.init()
-
 if __name__ == "__main__":
-
+    btn = cube_button()
+    btn.config()
+    sample_page.key_init(btn)
     sample_page.add_demo()
 
     @ui.warp_template(ui.blank_draw)
