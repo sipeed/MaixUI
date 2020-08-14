@@ -9,11 +9,11 @@ import math, os, image
 
 try:
     from ui_canvas import ui
-    from button import cube_button
+    from button import sipeed_button
     from core import agent
 except ImportError:
     from ui.ui_canvas import ui
-    from driver.button import cube_button
+    from driver.button import sipeed_button
     from lib.core import agent
 
 class icon:
@@ -63,7 +63,7 @@ class launcher:
       icon(140, 150, os.getcwd() + "/res/icons/app_system_info.bmp")
   ]
 
-  btn = cube_button()
+  btn = sipeed_button()
   agent = agent()
 
   def init():

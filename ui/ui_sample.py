@@ -13,11 +13,11 @@ import random
 try:
     from lib.core import agent
     from ui.ui_canvas import ui
-    from driver.button import cube_button
+    from driver.button import sipeed_button
 except ImportError:
     from core import agent
     from ui_canvas import ui
-    from button import cube_button
+    from button import sipeed_button
 
 
 class sample_page():
@@ -137,7 +137,7 @@ class sample_page():
         sample_page.add_sample(case2())
 
 if __name__ == "__main__":
-    btn = cube_button()
+    btn = sipeed_button()
     btn.config()
     sample_page.key_init(btn)
     sample_page.add_demo()

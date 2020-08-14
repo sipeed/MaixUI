@@ -18,7 +18,7 @@ from core import agent
 from wdt import protect
 
 from led import cube_led
-from button import cube_button
+from button import sipeed_button
 from pmu_axp173 import AXP173, AXP173_ADDR
 from sound import CubeAudio
 #from es8374 import ES8374
@@ -370,7 +370,7 @@ class KeyTest():
             self.is_load = True
             sample_page.btn.enable = False
             cube_led.init(14, 15, 17, 32)
-            self.btn = cube_button()
+            self.btn = sipeed_button()
             self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
@@ -474,7 +474,7 @@ class FrontSensorTest():
             cube_led.init(14, 15, 17, 32)
             cube_led.w.value(1)
             sample_page.btn.enable = False
-            self.btn = cube_button()
+            self.btn = sipeed_button()
             self.btn.config(23, 20, 31)
             self.get_image = None
             self.isError = None
@@ -552,7 +552,7 @@ class RearSensorTest():
             cube_led.init(14, 15, 17, 32)
             cube_led.w.value(1)
             sample_page.btn.enable = False
-            self.btn = cube_button()
+            self.btn = sipeed_button()
             self.btn.config(23, 20, 31)
             self.get_image = None
             self.isError = None
@@ -631,7 +631,7 @@ class AudioTest():
             self.state = 0
             self.result = 0
             self.fft_amp = None
-            self.btn = cube_button()
+            self.btn = sipeed_button()
             self.btn.config(23, 20, 31)
             self.count += 1
             self.agent = agent()
@@ -798,7 +798,7 @@ if __name__ == "__main__":
         sample_page.samples = []
         gc.collect()
 
-    btn = cube_button()
+    btn = sipeed_button()
     btn.config(23, 20, 31)
     sample_page.key_init(btn)
     sample_page.add_sample(Report()) # keep

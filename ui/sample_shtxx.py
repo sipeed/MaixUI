@@ -7,7 +7,7 @@
 
 try:
     from ui_canvas import ui
-    from button import cube_button
+    from button import sipeed_button
     from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
     from core import agent
 except ImportError:

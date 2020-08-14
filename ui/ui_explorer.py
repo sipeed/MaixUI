@@ -8,12 +8,12 @@
 
 try:
     from ui_canvas import ui
-    from button import cube_button
+    from button import sipeed_button
     from fs import OS
     from wdt import protect
 except ImportError:
     from ui.ui_canvas import ui
-    from driver.button import cube_button
+    from driver.button import sipeed_button
     from driver.fs import OS
     from driver.wdt import protect
 
@@ -39,7 +39,7 @@ def list_lshift(obj):
 
 class explorer:
 
-  btn = cube_button()
+  btn = sipeed_button()
   files = OS.listdir('/') + ["/"]
   paths = ["/"]
   info = ""

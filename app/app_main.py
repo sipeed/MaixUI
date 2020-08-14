@@ -13,7 +13,7 @@ from ui_launcher import launcher
 from ui_system_info import system_info
 from ui_catch import catch
 from ui_pages import pages
-from button import cube_button
+from button import sipeed_button
 from ui_camera import ai_camera
 
 
@@ -21,7 +21,7 @@ class app:
 
     layer = 0  # set help_draw to top
     ctrl = agent()
-    btn = cube_button()
+    btn = sipeed_button()
 
     @ui.warp_template(ui.bg_draw)
     @ui.warp_template(ui.help_draw)

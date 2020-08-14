@@ -32,7 +32,7 @@ class GPIO:
         return self.t
 
 
-class cube_button:
+class sipeed_button:
     def __init__(self):
         self.home_last, self.next_last, self.back_last = 1, 1, 1
         self.cache = {
@@ -120,7 +120,7 @@ class cube_button:
 
 if __name__ == "__main__":
 
-    tmp = cube_button()
+    tmp = sipeed_button()
     n = 10000
 
     t = time.ticks()

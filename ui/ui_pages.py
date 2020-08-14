@@ -7,10 +7,10 @@
 
 try:
     from ui_canvas import ui
-    from button import cube_button
+    from button import sipeed_button
 except ImportError:
     from ui.ui_canvas import ui
-    from driver.button import cube_button
+    from driver.button import sipeed_button
 
 import os
 import machine
@@ -85,7 +85,7 @@ class sys_info:
 class pages:
 
   def __init__(self):
-    self.btn = cube_button()
+    self.btn = sipeed_button()
     self.page_info = sys_info()
     self.page = 0
 

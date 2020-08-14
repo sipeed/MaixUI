@@ -12,13 +12,13 @@ import random
 
 try:
     from ui_canvas import ui
-    from button import cube_button
+    from button import sipeed_button
     import camera
     from face_reco import FaceReco
     from led import cube_led
 except ImportError:
     from ui.ui_canvas import ui
-    from driver.button import cube_button
+    from driver.button import sipeed_button
     import driver.camera as camera
     from driver.face_reco import FaceReco
     from driver.led import cube_led
@@ -51,7 +51,7 @@ class ai_sample():
 class ai_camera():
 
     index, model, models = 0, ai_sample, [ai_sample, FaceReco]
-    btn, replace = cube_button(), False
+    btn, replace = sipeed_button(), False
     backlight = 1
 
     def reload():

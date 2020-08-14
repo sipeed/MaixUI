@@ -14,13 +14,13 @@ from Maix import FPIOA, GPIO
 Match = [[(1, 0), (1, 0)], [(2, 1), None]] # 0 1 1 2 0
 #Match = [[None, (1, 0)], [(2, 1), None]]  # 0 1 0 0 2
 
-class cube_button:
+class sipeed_button:
 
     def config(self, ENTER=10, BACK=11, NEXT=16, Limit=1000):
-        fm.register(ENTER, fm.fpioa.GPIOHS10)
-        fm.register(BACK, fm.fpioa.GPIOHS11)
-        fm.register(NEXT, fm.fpioa.GPIOHS16)
-        cube_button.Limit = 1000  # 1s
+        fm.register(ENTER, fm.fpioa.GPIOHS0)
+        fm.register(BACK, fm.fpioa.GPIOHS1)
+        fm.register(NEXT, fm.fpioa.GPIOHS6)
+        sipeed_button.Limit = 1000  # 1s
 
     def __init__(self):
         self.home_last, self.next_last, self.back_last = 1, 1, 1
@@ -35,13 +35,13 @@ class cube_button:
 
         self.config()
 
-        self.home_button = GPIO(GPIO.GPIOHS10, GPIO.IN, GPIO.PULL_UP)
+        self.home_button = GPIO(GPIO.GPIOHS0, GPIO.IN, GPIO.PULL_UP)
         # if self.home_button.value() == 0:
         #     sys.exit()
 
-        self.back_button = GPIO(GPIO.GPIOHS11, GPIO.IN, GPIO.PULL_UP)
+        self.back_button = GPIO(GPIO.GPIOHS1, GPIO.IN, GPIO.PULL_UP)
 
-        self.next_button = GPIO(GPIO.GPIOHS16, GPIO.IN, GPIO.PULL_UP)
+        self.next_button = GPIO(GPIO.GPIOHS6, GPIO.IN, GPIO.PULL_UP)
 
     def home(self):
         if self.enable:
@@ -165,7 +165,7 @@ if __name__ == "__main__":
     #time.sleep_ms(200)
     #print(tmp.home())
 
-    tmp = cube_button()
+    tmp = sipeed_button()
     #tmp.config(10, 11, 16) # cube
     tmp.config(23, 20, 31) # amigo
     while True:

@@ -144,7 +144,7 @@ The difference is that it can be used multiple times, so object-oriented design 
 class pages:
 
   def __init__(self):
-    self.btn = cube_button()
+    self.btn = sipeed_button()
     self.page_info = sys_info()
     self.page = 0
 

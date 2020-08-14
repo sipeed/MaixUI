@@ -18,7 +18,7 @@ from core import agent
 from wdt import protect
 
 from led import cube_led
-from button import cube_button
+from button import sipeed_button
 from pmu_axp173 import AXP173
 from sound import CubeAudio
 #from es8374 import ES8374
@@ -93,7 +93,7 @@ if __name__ == "__main__":
                 #print(case.load)
                 self.is_load = True
                 sample_page.btn.enable = False
-                self.btn = cube_button()
+                self.btn = sipeed_button()
                 self.btn.config(10, 11, 16)
                 self.agent = agent()
                 self.agent.event(150, self.key_event)
@@ -153,7 +153,7 @@ if __name__ == "__main__":
                 #print(case.load)
                 self.is_load = True
                 sample_page.btn.enable = False
-                self.btn = cube_button()
+                self.btn = sipeed_button()
                 self.btn.config(10, 11, 16)
                 cube_led.init(13, 12, 14, 32)
                 self.agent = agent()
@@ -724,7 +724,7 @@ if __name__ == "__main__":
                 self.state = 0
                 self.result = 0
                 self.fft_amp = None
-                self.btn = cube_button()
+                self.btn = sipeed_button()
                 self.btn.config(10, 11, 16)
                 self.agent = agent()
                 self.agent.event(150, self.key_event)

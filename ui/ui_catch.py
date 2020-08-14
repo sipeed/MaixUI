@@ -8,10 +8,10 @@
 
 try:
     from ui_canvas import ui
-    from button import cube_button
+    from button import sipeed_button
 except ImportError:
     from ui.ui_canvas import ui
-    from driver.button import cube_button
+    from driver.button import sipeed_button
 
 import sys
 import image
@@ -26,7 +26,7 @@ def catch(func):
             func()
         except Exception as e:
             try:
-                btn = cube_button()
+                btn = sipeed_button()
 
                 import uio
                 string_io = uio.StringIO()
@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     class test:
 
-        btn = cube_button()
+        btn = sipeed_button()
 
         info = 'this is test text.\n change to test.info'
 

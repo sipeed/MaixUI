@@ -21,7 +21,7 @@ try:
     from ui_explorer import explorer
     from sample_shtxx import sample_shtxx
     from sample_spmod import sample_spmod_test
-    from button import cube_button
+    from button import sipeed_button
     from wdt import protect
     from led import cube_led
     from sound import CubeAudio
@@ -39,7 +39,7 @@ except ImportError:
     from ui.ui_explorer import explorer
     from ui.sample_shtxx import sample_shtxx
     from ui.sample_spmod import sample_spmod_test
-    from driver.button import cube_button
+    from driver.button import sipeed_button
     from driver.wdt import protect
     from driver.led import cube_led
     from driver.sound import CubeAudio
@@ -48,7 +48,7 @@ class app:
 
     layer = 0 # set help_draw to top
     ctrl = agent()
-    btn = cube_button()
+    btn = sipeed_button()
 
 
     @ui.warp_template(ui.bg_in_draw)
