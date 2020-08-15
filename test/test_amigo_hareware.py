@@ -603,13 +603,10 @@ class AudioTest():
             self.state += 1
         elif self.btn.home() == 2:
             #print('self.btn.home()')
+            self.result += 1
             self.state += 1
-            if self.state > 1 and self.result == 2:
-                self.result = 0
-                Report.Audio_Test = True
-        if self.state > 1:
+        if self.state > 2:
             sample_page.next()
-
 
     def test_event(self):
         if self.isconnected and self.result == 2:
@@ -645,6 +642,9 @@ class AudioTest():
     def free(self):
         if self.is_load:
             # i2c deinit()
+            if self.result == 2:
+                self.result = 0
+                Report.Audio_Test = True
             sample_page.btn.enable = True
             self.is_load = False
 
@@ -691,7 +691,7 @@ class AudioTest():
                     CubeAudio.load(os.getcwd() + "/res/loop.wav", 100)
                     if self.count > 1:
                         #print('self.count', self.count)
-                        CubeAudio.i2s.set_sample_rate(22050)
+                        CubeAudio.i2s.set_sample_rate(11025)
             elif self.state == 1 and self.is_record:
                 tmp = CubeAudio.i2s.record(1024)
                 fft_res = FFT.run(tmp.to_bytes(), 512)
@@ -836,7 +836,7 @@ if __name__ == "__main__":
             #protect.keep()
             #continue
             try:
-                print((int)(1000 / (time.ticks_ms() - last)), 'fps')
+                # print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                 last = time.ticks_ms()
                 app_main()
                 protect.keep()
