@@ -11,12 +11,6 @@ from fpioa_manager import fm
 from machine import I2C
 from Maix import I2S, GPIO, FFT
 
-from ui_catch import catch
-from ui_canvas import ui
-from ui_sample import sample_page
-from core import agent
-from wdt import protect
-
 from led import cube_led
 from button import sipeed_button
 from pmu_axp173 import AXP173, AXP173_ADDR
@@ -26,6 +20,12 @@ from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
 from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
 from bme280 import BME280, BME280_I2CADDR
 from qmcx983 import QMCX983, QMCX983_I2CADDR
+
+from ui_catch import catch
+from ui_canvas import ui
+from ui_sample import sample_page
+from core import agent
+from wdt import protect
 
 class Report():
 
@@ -604,9 +604,11 @@ class AudioTest():
         elif self.btn.home() == 2:
             #print('self.btn.home()')
             self.state += 1
-            if self.state > 1:
+            if self.state > 1 and self.result == 2:
+                self.result = 0
                 Report.Audio_Test = True
-                sample_page.next()
+        if self.state > 1:
+            sample_page.next()
 
 
     def test_event(self):
@@ -635,7 +637,7 @@ class AudioTest():
             self.btn.config(23, 20, 31)
             self.count += 1
             self.agent = agent()
-            self.agent.event(200, self.key_event)
+            self.agent.event(150, self.key_event)
             self.agent.event(500, self.check)
             self.agent.event(15000, self.test_event)
             self.is_load = True
@@ -690,12 +692,12 @@ class AudioTest():
                     if self.count > 1:
                         #print('self.count', self.count)
                         CubeAudio.i2s.set_sample_rate(22050)
-            elif self.state == 2 and self.is_record:
+            elif self.state == 1 and self.is_record:
                 tmp = CubeAudio.i2s.record(1024)
                 fft_res = FFT.run(tmp.to_bytes(), 512)
                 fft_amp = FFT.amplitude(fft_res)
                 if fft_amp[50] > 100 and fft_amp[100] > 100:
-                    Report.Audio_Test = True
+                    self.result += 1
                     sample_page.next()
                 for x_shift in range(240):
                     hist_height = fft_amp[x_shift]

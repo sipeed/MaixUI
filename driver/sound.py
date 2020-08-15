@@ -24,7 +24,7 @@ class CubeAudio:
             CubeAudio.dev.stop(0x02)
         CubeAudio.dev = ES8374()
         CubeAudio.dev.setVoiceVolume(volume)
-        #CubeAudio.dev.start(0x03)
+        CubeAudio.dev.start(0x03)
         if is_record:
             CubeAudio.i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT,
                 cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
         # record to wav
         print('record to wav')
-        CubeAudio.ready()
+        CubeAudio.ready(True)
         CubeAudio.i2s.set_sample_rate(22050)
 
         # init audio
