@@ -8,7 +8,7 @@
 import time, gc, math, random, sensor, audio
 
 from fpioa_manager import fm
-from machine import I2C
+from machine import I2C, SPI
 from Maix import I2S, GPIO, FFT
 
 from led import cube_led
@@ -432,6 +432,134 @@ class GroveReport():
         if self.is_load:
             pass
             #self.is_load = False
+
+class SpmodTest():
+
+    test_conut = 0
+
+    def __init__(self, mosi=10, miso=6, cs=12, clk=11):
+        self.is_load = False
+        self.spi = SPI(SPI.SPI1, mode=SPI.MODE_MASTER, baudrate=400*1000,
+            polarity=0, phase=0, bits=8, firstbit=SPI.MSB, sck=clk, mosi=mosi, miso=miso)
+        fm.register(cs, fm.fpioa.GPIOHS12, force=True)
+        self.cs = GPIO(GPIO.GPIOHS12, GPIO.OUT)
+
+    def test_event(self):
+        if self.work_data != None and self.work_data == b'\x0b\x17':
+            SpmodTest.test_conut += 1
+            if SpmodTest.test_conut == 2:
+                Report.Spmod_Test = True
+        sample_page.next()
+
+    def load(self):
+        if Report.Spmod_Test and SpmodTest.test_conut == 2:
+            sample_page.next()
+        if self.is_load == False:
+            # i2c init()
+            sample_page.btn.enable = False
+            self.isError = None
+            self.work_info = []
+            self.work_data = None
+            self.agent = agent()
+            self.agent.event(250, self.check)
+            self.agent.event(2000, self.test_event)
+            self.is_load = True
+
+    def free(self):
+        if self.is_load:
+            # i2c deinit()
+            sample_page.btn.enable = True
+            self.is_load = False
+
+    def check(self):
+        try:
+            tmp = []
+            self.cs.value(0)
+            write_data = bytearray([0x90, 0x00, 0x00, 0x00])
+            self.spi.write(write_data)
+            id_buf = bytearray(2)
+            self.spi.readinto(id_buf, write=0xff)
+            self.work_data = id_buf
+            self.cs.value(1)
+            tmp.append("Flash ReadID\n\n" + str(self.work_data))
+            self.work_info = tmp
+        except Exception as e:
+            Report.Spmod_Test = False
+            Report.isError = str(e)
+            print(e)
+
+    def work(self):
+        self.agent.parallel_cycle()
+
+        ui.canvas.draw_string(30, 10, "Spmod Test", (0, 255, 127), scale=2)
+        if self.work_data:
+            for i in range(len(self.work_info)):
+                ui.canvas.draw_string(
+                    20, 20*i + 90, "{0}".format(str(self.work_info[i])), scale=2)
+        if self.isError != None:
+            ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
+            sample_page.next()
+
+class SpmodReport():
+
+    def __init__(self):
+        self.is_load = False
+
+    def load(self):
+        if self.is_load == False:
+            self.is_load = True
+            self.agent = agent()
+            self.agent.event(2000, sample_page.next)
+        else:
+            sample_page.next()
+
+    def work(self):
+        self.agent.cycle()
+        ui.canvas.draw_string(30, 20, "SpmodReport", (127, 255, 255), scale=4)
+        ui.canvas.draw_string(60, 120, "Pass" if (Report.Spmod_Test) else "Fail", (0, 255, 0) if (Report.Spmod_Test) else (255, 0, 0), scale=8)
+
+    def free(self):
+        if self.is_load:
+            pass
+            #self.is_load = False
+
+class WaitTestStart():
+
+    def __init__(self):
+        self.is_load = False
+
+    def key_event(self):
+        self.btn.expand_event()
+
+        if self.btn.back() == 2:
+            sample_page.next()
+        elif self.btn.next() == 2:
+            sample_page.next()
+        elif self.btn.home() == 2:
+            sample_page.next()
+
+    def load(self):
+        if self.is_load == False:
+            self.is_load = True
+            sample_page.btn.enable = False
+            self.btn = sipeed_button()
+            self.btn.config(23, 20, 31)
+            self.agent = agent()
+            self.agent.event(150, self.key_event)
+            #self.agent.event(2000, sample_page.next)
+        else:
+            if Report.Key_Test:
+                sample_page.next()
+
+    def work(self):
+        self.agent.cycle()
+        ui.canvas.draw_string(30, 20, "Press \n\n Any-key \n\n Start Test", (127, 255, 255), scale=4)
+
+    def free(self):
+        if self.is_load:
+            pass
+            #self.is_load = False
+        sample_page.btn.enable = True
 
 class KeyTest():
 
@@ -1167,7 +1295,11 @@ if __name__ == "__main__":
     sample_page.add_sample(KeyReport())
     sample_page.add_sample(KeyTest())
 
-    #sample_page.add_sample(SpmodTest())
+    sample_page.add_sample(WaitTestStart())
+
+    sample_page.add_sample(SpmodReport())
+    sample_page.add_sample(SpmodTest(30, 28, 29, 8))
+    sample_page.add_sample(SpmodTest(10, 6, 12, 11))
 
     sample_page.add_sample(GroveReport())
     sample_page.add_sample(GroveTest())

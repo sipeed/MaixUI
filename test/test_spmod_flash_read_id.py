@@ -26,10 +26,9 @@ from fpioa_manager import fm
 
 print("Welcome to MicroPython!")
 fm.register(12, fm.fpioa.GPIOHS16, force=True)
-cs = GPIO(fm.fpioa.GPIOHS16, GPIO.OUT)
+cs = GPIO(GPIO.GPIOHS16, GPIO.OUT)
 #cs.value(0)
 #utime.sleep_ms(2000)
-
 
 spi = SPI(SPI.SPI1, mode=SPI.MODE_MASTER, baudrate=400*1000, polarity=0, phase=0, bits=8, firstbit=SPI.MSB,
     sck=11, mosi=10, miso=6)#使用程序配置了 cs0 则无法读取 W25QXX
@@ -46,7 +45,7 @@ while True:
     print(time.ticks_ms())
     #cs.value(0)
     utime.sleep_ms(200)
-    #cs.value(1)
+    cs.value(1)
     #utime.sleep_ms(2200)
 
 spi.deinit()
