@@ -208,10 +208,10 @@ class PowerTest():
         ui.canvas.draw_string(10, 10, "1 Power Test", (127, 127, 255), scale=3)
         ui.canvas.draw_string(10, 40, "isconnected: %s" % (
             str)(self.isconnected), (255, 127, 0), scale=2)
-        if self.isconnected:
-            for i in range(len(self.work_info)):
-                ui.canvas.draw_string(
-                    20, 20*i + 80, "{0}".format(str(self.work_info[i])), mono_space=2)
+        #if self.isconnected:
+            #for i in range(len(self.work_info)):
+                #ui.canvas.draw_string(
+                    #20, 20*i + 80, "{0}".format(str(self.work_info[i])), mono_space=2)
         if self.isError != None:
             ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
             sample_page.next()
@@ -297,19 +297,19 @@ class Msa301Test():
         ui.canvas.draw_string(10, 30, "2 Msa301Test", (127, 127, 255), scale=3)
         ui.canvas.draw_string(10, 80, "isconnected: %s" % (
             str)(self.isconnected), (255, 127, 0), scale=2)
-        if self.isconnected:
-            ui.canvas.draw_string(10, 120, "tapped: %s" % (
-                str)(self.tapped), (0, 214, 126), scale=2)
+        #if self.isconnected:
+            #ui.canvas.draw_string(10, 120, "tapped: %s" % (
+                #str)(self.tapped), (0, 214, 126), scale=2)
 
-            ui.canvas.draw_string(10, 140, "x", (255, 0, 0), scale=2)
-            ui.canvas.draw_line(120, 150, 120 + int(self.acceleration[0] * 8), 150, color=(41, 131, 255))
-            ui.canvas.draw_string(10, 160, "y", (0, 255, 0), scale=2)
-            ui.canvas.draw_line(120, 170, 120 + int(self.acceleration[1] * 8), 170, color=(141, 31, 255))
-            ui.canvas.draw_string(10, 180, "z", (0, 0, 255), scale=2)
-            ui.canvas.draw_line(120, 190, 120 + int(self.acceleration[2] * 8), 190, color=(241, 131, 55))
+            #ui.canvas.draw_string(10, 140, "x", (255, 0, 0), scale=2)
+            #ui.canvas.draw_line(120, 150, 120 + int(self.acceleration[0] * 8), 150, color=(41, 131, 255))
+            #ui.canvas.draw_string(10, 160, "y", (0, 255, 0), scale=2)
+            #ui.canvas.draw_line(120, 170, 120 + int(self.acceleration[1] * 8), 170, color=(141, 31, 255))
+            #ui.canvas.draw_string(10, 180, "z", (0, 0, 255), scale=2)
+            #ui.canvas.draw_line(120, 190, 120 + int(self.acceleration[2] * 8), 190, color=(241, 131, 55))
 
-            ui.canvas.draw_string(40, 210,
-                str(("%-02.2f %-02.2f %-02.2f" % self.acceleration)), (127, 255, 255), scale=2)
+            #ui.canvas.draw_string(40, 210,
+                #str(("%-02.2f %-02.2f %-02.2f" % self.acceleration)), (127, 255, 255), scale=2)
 
         if self.isError != None:
             ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
@@ -402,10 +402,10 @@ class GroveTest():
         ui.canvas.draw_string(10, 10, "3 Grove Test SHT3X", (0, 255, 127), scale=2)
         ui.canvas.draw_string(10, 50, "isconnected: %s" % (
             str)(self.isconnected), (255, 127, 0), scale=2)
-        if self.isconnected:
-            for i in range(len(self.work_info)):
-                ui.canvas.draw_string(
-                    20, 20*i + 90, "{0}".format(str(self.work_info[i])), scale=2)
+        #if self.isconnected:
+            #for i in range(len(self.work_info)):
+                #ui.canvas.draw_string(
+                    #20, 20*i + 90, "{0}".format(str(self.work_info[i])), scale=2)
         if self.isError != None:
             ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
             sample_page.next()
@@ -492,10 +492,10 @@ class SpmodTest():
         self.agent.parallel_cycle()
 
         ui.canvas.draw_string(10, 10, "4 Spmod Test", (0, 255, 127), scale=2)
-        if self.work_data:
-            for i in range(len(self.work_info)):
-                ui.canvas.draw_string(
-                    20, 20*i + 90, "{0}".format(str(self.work_info[i])), scale=2)
+        #if self.work_data:
+            #for i in range(len(self.work_info)):
+                #ui.canvas.draw_string(
+                    #20, 20*i + 90, "{0}".format(str(self.work_info[i])), scale=2)
         if self.isError != None:
             ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
             sample_page.next()
@@ -1160,15 +1160,17 @@ class AudioTest():
         ui.canvas.draw_string(10, 100, "Test: %s" %
             ('play' if self.state == 0 else 'record'), (255, 127, 0), scale=4)
 
+        #print(time.ticks_ms())
+
         if self.isconnected:
             if self.state == 0 and self.is_play:
                 if CubeAudio.event() == False:
-                    CubeAudio.load(os.getcwd() + "/res/loop.wav", 100)
+                    CubeAudio.load("/flash/test.wav", 100)
+                    #print('self.count', self.count)
                     if self.count > 1:
-                        #print('self.count', self.count)
-                        CubeAudio.i2s.set_sample_rate(11025)
+                        CubeAudio.i2s.set_sample_rate(22050)
                     else:
-						# pass
+                        # pass
                         CubeAudio.i2s.set_sample_rate(22050)
             elif self.state == 1:
                 ui.canvas.draw_string(10, 200, "Press Any-Key \n Start", (255, 127, 0), scale=3)
@@ -1183,6 +1185,7 @@ class AudioTest():
                     hist_height = fft_amp[x_shift]
                     ui.canvas.draw_rectangle((x_shift, 0, 1, hist_height), [255,255,255], 1, True)
                     #print((x_shift, 0, 1, hist_height))
+
         if self.isError != None:
             ui.canvas.draw_string(40, 80, self.isError, (255, 255, 255), scale=2)
             sample_page.next()
@@ -1315,16 +1318,16 @@ if __name__ == "__main__":
 
     #ui.height, ui.weight = int(lcd.width() / 2), int(lcd.height())
 
-    ui.height, ui.weight = 320, 320
+    ui.height, ui.weight = 320, 300
 
     @ui.warp_template(ui.blank_draw)
-    @ui.warp_template(ui.grey_draw)
+    #@ui.warp_template(ui.grey_draw)
     @ui.warp_template(sample_page.sample_draw)
     @catch
     def app_main():
         ui.display()
 
-    # last = time.ticks_ms()
+    last = time.ticks_ms()
     while True:
         #app_main()
         #import time
@@ -1334,8 +1337,8 @@ if __name__ == "__main__":
             #protect.keep()
             #continue
             try:
-                # print((int)(1000 / (time.ticks_ms() - last)), 'fps')
-                # last = time.ticks_ms()
+                #print((int)(1000 / (time.ticks_ms() - last)), 'fps')
+                last = time.ticks_ms()
                 app_main()
                 protect.keep()
                 #print(time.ticks_ms(), 'ram total : ' + str(gc.mem_free() / 1024) + ' kb')
