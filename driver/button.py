@@ -5,31 +5,31 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import sys
-import time
+import sys, time
 
 from fpioa_manager import fm
 from Maix import FPIOA, GPIO
+
+class button_io:
+
+    home_button = None
+    next_button = None
+    back_button = None
+
+    def config(ENTER=10, BACK=11, NEXT=16):
+        fm.fpioa.set_function(pin=ENTER, func=fm.fpioa.GPIOHS10)
+        fm.fpioa.set_function(pin=BACK, func=fm.fpioa.GPIOHS11)
+        fm.fpioa.set_function(pin=NEXT, func=fm.fpioa.GPIOHS16)
+
+        button_io.home_button = GPIO(GPIO.GPIOHS10, GPIO.IN, GPIO.PULL_UP)
+        button_io.next_button = GPIO(GPIO.GPIOHS11, GPIO.IN, GPIO.PULL_UP)
+        button_io.back_button = GPIO(GPIO.GPIOHS16, GPIO.IN, GPIO.PULL_UP)
+
 
 Match = [[(1, 0), (1, 0)], [(2, 1), None]] # 0 1 1 2 0
 #Match = [[None, (1, 0)], [(2, 1), None]]  # 0 1 0 0 2
 
 class sipeed_button:
-
-    def config(self, ENTER=10, BACK=11, NEXT=16, Limit=1000):
-        fm.register(ENTER, fm.fpioa.GPIOHS0)
-        fm.register(BACK, fm.fpioa.GPIOHS1)
-        fm.register(NEXT, fm.fpioa.GPIOHS6)
-        sipeed_button.Limit = 1000  # 1s
-
-        self.home_button = GPIO(GPIO.GPIOHS0, GPIO.IN, GPIO.PULL_UP)
-        # if self.home_button.value() == 0:
-        #     sys.exit()
-
-        self.back_button = GPIO(GPIO.GPIOHS1, GPIO.IN, GPIO.PULL_UP)
-
-        self.next_button = GPIO(GPIO.GPIOHS6, GPIO.IN, GPIO.PULL_UP)
-
 
     def __init__(self):
         self.home_last, self.next_last, self.back_last = 1, 1, 1
@@ -41,6 +41,7 @@ class sipeed_button:
         }
         self.pause_time = 0
         self.enable = True
+        self.Limit = 1000  # 1s
 
     def home(self):
         if self.enable:
@@ -71,19 +72,19 @@ class sipeed_button:
 
             self.bak_time = time.ticks_ms()
 
-            home_value = self.home_button.value()
+            home_value = button_io.home_button.value()
 
             tmp = Match[home_value][self.home_last]
             if tmp:
                 self.last_time = time.ticks_ms() - self.bak_time
                 self.cache['home'], self.home_last = tmp
 
-            tmp = Match[self.back_button.value()][self.back_last]
+            tmp = Match[button_io.back_button.value()][self.back_last]
             if tmp:
                 self.last_time = time.ticks_ms() - self.bak_time
                 self.cache['back'], self.back_last = tmp
 
-            tmp = Match[self.next_button.value()][self.next_last]
+            tmp = Match[button_io.next_button.value()][self.next_last]
             if tmp:
                 self.last_time = time.ticks_ms() - self.bak_time
                 self.cache['next'], self.next_last = tmp
@@ -92,7 +93,7 @@ class sipeed_button:
 
         if self.enable:
 
-            tmp = self.home_button.value()
+            tmp = button_io.home_button.value()
             if tmp == 0 and self.home_last == 1 and self.pause_time < time.ticks_ms():
                 self.cache['home'], self.home_last, self.bak_time = 1, 0, time.ticks_ms()
 
@@ -107,7 +108,7 @@ class sipeed_button:
                 self.cache['home'], self.home_last, self.last_time = 2, 1, time.ticks_ms(
                 ) - self.bak_time
 
-            tmp = self.back_button.value()
+            tmp = button_io.back_button.value()
 
             if tmp == 0 and self.back_last == 1:
                 self.cache['back'], self.back_last, self.bak_time = 1, 0, time.ticks_ms()
@@ -119,7 +120,7 @@ class sipeed_button:
                 self.cache['back'], self.back_last, self.last_time = 2, 1, time.ticks_ms(
                 ) - self.bak_time
 
-            tmp = self.next_button.value()
+            tmp = button_io.next_button.value()
 
             if tmp == 0 and self.next_last == 1:
                 self.cache['next'], self.next_last, self.bak_time = 1, 0, time.ticks_ms()
@@ -131,10 +132,8 @@ class sipeed_button:
                 self.cache['next'], self.next_last, self.last_time = 2, 1, time.ticks_ms(
                 ) - self.bak_time
 
-
-PIR = 16
-
 class ttgo_button:
+    PIR = 16
 
     def __init__(self):
         self.home_last = 1
@@ -142,7 +141,7 @@ class ttgo_button:
             'home': 0,
         }
 
-        fm.register(PIR, fm.fpioa.GPIOHS16)
+        fm.register(ttgo_button.PIR, fm.fpioa.GPIOHS16)
         self.home_button = GPIO(GPIO.GPIOHS16, GPIO.IN, GPIO.PULL_UP)
 
     def home(self):
@@ -164,10 +163,11 @@ if __name__ == "__main__":
     #time.sleep_ms(200)
     #print(tmp.home())
 
-    tmp = sipeed_button()
-    #tmp.config(10, 11, 16) # cube
     print(os.listdir())
-    tmp.config(23, 20, 31) # amigo
+    tmp = sipeed_button()
+    button_io.config() # cube
+    #button.config(10, 11, 16) # cube
+    #button.config(23, 20, 31) # amigo
     print(os.listdir())
     while True:
         time.sleep_ms(200)
@@ -175,4 +175,4 @@ if __name__ == "__main__":
         #print(tmp.back(), tmp.home(), tmp.next())
         tmp.expand_event()
         print(tmp.back(), tmp.home(), tmp.next(), tmp.interval())
-        print(os.listdir())
+        #print(os.listdir())

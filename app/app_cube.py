@@ -21,7 +21,7 @@ try:
     from sample_shtxx import sample_shtxx
     from sample_spmod import sample_spmod_test
     from sample_msa301 import sample_msa301
-    from button import sipeed_button
+    from button import sipeed_button, button_io
     from wdt import protect
     from led import cube_led
     from sound import CubeAudio
@@ -120,6 +120,7 @@ class app:
             #raise Exception("Settings Unrealized.")
         elif selected == 3:
             CubeAudio.load(os.getcwd() + "/res/one.wav", 100)
+            sample_page.key_init()
             sample_page.add_sample(sample_msa301())
             sample_page.add_sample(sample_spmod_test())
             sample_page.add_sample(sample_shtxx())
@@ -192,6 +193,7 @@ class app:
             app.exec_application()
 
     def run():
+        button_io.config()
         cube_led.init(13, 12, 14, 32)
         fm.register(30,fm.fpioa.I2C1_SCLK, force=True)
         fm.register(31,fm.fpioa.I2C1_SDA, force=True)

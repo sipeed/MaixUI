@@ -12,7 +12,7 @@ from machine import I2C, SPI
 from Maix import I2S, GPIO, FFT
 
 from led import cube_led
-from button import sipeed_button
+from button import sipeed_button, button_io
 from pmu_axp173 import AXP173, AXP173_ADDR
 from sound import CubeAudio
 #from es8374 import ES8374
@@ -1278,9 +1278,8 @@ if __name__ == "__main__":
         sample_page.samples = []
         gc.collect()
 
-    btn = sipeed_button()
-    btn.config(23, 20, 31)
-    sample_page.key_init(btn)
+    button_io.config(23, 20, 31)
+    sample_page.key_init()
 
     sample_page.add_sample(Report()) # keep
 

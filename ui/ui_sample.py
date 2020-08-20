@@ -13,22 +13,21 @@ import random
 try:
     from lib.core import agent
     from ui.ui_canvas import ui
-    from driver.button import sipeed_button
+    from driver.button import sipeed_button, button_io
 except ImportError:
     from core import agent
     from ui_canvas import ui
-    from button import sipeed_button
+    from button import sipeed_button, button_io
 
 
 class sample_page():
 
     index, case, samples = 0, None, []
-    btn, replace = None, False
+    btn, replace = sipeed_button(), False
 
     agent = agent()
 
-    def key_init(btn):
-        sample_page.btn = btn
+    def key_init():
         sample_page.agent.event(150, sample_page.key_event)
 
     def next():
@@ -138,8 +137,8 @@ class sample_page():
 
 if __name__ == "__main__":
     btn = sipeed_button()
-    btn.config()
-    sample_page.key_init(btn)
+    button_io.config()
+    sample_page.key_init()
     sample_page.add_demo()
 
     @ui.warp_template(ui.blank_draw)
