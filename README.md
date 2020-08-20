@@ -63,11 +63,17 @@ Developers can sart from [ui/ui_canvas.py](ui/ui_canvas.py)
     - lib
     - driver
 
-3. Rename [app/app_cube.py](app/app_cube.py) to `main.py`.
+3. Rename your [app/app_main.py](app/app_main.py) to `main.py`.
 
 3. Move `main.py` to the root directory in SD card.
 
 4. Boot from the SD card.
+
+#### Currently supported startup applications.
+
+- [app/app_main.py](app/app_main.py)
+- [app/app_cube.py](app/app_cube.py)
+- [app/app_amigo.py](app/app_amigo.py)
 
 ## Architecture description
 
@@ -170,9 +176,9 @@ look at this [ui/ui_pages.py](ui/ui_pages.py)
 
 ![](./image/ui_pages.gif)
 
-It is recommended to use app_micro.py as a migration reference for other hardware, it will not contain external images.
+It is recommended to use app_main.py as a migration reference for other hardware, it will not contain external images.
 
-Use this [app/app_micro.py](app/app_micro.py)
+Use this [app/app_main.py](app/app_main.py)
 
 ![](./image/layer.png)
 
@@ -195,6 +201,8 @@ class bar(frame):
 ```
 
 For example, our button driver realizes the event of pressing and releasing, and can give any function to actively access the button event.
+
+> Now Configure IO function through button_io.config().
 
 ```python
 
