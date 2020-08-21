@@ -9,10 +9,12 @@ import math, os, image
 
 try:
     from ui_canvas import ui
+    from touch import Touch
     from button import sipeed_button, button_io
     from core import agent
 except ImportError:
     from ui.ui_canvas import ui
+    from driver.touch import Touch
     from driver.button import sipeed_button, button_io
     from lib.core import agent
 
@@ -111,12 +113,16 @@ class Photo(icon):
         self.img.draw_font(0, 0, 16, 16, Photo.tmp3, scale=4, color=(0xFF, 0xa0, 0xa0))
 
     def on_title(self, color=(255, 255, 255)):
-        ui.canvas.draw_string(self.x + 5, self.y + self.h + 5, self.__qualname__, scale=2, color=color)
+        ui.canvas.draw_string(self.x + 3, self.y + self.h + 5, self.__qualname__, scale=2, color=color)
+
+from machine import I2C
 
 class launcher:
 
+  effect = []
   alpha = 0
   app_select = 0
+  app_run = False
   app_sets = [
       Camera(60, 200),
       Setting(160, 200),
@@ -124,11 +130,40 @@ class launcher:
       Photo(360, 200),
   ]
 
+  toth = Touch(I2C(I2C.I2C1, freq=400*1000, scl=24, sda=27), 480, 320, 200)
   btn = sipeed_button()
   agent = agent()
 
   def init():
     launcher.agent.event(150, launcher.key_event)
+    launcher.agent.event(50, launcher.touch_event)
+
+  def touch_event():
+    launcher.toth.event()
+    if launcher.toth.state == 1:
+      #print(launcher.toth.state, launcher.toth.points)
+      tmp = launcher.toth.points[1]
+      if len(launcher.effect) > 8:
+        launcher.effect.pop(0)
+      launcher.effect.append((tmp[0], tmp[1]))
+    elif launcher.toth.state == 2:
+      #print(launcher.toth.state, launcher.toth.points)
+      launcher.effect = []
+      old = launcher.toth.points[0]
+      sel = launcher.toth.points[1]
+      #print(sel, old, sel[2] - old[2])
+      if sel[2] - old[2] < 500:
+        # start
+        #if 136 < sel[1] and sel[1] < 200:
+        for i in range(len(launcher.app_sets)):
+            p = launcher.app_sets[i]
+            x, y = p.x, 320 - p.y
+            # print(x, p.w, y, p.h)
+            if x < sel[0] and sel[1] < y and sel[0] < x + p.w and y - p.h < sel[1]:
+                launcher.app_select = i
+                if sel[2] - old[2] < 250:
+                    print('start', launcher.app_select)
+                    launcher.app_run = True
 
   def key_event():
     launcher.btn.event()
@@ -139,13 +174,14 @@ class launcher:
         launcher.app_select += 1
     elif launcher.btn.home() == 1:
         print('start', launcher.app_select)
+        # launcher.app_run = True
         # ui.canvas.draw_string(15, 120, '(%s)' % launcher.app_sets[launcher.app_select])
 
     launcher.app_select = launcher.app_select % len(launcher.app_sets)  # lock pos
 
-
   def draw():
     launcher.agent.parallel_cycle()
+
     ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
                                      fill=True, color=(120, 120, 120))
     ui.canvas.draw_string(203, 73, "Amigo",
@@ -168,6 +204,13 @@ class launcher:
         checked = (pos == launcher.app_select)
         launcher.app_sets[pos].draw(checked, value if checked else 255)
 
+    for pos in range(len(launcher.effect)):
+        tmp = launcher.effect[pos]
+        cor = (pos + 1) * 32
+        ui.canvas.draw_circle(tmp[0], 320 - tmp[1], (pos + 1) * 3, thickness=1, fill=False, color=(cor, cor, cor))
+
+    launcher.agent.parallel_cycle()
+
 launcher.init()
 
 if __name__ == "__main__":
@@ -182,7 +225,7 @@ if __name__ == "__main__":
   import time
   last = time.ticks_ms()
   while True:
-      print(time.ticks_ms() - last)
+      #print(time.ticks_ms() - last)
       last = time.ticks_ms()
       unit_test()
       #time.sleep(0.5)

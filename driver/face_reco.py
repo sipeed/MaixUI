@@ -22,6 +22,7 @@ class FaceReco():
     anchor = (1.889, 2.5245, 2.9465, 3.94056, 3.99987,
               5.3658, 5.155437, 6.92275, 6.718375, 9.01025)
     is_load = False
+    bbox = None
 
     def load():
         if FaceReco.is_load == False:
@@ -33,9 +34,9 @@ class FaceReco():
     def work(img):
         img.pix_to_ai()
         # Run the detection routine
-        bbox = kpu.run_yolo2(FaceReco.model, img)
-        if bbox:
-            for i in bbox:
+        FaceReco.bbox = kpu.run_yolo2(FaceReco.model, img)
+        if FaceReco.bbox:
+            for i in FaceReco.bbox:
                 # print(i)
                 img.draw_rectangle(i.rect())
 
