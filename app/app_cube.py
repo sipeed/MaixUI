@@ -120,7 +120,6 @@ class app:
             #raise Exception("Settings Unrealized.")
         elif selected == 3:
             CubeAudio.load(os.getcwd() + "/res/one.wav", 100)
-            sample_page.key_init()
             sample_page.add_sample(sample_msa301())
             sample_page.add_sample(sample_spmod_test())
             sample_page.add_sample(sample_shtxx())
@@ -173,16 +172,10 @@ class app:
         if app.btn.next() == 1:
             app.rgb = (app.rgb + 1) % 8
             app.rgb_change(app.rgb)
-            if launcher.app_select == 1:
-                CubeAudio.load(os.getcwd() + "/res/jump.wav", 100)
-
 
         if app.btn.back() == 1:
             app.rgb = (app.rgb - 1) % 8
             app.rgb_change(app.rgb)
-            if launcher.app_select == 1:
-                CubeAudio.load(os.getcwd() + "/res/alarm.wav", 100)
-
 
         if app.layer == 0:
             app.draw_load()
@@ -195,6 +188,8 @@ class app:
     def run():
         button_io.config()
         cube_led.init(13, 12, 14, 32)
+        sample_page.key_init()
+
         fm.register(30,fm.fpioa.I2C1_SCLK, force=True)
         fm.register(31,fm.fpioa.I2C1_SDA, force=True)
         if CubeAudio.check():

@@ -17,13 +17,13 @@ class button_io:
     back_button = None
 
     def config(ENTER=10, BACK=11, NEXT=16):
-        fm.fpioa.set_function(pin=ENTER, func=fm.fpioa.GPIOHS10)
-        fm.fpioa.set_function(pin=BACK, func=fm.fpioa.GPIOHS11)
-        fm.fpioa.set_function(pin=NEXT, func=fm.fpioa.GPIOHS16)
+        fm.fpioa.set_function(pin=ENTER, func=fm.fpioa.GPIOHS0)
+        fm.fpioa.set_function(pin=BACK, func=fm.fpioa.GPIOHS1)
+        fm.fpioa.set_function(pin=NEXT, func=fm.fpioa.GPIOHS6)
 
-        button_io.home_button = GPIO(GPIO.GPIOHS10, GPIO.IN, GPIO.PULL_UP)
-        button_io.next_button = GPIO(GPIO.GPIOHS11, GPIO.IN, GPIO.PULL_UP)
-        button_io.back_button = GPIO(GPIO.GPIOHS16, GPIO.IN, GPIO.PULL_UP)
+        button_io.home_button = GPIO(GPIO.GPIOHS0, GPIO.IN, GPIO.PULL_UP)
+        button_io.next_button = GPIO(GPIO.GPIOHS1, GPIO.IN, GPIO.PULL_UP)
+        button_io.back_button = GPIO(GPIO.GPIOHS6, GPIO.IN, GPIO.PULL_UP)
 
 
 Match = [[(1, 0), (1, 0)], [(2, 1), None]] # 0 1 1 2 0
@@ -165,14 +165,13 @@ if __name__ == "__main__":
 
     print(os.listdir())
     tmp = sipeed_button()
-    button_io.config() # cube
-    #button.config(10, 11, 16) # cube
-    #button.config(23, 20, 31) # amigo
+    # button_io.config(10, 11, 16) # cube
+    button_io.config(23, 31, 20) # amigo
     print(os.listdir())
     while True:
         time.sleep_ms(200)
         #tmp.event()
-        #print(tmp.back(), tmp.home(), tmp.next())
+        #print(tmp.home(), tmp.back(), tmp.next())
         tmp.expand_event()
-        print(tmp.back(), tmp.home(), tmp.next(), tmp.interval())
+        print(tmp.home(), tmp.back(), tmp.next(), tmp.interval())
         #print(os.listdir())
