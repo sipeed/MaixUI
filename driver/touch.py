@@ -24,9 +24,7 @@ class Touch:
     self.last_time = 0
     self.points = [(0, 0), (0, 0)]
     self.state = Touch.idle
-    self.write_reg(0x00, 0x0)
-    self.write_reg(0x80, 0xC)
-    self.write_reg(0x88, 0xC)
+    self.config_ft6x36
     self.width, self.height = w, h
 
   def write_reg(self, reg_addr, buf):
@@ -56,7 +54,7 @@ class Touch:
             return (x, y)
     return None
 
-  def touch_event(self):
+  def event(self):
     data = self.read_reg(0x02, 1)
     if (data[0] == 0x1):
         data_buf = self.read_reg(0x03, 4)
@@ -66,8 +64,8 @@ class Touch:
             self.last_time = time.ticks_ms()
             if self.state != Touch.press:
                 self.state = Touch.press
-                self.points[0] = (x, y)
-            self.points[1] = (x, y)
+                self.points[0] = (x, y, time.ticks_ms())
+            self.points[1] = (x, y, time.ticks_ms())
 
     # timeout return ilde.
     if time.ticks_ms() > self.last_time + self.cycle:
@@ -91,6 +89,6 @@ if __name__ == "__main__":
   tmp.config_ft6x36()
   while 1:
     #tmp.get_point()
-    tmp.touch_event()
+    tmp.event()
     print(tmp.state, tmp.points)
     time.sleep_ms(200)
