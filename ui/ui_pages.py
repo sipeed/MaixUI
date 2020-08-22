@@ -88,6 +88,7 @@ class pages:
     self.btn = sipeed_button()
     self.page_info = sys_info()
     self.page = 0
+    self.tips = "Weclome to MaixCube"
 
   def draw(self):
     self.btn.event()
@@ -99,7 +100,7 @@ class pages:
     self.page = self.page % 3
 
     if self.page == 0:
-      ui.canvas.draw_string(20, 30, "Weclome to MaixCube",
+      ui.canvas.draw_string(20, 30, self.tips,
                             (255, 124, 12), scale=2)
     if self.page == 1:
       self.page_info.draw(ui.canvas)

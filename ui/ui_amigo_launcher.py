@@ -9,12 +9,12 @@ import math, os, image
 
 try:
     from ui_canvas import ui
-    from touch import Touch
+    from touch import Touch, TouchLow
     from button import sipeed_button, button_io
     from core import agent
 except ImportError:
     from ui.ui_canvas import ui
-    from driver.touch import Touch
+    from driver.touch import Touch, TouchLow
     from driver.button import sipeed_button, button_io
     from lib.core import agent
 
@@ -71,19 +71,19 @@ class Camera(icon):
     def on_title(self, color=(255, 255, 255)):
         ui.canvas.draw_string(self.x - 3, self.y + self.h + 5, self.__qualname__, scale=2, color=color)
 
-class Setting(icon):
+class System(icon):
 
     tmp1 = b"\x00\x03\x19\x3B\x3F\x0E\x5C\x78\x78\x5C\x0E\x3F\x3B\x19\x03\x00\x00\xC0\x98\xDC\xFC\x70\x3A\x1E\x1E\x3A\x70\xFC\xDC\x98\xC0\x00"
     tmp2 = b"\x00\x00\x00\x03\x0F\x0E\x1C\x18\x18\x1C\x0E\x0F\x03\x00\x00\x00\x00\x00\x00\xC0\xF0\x70\x38\x18\x18\x38\x70\xF0\xC0\x00\x00\x00"
 
     def on_draw(self):
 
-        self.img.draw_font(2, 2, 16, 16, Setting.tmp1, scale=4, color=(64,64,64))
-        self.img.draw_font(0, 0, 16, 16, Setting.tmp1, scale=4, color=(0xCF, 0xCF, 0xCF))
-        self.img.draw_font(0, 0, 16, 16, Setting.tmp2, scale=4, color=(255, 255, 255))
+        self.img.draw_font(2, 2, 16, 16, System.tmp1, scale=4, color=(64,64,64))
+        self.img.draw_font(0, 0, 16, 16, System.tmp1, scale=4, color=(0xCF, 0xCF, 0xCF))
+        self.img.draw_font(0, 0, 16, 16, System.tmp2, scale=4, color=(255, 255, 255))
 
     def on_title(self, color=(255, 255, 255)):
-        ui.canvas.draw_string(self.x - 5, self.y + self.h + 5, self.__qualname__, scale=2, color=color)
+        ui.canvas.draw_string(self.x, self.y + self.h + 5, self.__qualname__, scale=2, color=color)
 
 class Demo(icon):
 
@@ -125,12 +125,12 @@ class launcher:
   app_run = False
   app_sets = [
       Camera(60, 200),
-      Setting(160, 200),
+      System(160, 200),
       Demo(260, 200),
       Photo(360, 200),
   ]
 
-  toth = Touch(I2C(I2C.I2C1, freq=400*1000, scl=24, sda=27), 480, 320, 200)
+  toth = Touch(480, 320, 50)
   btn = sipeed_button()
   agent = agent()
 
@@ -217,6 +217,7 @@ if __name__ == "__main__":
   from ui_canvas import ui
   ui.height, ui.weight = 480, 320
   button_io.config(23, 31, 20) # amigo
+  TouchLow.config(I2C(I2C.I2C1, freq=400*1000, scl=24, sda=27)) # amigo
   @ui.warp_template(ui.blank_draw)
   @ui.warp_template(launcher.draw)
   @ui.warp_template(ui.bg_in_draw)
