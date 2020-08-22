@@ -82,7 +82,7 @@ if __name__ == "__main__":
         fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
 
         while True:
-            CubeAudio.load("/flash/res/loop.wav", 80)
+            CubeAudio.load("/flash/res/sound/loop.wav", 80)
             while CubeAudio.is_load:
                 #time.sleep_ms(20)
                 CubeAudio.event()

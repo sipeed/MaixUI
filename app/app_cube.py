@@ -119,7 +119,7 @@ class app:
             #app.layer -= 1 # return last layer
             #raise Exception("Settings Unrealized.")
         elif selected == 3:
-            CubeAudio.load(os.getcwd() + "/res/one.wav", 100)
+            CubeAudio.load(os.getcwd() + "/res/sound/one.wav", 100)
             sample_page.add_sample(sample_msa301())
             sample_page.add_sample(sample_spmod_test())
             sample_page.add_sample(sample_shtxx())
