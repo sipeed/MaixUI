@@ -189,6 +189,7 @@ class app:
         button_io.config()
         cube_led.init(13, 12, 14, 32)
         sample_page.key_init()
+        taskbar.init(AXP173())
 
         fm.register(30,fm.fpioa.I2C1_SCLK, force=True)
         fm.register(31,fm.fpioa.I2C1_SDA, force=True)
