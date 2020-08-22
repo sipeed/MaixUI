@@ -189,7 +189,13 @@ class app:
         button_io.config()
         cube_led.init(13, 12, 14, 32)
         sample_page.key_init()
-        taskbar.init(AXP173())
+
+        axp173 = AXP173()
+        axp173.enable_adc(True)
+        # 默认充电限制在 4.2V, 190mA 档位
+        axp173.setEnterChargingControl(True)
+        axp173.exten_output_enable()
+        taskbar.init(axp173)
 
         fm.register(30,fm.fpioa.I2C1_SCLK, force=True)
         fm.register(31,fm.fpioa.I2C1_SDA, force=True)
