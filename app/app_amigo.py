@@ -11,15 +11,16 @@ from core import agent
 from ui_canvas import ui, print_mem_free
 # from ui_launcher import launcher
 from ui_amigo_launcher import launcher
-from ui_system_info import system_info
+#from ui_system_info import system_info
 from ui_catch import catch
 from ui_pages import pages
 from ui_camera import ai_camera
-from ui_sample import sample_page
-from ui_explorer import explorer
+#from ui_sample import sample_page
+#from ui_explorer import explorer
 #from sample_shtxx import sample_shtxx
 #from sample_spmod import sample_spmod_test
 #from sample_msa301 import sample_msa301
+from fs import OS
 from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
 from button import sipeed_button, button_io
 from wdt import protect
@@ -29,9 +30,55 @@ from touch import Touch, TouchLow
 from ui_taskbar import taskbar
 from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
 
+class photos:
+
+    image_pos = 0
+    image_set = []
+
+    def scan(path=['/flash/res/images', '/sd/res/images']):
+        images = {}
+        for p in path:
+            images[p] = OS.listdir(p)
+        photos.image_set = []
+        for path in images:
+            for file in images[path]:
+                photos.image_set.append(path + '/' + file)
+
+    def image_next():
+        photos.image_pos = (photos.image_pos + 1) % len(photos.image_set)
+
+    def image_last():
+        photos.image_pos = (photos.image_pos - 1) % len(photos.image_set)
+
+    def image_path():
+        #print(photos.image_set, photos.image_pos)
+        return photos.image_set[photos.image_pos]
+
+    def photos_len():
+        return len(photos.image_set)
+
+    def unit_test():
+        photos.scan()
+        for i in range(len(photos.image_set) + 2):
+            img = image.Image(photos.image_path())
+            lcd.display(img)
+            del img
+            time.sleep(0.5)
+            protect.keep()
+            photos.image_next()
+
+        for i in range(len(photos.image_set) + 2):
+            img = image.Image(photos.image_path())
+            lcd.display(img)
+            del img
+            time.sleep(0.5)
+            protect.keep()
+            photos.image_last()
+
+#'''
 class app:
 
-    layer = 0 # set help_draw to top
+    layer = 1 # set help_draw to top
     ctrl = agent()
     btn = sipeed_button()
     loop = 0
@@ -61,14 +108,14 @@ class app:
             if launcher.app_select == 1:
                 app.current.page -= 1
             elif launcher.app_select == 3:
-                pass
+                photos.image_last()
           elif p[0] > 420 and p[1] < 60:
             app.touch_select = +1
             #print(app.touch_select)
             if launcher.app_select == 1:
                 app.current.page -= 1
             elif launcher.app_select == 3:
-                pass
+                photos.image_last()
 
         if app.toth.state == 1:
             p = app.toth.points[1]
@@ -218,12 +265,25 @@ class app:
 
         ui.display()
 
+    photos_title = "/"
+    photos_temp = None
     #@ui.warp_template(taskbar.time_draw)
     #@ui.warp_template(sample_page.sample_draw)
     #@ui.warp_template(ui.grey_draw)
     #@ui.warp_template(CubeAudio.event)
-    @ui.warp_template(touch_draw)
+    #@ui.warp_template(touch_draw)
     def draw_photos():
+        if photos.photos_len() > 0:
+            #if app.photos_title != photos.image_path():
+                #app.photos_title = photos.image_path()
+                #if app.photos_temp != None:
+                    #del app.photos_temp
+                #app.photos_temp = image.Image(app.photos_title)
+
+            ui.canvas.draw_image(image.Image(photos.image_path()), 0, 0)
+        else:
+            ui.canvas.draw_string(40, 120, "Please put pictures\n in '/sd/res/images' folder", color=(255, 255, 255), scale=3, mono_space=0)
+        app.touch_draw()
         ui.display()
 
     i2c0 = None
@@ -308,6 +368,7 @@ class app:
         except Exception as e:
             app.layer = 1
             app.isconnected = False
+            app.points=[]
             raise e
 
     def draw_camera():
@@ -342,11 +403,12 @@ class app:
             app.current.tips = "Weclome to Maix Amigo"
         elif selected == 2:
             CubeAudio.load(os.getcwd() + "/res/loop.wav", 100)
+            app.points=[]
             pass
             #app.layer -= 1 # return last layer
             #raise Exception("Settings Unrealized.")
         elif selected == 3:
-            pass
+            photos.scan()
 
 
     def exec_application():
@@ -357,10 +419,11 @@ class app:
         if launcher.app_select == 2:
             app.draw_demo()
         if launcher.app_select == 3:
-            try:
-                app.draw_photos()
-            except Exception as e:
-                app.layer -= 1
+            app.draw_photos()
+        #try:
+            #app.draw_photos()
+        #except Exception as e:
+            #app.layer -= 1
 
     rgb = 0
     def rgb_change(rgb):
@@ -400,10 +463,14 @@ class app:
         if app.btn.next() == 1:
             app.rgb = (app.rgb + 1) % 8
             app.rgb_change(app.rgb)
+            if launcher.app_select == 3:
+                photos.image_next()
 
         if app.btn.back() == 1:
             app.rgb = (app.rgb - 1) % 8
             app.rgb_change(app.rgb)
+            if launcher.app_select == 3:
+                photos.image_last()
 
         if app.layer == 0:
             app.draw_load()
@@ -464,11 +531,12 @@ class app:
         app.ctrl.event(5, app.draw)
         while True:
             import time
-            last = time.ticks_ms() - 10.0
+            last = 0
             while True:
                 try:
                     print((int)(1000 / (time.ticks_ms() - last)), 'fps')
-                    last = time.ticks_ms()
+                    last = time.ticks_ms() - 10
+                    print_mem_free()
                     app.ctrl.cycle()
                     protect.keep()
                     #time.sleep(0.1)
@@ -479,6 +547,7 @@ class app:
                     gc.collect()
                     print(e)
 
+#'''
 if __name__ == "__main__":
     gc.collect()
     print_mem_free()
