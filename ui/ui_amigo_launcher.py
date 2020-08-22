@@ -5,7 +5,10 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import math, os, image
+from machine import I2C
+import math
+import os
+import image
 
 try:
     from ui_canvas import ui
@@ -18,9 +21,10 @@ except ImportError:
     from driver.button import sipeed_button, button_io
     from lib.core import agent
 
+
 class icon:
 
-  def __init__(self, x, y, w = 64, h = 64):
+  def __init__(self, x, y, w=64, h=64):
     self.x, self.y, self.w, self.h = x, y, w, h
     self.img = image.Image(size=(self.w, self.h))
 
@@ -31,11 +35,12 @@ class icon:
   def on_draw(self):
     tmp = b"\x1F\x3F\x78\xF0\xE3\xC7\xCC\xCC\xCF\xCF\xC7\xE3\xF0\x78\x3F\x1F\xF8\xFC\x1E\x0F\xC7\xE3\xF3\xF3\xF3\xB3\xE3\xC7\x0F\x1E\xFC\xF8"
 
-    self.img.draw_font(0, 0, 16, 16, tmp, scale=4, color=(64,64,64))
-    self.img.draw_font(0, 0, 16, 16, tmp, scale=4, color=(255,255,255))
+    self.img.draw_font(0, 0, 16, 16, tmp, scale=4, color=(64, 64, 64))
+    self.img.draw_font(0, 0, 16, 16, tmp, scale=4, color=(255, 255, 255))
 
   def on_title(self, color=(255, 255, 255)):
-    ui.canvas.draw_string(self.x, self.y + self.h + 5, self.__qualname__, scale=2)
+    ui.canvas.draw_string(self.x, self.y + self.h + 5,
+                          self.__qualname__, scale=2)
 
   def draw(self, is_check=False, alpha=0, color=(255, 255, 255)):
     self.img.clear()
@@ -57,6 +62,7 @@ class icon:
 
     self.on_title()
 
+
 class Camera(icon):
 
     tmp1 = b"\x00\x3E\x22\x7F\xFF\xC0\xC7\xCF\xDC\xD8\xDC\xCF\xC7\xC0\xFF\x7F\x00\x00\x00\xFE\xFF\x03\x9B\xC3\xE3\x63\xE3\xC3\x83\x03\xFF\xFE"
@@ -64,12 +70,17 @@ class Camera(icon):
 
     def on_draw(self):
 
-        self.img.draw_font(2, 2, 16, 16, Camera.tmp1, scale=4, color=(64,64,64))
-        self.img.draw_font(0, 0, 16, 16, Camera.tmp1, scale=4, color=(255,255,255))
-        self.img.draw_font(0, 0, 16, 16, Camera.tmp2, scale=4, color=(180, 180, 180))
+        self.img.draw_font(2, 2, 16, 16, Camera.tmp1,
+                           scale=4, color=(64, 64, 64))
+        self.img.draw_font(0, 0, 16, 16, Camera.tmp1,
+                           scale=4, color=(255, 255, 255))
+        self.img.draw_font(0, 0, 16, 16, Camera.tmp2,
+                           scale=4, color=(180, 180, 180))
 
     def on_title(self, color=(255, 255, 255)):
-        ui.canvas.draw_string(self.x - 3, self.y + self.h + 5, self.__qualname__, scale=2, color=color)
+        ui.canvas.draw_string(self.x - 3, self.y + self.h + 5,
+                              self.__qualname__, scale=2, color=color)
+
 
 class System(icon):
 
@@ -78,12 +89,17 @@ class System(icon):
 
     def on_draw(self):
 
-        self.img.draw_font(2, 2, 16, 16, System.tmp1, scale=4, color=(64,64,64))
-        self.img.draw_font(0, 0, 16, 16, System.tmp1, scale=4, color=(0xCF, 0xCF, 0xCF))
-        self.img.draw_font(0, 0, 16, 16, System.tmp2, scale=4, color=(255, 255, 255))
+        self.img.draw_font(2, 2, 16, 16, System.tmp1,
+                           scale=4, color=(64, 64, 64))
+        self.img.draw_font(0, 0, 16, 16, System.tmp1,
+                           scale=4, color=(0xCF, 0xCF, 0xCF))
+        self.img.draw_font(0, 0, 16, 16, System.tmp2,
+                           scale=4, color=(255, 255, 255))
 
     def on_title(self, color=(255, 255, 255)):
-        ui.canvas.draw_string(self.x, self.y + self.h + 5, self.__qualname__, scale=2, color=color)
+        ui.canvas.draw_string(self.x, self.y + self.h + 5,
+                              self.__qualname__, scale=2, color=color)
+
 
 class Demo(icon):
 
@@ -92,12 +108,17 @@ class Demo(icon):
 
     def on_draw(self):
 
-        self.img.draw_font(2, 2, 16, 16, Demo.tmp1, scale=4, color=(64,64,64))
-        self.img.draw_font(0, 0, 16, 16, Demo.tmp1, scale=4, color=(0xCF, 0xCF, 0xCF))
-        self.img.draw_font(0, 0, 16, 16, Demo.tmp2, scale=4, color=(0x40, 0xFF, 0x40))
+        self.img.draw_font(2, 2, 16, 16, Demo.tmp1,
+                           scale=4, color=(64, 64, 64))
+        self.img.draw_font(0, 0, 16, 16, Demo.tmp1, scale=4,
+                           color=(0xCF, 0xCF, 0xCF))
+        self.img.draw_font(0, 0, 16, 16, Demo.tmp2, scale=4,
+                           color=(0x40, 0xFF, 0x40))
 
     def on_title(self, color=(255, 255, 255)):
-        ui.canvas.draw_string(self.x + 10, self.y + self.h + 5, self.__qualname__, scale=2, color=color)
+        ui.canvas.draw_string(self.x + 10, self.y + self.h + 5,
+                              self.__qualname__, scale=2, color=color)
+
 
 class Photo(icon):
 
@@ -107,15 +128,19 @@ class Photo(icon):
 
     def on_draw(self):
 
-        self.img.draw_font(2, 2, 16, 16, Photo.tmp1, scale=4, color=(64,64,64))
-        self.img.draw_font(0, 0, 16, 16, Photo.tmp1, scale=4, color=(0,255,255))
-        self.img.draw_font(0, 0, 16, 16, Photo.tmp2, scale=4, color=(0x1F, 255, 0xa0))
-        self.img.draw_font(0, 0, 16, 16, Photo.tmp3, scale=4, color=(0xFF, 0xa0, 0xa0))
+        self.img.draw_font(2, 2, 16, 16, Photo.tmp1,
+                           scale=4, color=(64, 64, 64))
+        self.img.draw_font(0, 0, 16, 16, Photo.tmp1,
+                           scale=4, color=(0, 255, 255))
+        self.img.draw_font(0, 0, 16, 16, Photo.tmp2,
+                           scale=4, color=(0x1F, 255, 0xa0))
+        self.img.draw_font(0, 0, 16, 16, Photo.tmp3,
+                           scale=4, color=(0xFF, 0xa0, 0xa0))
 
     def on_title(self, color=(255, 255, 255)):
-        ui.canvas.draw_string(self.x + 3, self.y + self.h + 5, self.__qualname__, scale=2, color=color)
+        ui.canvas.draw_string(self.x + 3, self.y + self.h + 5,
+                              self.__qualname__, scale=2, color=color)
 
-from machine import I2C
 
 class launcher:
 
@@ -140,30 +165,33 @@ class launcher:
 
   def touch_event():
     launcher.toth.event()
+    #print(launcher.toth.state, launcher.toth.points)
     if launcher.toth.state == 1:
+      old = launcher.toth.points[0]
+      sel = launcher.toth.points[1]
+      #if len(launcher.effect) > 8:
+        #launcher.effect.pop(0)
+      #launcher.effect.append((old[0], old[1]))
+      if 250 < sel[2] - old[2] and sel[2] - old[2] < 500:
+        launcher.toth.state = 2
+    if launcher.toth.state == 2:
       #print(launcher.toth.state, launcher.toth.points)
-      tmp = launcher.toth.points[1]
-      if len(launcher.effect) > 8:
-        launcher.effect.pop(0)
-      launcher.effect.append((tmp[0], tmp[1]))
-    elif launcher.toth.state == 2:
-      #print(launcher.toth.state, launcher.toth.points)
-      launcher.effect = []
+      #launcher.effect = []
       old = launcher.toth.points[0]
       sel = launcher.toth.points[1]
       #print(sel, old, sel[2] - old[2])
-      if sel[2] - old[2] < 500:
+      if sel[2] - old[2] < 1000:
         # start
         #if 136 < sel[1] and sel[1] < 200:
         for i in range(len(launcher.app_sets)):
-            p = launcher.app_sets[i]
-            x, y = p.x, 320 - p.y
-            # print(x, p.w, y, p.h)
-            if x < sel[0] and sel[1] < y and sel[0] < x + p.w and y - p.h < sel[1]:
-                launcher.app_select = i
-                if sel[2] - old[2] < 250:
-                    print('start', launcher.app_select)
-                    launcher.app_run = True
+          p = launcher.app_sets[i]
+          x, y = p.x, 320 - p.y
+          # print(x, p.w, y, p.h)
+          if x < sel[0] and sel[1] < y and sel[0] < x + p.w and y - p.h < sel[1]:
+            launcher.app_select = i
+            if sel[2] - old[2] < 250:
+              print('launcher.app_select', launcher.app_select)
+              launcher.app_run = True
 
   def key_event():
     launcher.btn.event()
@@ -183,7 +211,7 @@ class launcher:
     launcher.agent.parallel_cycle()
 
     ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
-                                     fill=True, color=(120, 120, 120))
+                                     fill = True, color = (120, 120, 120))
     ui.canvas.draw_string(203, 73, "Amigo",
                           color=(64, 64, 64), scale=8, mono_space=0)
     ui.canvas.draw_string(200, 70, "A",
@@ -204,10 +232,10 @@ class launcher:
         checked = (pos == launcher.app_select)
         launcher.app_sets[pos].draw(checked, value if checked else 255)
 
-    for pos in range(len(launcher.effect)):
-        tmp = launcher.effect[pos]
-        cor = (pos + 1) * 32
-        ui.canvas.draw_circle(tmp[0], 320 - tmp[1], (pos + 1) * 3, thickness=1, fill=False, color=(cor, cor, cor))
+    #for pos in range(len(launcher.effect)):
+        #tmp = launcher.effect[pos]
+        #cor = (pos + 1) * 32
+        #ui.canvas.draw_circle(tmp[0], 320 - tmp[1], (pos + 1) * 3, thickness=1, fill=False, color=(cor, cor, cor))
 
     launcher.agent.parallel_cycle()
 
