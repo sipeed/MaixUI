@@ -14,9 +14,10 @@ import lcd
 class obj:
 
     is_init = False
+    is_dual_buff = False
 
     def init():
-        sensor.reset(dual_buff=True)
+        sensor.reset(dual_buff=obj.is_dual_buff)
         sensor.set_pixformat(sensor.YUV422)
         sensor.set_framesize(sensor.QVGA)
         sensor.set_hmirror(1)
