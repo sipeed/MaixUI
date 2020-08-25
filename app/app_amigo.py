@@ -14,17 +14,11 @@ from fpioa_manager import fm
 from Maix import GPIO
 from core import agent
 from ui_canvas import ui, print_mem_free
-# from ui_launcher import launcher
 from ui_amigo_launcher import launcher
-#from ui_system_info import system_info
 from ui_catch import catch
 from ui_pages import pages
+from ui_photos import photos
 from ui_camera import ai_camera
-#from ui_sample import sample_page
-#from ui_explorer import explorer
-#from sample_shtxx import sample_shtxx
-#from sample_spmod import sample_spmod_test
-#from sample_msa301 import sample_msa301
 from fs import OS
 from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
 from button import sipeed_button, button_io
@@ -35,57 +29,11 @@ from touch import Touch, TouchLow
 from ui_taskbar import taskbar
 from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
 
-class photos:
-
-    image_pos = 0
-    image_set = []
-
-    def scan(path=['/sd/imgs','/flash/imgs']): # '/sd/imgs',
-        images = {}
-        for p in path:
-            try:
-                images[p] = OS.listdir(p)
-            except Exception as e:
-                print(e, p)
-                gc.collect()
-        photos.image_set = []
-        for path in images:
-            for file in images[path]:
-                photos.image_set.append(path + '/' + file)
-        print(photos.image_set)
-
-    def image_next():
-        if len(photos.image_set) > 0:
-            photos.image_pos = (photos.image_pos + 1) % len(photos.image_set)
-
-    def image_last():
-        if len(photos.image_set) > 0:
-            photos.image_pos = (photos.image_pos - 1) % len(photos.image_set)
-
-    def image_path():
-        #print(photos.image_set, photos.image_pos)
-        return photos.image_set[photos.image_pos]
-
-    def photos_len():
-        return len(photos.image_set)
-
-    def unit_test():
-        photos.scan()
-        for i in range(len(photos.image_set) + 2):
-            img = image.Image(photos.image_path())
-            lcd.display(img)
-            del img
-            time.sleep(0.5)
-            protect.keep()
-            photos.image_next()
-
-        for i in range(len(photos.image_set) + 2):
-            img = image.Image(photos.image_path())
-            lcd.display(img)
-            del img
-            time.sleep(0.5)
-            protect.keep()
-            photos.image_last()
+#from ui_sample import sample_page
+#from ui_explorer import explorer
+#from sample_shtxx import sample_shtxx
+#from sample_spmod import sample_spmod_test
+#from sample_msa301 import sample_msa301
 
 #'''
 class app:
@@ -304,10 +252,10 @@ class app:
                     del tmp
                     app.photos_temp = None
                 app.photos_temp = image.Image(app.photos_title)
-            
-            ui.canvas.draw_string(2, 2, app.photos_title, color=(255, 255, 255), scale=1, mono_space=0)
+
             ui.canvas.draw_image(app.photos_temp, 0, 0)
             #ui.canvas = image.Image(photos.image_path())
+            ui.canvas.draw_string(2, 2, app.photos_title, color=(255, 255, 255), scale=1, mono_space=0)
         else:
             ui.canvas.draw_string(40, 120, "Please put pictures\n in '/sd/imgs' folder", color=(255, 255, 255), scale=3, mono_space=0)
         app.touch_draw()
@@ -399,15 +347,26 @@ class app:
     def draw_camera():
         try:
             ai_camera.ai_draw()
-            if ai_camera.models[1].bbox != None:
-                bbox = ai_camera.models[1].bbox
-                ui.canvas.draw_string(20, 260, "Find Face %d" % len(bbox), scale=5)
-                for pos in range(len(bbox)):
-                    i = bbox[pos]
-                    print(i.x(), i.y(), i.w(), i.h())
-                    face_cut = ui.canvas.cut(i.x(), i.y(), i.w(), i.h())
-                    face_cut_128 = face_cut.resize(80, 80)
-                    ui.canvas.draw_image(face_cut_128, 320 + int((pos % 2)*80), int((pos // 2)*80))
+            for model in ai_camera.models:
+              #print(model.__qualname__, ai_camera.model.__qualname__)
+              if 'ai_sample' == ai_camera.model.__qualname__:
+                  ui.canvas.draw_string(340, 80, "  AI\nDemo", scale=5)
+                  ui.canvas.draw_string(50, 260, "Press Left (<) or Right (>) to View", scale=2)
+                  pass
+
+              elif 'FaceReco' == ai_camera.model.__qualname__:
+
+                  if ai_camera.models[1].bbox != None:
+                      bbox = ai_camera.models[1].bbox
+                      ui.canvas.draw_string(50, 260, "Find Face %d" % len(bbox), scale=5)
+                      for pos in range(len(bbox)):
+                          i = bbox[pos]
+                          print(i.x(), i.y(), i.w(), i.h())
+                          face_cut = ui.canvas.cut(i.x(), i.y(), i.w(), i.h())
+                          face_cut_128 = face_cut.resize(80, 80)
+                          ui.canvas.draw_image(face_cut_128, 320 + int((pos % 2)*80), int((pos // 2)*80))
+                  else:
+                      ui.canvas.draw_string(50, 260, "Find Face Reco", scale=5)
             app.touch_draw()
             ui.display()
         except Exception as e:
@@ -511,6 +470,10 @@ class app:
             app.exec_application()
 
     def run():
+        # debug into app_select
+        launcher.app_select = 0
+        app.layer = 2
+
         ui.height, ui.weight = 480, 320
         button_io.config(23, 31, 20) # amigo
         cube_led.init(14, 15, 17, 32)
@@ -561,7 +524,7 @@ class app:
                     gc.collect()
                     print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                     last = time.ticks_ms()
-                    print_mem_free()
+                    #print_mem_free()
                     app.ctrl.cycle()
                     protect.keep()
                     #time.sleep(0.1)
