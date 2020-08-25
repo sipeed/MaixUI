@@ -18,7 +18,7 @@ from core import agent
 from wdt import protect
 
 from led import cube_led
-from button import sipeed_button
+from button import sipeed_button, button_io
 from pmu_axp173 import AXP173
 from sound import CubeAudio
 #from es8374 import ES8374
@@ -94,7 +94,7 @@ if __name__ == "__main__":
                 self.is_load = True
                 sample_page.btn.enable = False
                 self.btn = sipeed_button()
-                self.btn.config(10, 11, 16)
+                # self.btn.config(10, 11, 16)
                 self.agent = agent()
                 self.agent.event(150, self.key_event)
                 self.agent.event(5000, lambda :sample_page.next())
@@ -154,7 +154,7 @@ if __name__ == "__main__":
                 self.is_load = True
                 sample_page.btn.enable = False
                 self.btn = sipeed_button()
-                self.btn.config(10, 11, 16)
+                # self.btn.config(10, 11, 16)
                 cube_led.init(13, 12, 14, 32)
                 self.agent = agent()
                 self.agent.event(150, self.key_event)
@@ -725,7 +725,7 @@ if __name__ == "__main__":
                 self.result = 0
                 self.fft_amp = None
                 self.btn = sipeed_button()
-                self.btn.config(10, 11, 16)
+                # self.btn.config(10, 11, 16)
                 self.agent = agent()
                 self.agent.event(150, self.key_event)
                 self.agent.event(500, self.check)
@@ -771,7 +771,7 @@ if __name__ == "__main__":
             if self.isconnected:
                 if self.state == 0 and self.is_play:
                     if CubeAudio.event() == False:
-                        CubeAudio.load(os.getcwd() + "/one.wav", 80)
+                        CubeAudio.load(os.getcwd() + "/res/sound/loop.wav", 80)
                         fm.register(19, fm.fpioa.I2S0_MCLK, force=True)
                         fm.register(35, fm.fpioa.I2S0_SCLK, force=True)
                         fm.register(33, fm.fpioa.I2S0_WS, force=True)
@@ -807,6 +807,8 @@ if __name__ == "__main__":
         sample_page.samples = []
         gc.collect()
         print('ram total : ' + str(gc.mem_free() / 1024) + ' kb')
+
+    button_io.config(10, 11, 16)
 
     sample_page.add_sample(Report()) # keep
 

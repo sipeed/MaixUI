@@ -543,7 +543,7 @@ class WaitTestStart():
             self.is_load = True
             sample_page.btn.enable = False
             self.btn = sipeed_button()
-            self.btn.config(23, 20, 31)
+            # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
             #self.agent.event(2000, sample_page.next)
@@ -580,7 +580,7 @@ class KeyTest():
             sample_page.btn.enable = False
             cube_led.init(14, 15, 17, 32)
             self.btn = sipeed_button()
-            self.btn.config(23, 20, 31)
+            # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
             self.agent.event(16000, lambda :sample_page.next())
@@ -658,7 +658,7 @@ class KeyReport():
             self.is_load = True
             sample_page.btn.enable = False
             self.btn = sipeed_button()
-            self.btn.config(23, 20, 31)
+            # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
             #self.agent.event(2000, sample_page.next)
@@ -800,7 +800,7 @@ class TouchReport():
             self.is_load = True
             sample_page.btn.enable = False
             self.btn = sipeed_button()
-            self.btn.config(23, 20, 31)
+            # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
             #self.agent.event(2000, sample_page.next)
@@ -869,7 +869,7 @@ class FrontSensorTest():
             # cube_led.w.value(1)
             sample_page.btn.enable = False
             self.btn = sipeed_button()
-            self.btn.config(23, 20, 31)
+            # self.btn.config(23, 20, 31)
             self.get_image = None
             self.isError = None
             self.agent = agent()
@@ -919,7 +919,7 @@ class FrontSensorReport():
             self.is_load = True
             sample_page.btn.enable = False
             self.btn = sipeed_button()
-            self.btn.config(23, 20, 31)
+            # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
             #self.agent.event(2000, sample_page.next)
@@ -989,7 +989,7 @@ class RearSensorTest():
             cube_led.w.value(1)
             sample_page.btn.enable = False
             self.btn = sipeed_button()
-            self.btn.config(23, 20, 31)
+            # self.btn.config(23, 20, 31)
             self.get_image = None
             self.isError = None
             self.agent = agent()
@@ -1039,7 +1039,7 @@ class RearSensorReport():
             self.is_load = True
             sample_page.btn.enable = False
             self.btn = sipeed_button()
-            self.btn.config(23, 20, 31)
+            # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
             #self.agent.event(2000, sample_page.next)
@@ -1089,7 +1089,7 @@ class AudioTest():
             self.state = 0
             self.fft_amp = None
             self.btn = sipeed_button()
-            self.btn.config(23, 20, 31)
+            # self.btn.config(23, 20, 31)
             self.count += 1
             self.agent = agent()
             self.agent.event(150, self.key_event)
@@ -1210,7 +1210,7 @@ class AudioReport():
             self.is_load = True
             sample_page.btn.enable = False
             self.btn = sipeed_button()
-            self.btn.config(23, 20, 31)
+            # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
             #self.agent.event(2000, sample_page.next)
