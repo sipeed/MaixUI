@@ -471,8 +471,8 @@ class app:
 
     def run():
         # debug into app_select
-        launcher.app_select = 0
-        app.layer = 2
+        # launcher.app_select = 0
+        # app.layer = 2
 
         ui.height, ui.weight = 480, 320
         button_io.config(23, 31, 20) # amigo
