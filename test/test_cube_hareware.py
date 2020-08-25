@@ -809,6 +809,7 @@ if __name__ == "__main__":
         print('ram total : ' + str(gc.mem_free() / 1024) + ' kb')
 
     button_io.config(10, 11, 16)
+    sample_page.key_init()
 
     sample_page.add_sample(Report()) # keep
 
