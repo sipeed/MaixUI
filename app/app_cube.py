@@ -8,6 +8,7 @@
 import time, gc
 
 try:
+    from pmu_axp173 import AXP173, AXP173_ADDR
     from core import agent
     from ui_canvas import ui, print_mem_free
     # from ui_launcher import launcher
@@ -43,6 +44,7 @@ except ImportError:
     from driver.button import sipeed_button
     from driver.wdt import protect
     from driver.led import cube_led
+    from driver.pmu_axp173 import AXP173, AXP173_ADDR
     from ui.ui_taskbar import taskbar
     from driver.sound import CubeAudio
 
@@ -190,6 +192,9 @@ class app:
         cube_led.init(13, 12, 14, 32)
         sample_page.key_init()
 
+        fm.register(30,fm.fpioa.I2C1_SCLK, force=True)
+        fm.register(31,fm.fpioa.I2C1_SDA, force=True)
+
         axp173 = AXP173()
         axp173.enable_adc(True)
         # 默认充电限制在 4.2V, 190mA 档位
@@ -197,8 +202,6 @@ class app:
         axp173.exten_output_enable()
         taskbar.init(axp173)
 
-        fm.register(30,fm.fpioa.I2C1_SCLK, force=True)
-        fm.register(31,fm.fpioa.I2C1_SDA, force=True)
         if CubeAudio.check():
             CubeAudio.ready()
             fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
