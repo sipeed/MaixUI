@@ -33,7 +33,7 @@ def catch(func):
                 sys.print_exception(e, string_io)
                 s = string_io.getvalue()
                 ui.canvas.draw_rectangle(
-                    (10, 10, 220, 220), fill=True, color=(50, 50, 50))
+                    (10, 10, ui.height - 20, ui.weight - 20), fill=True, color=(50, 50, 50))
                 msg = "** " + str(e)
                 chunks, chunk_size = len(msg), 29
                 msg_lines = [msg[i:i+chunk_size]
@@ -69,7 +69,7 @@ def catch(func):
                         x_offset, y_offset + 5, info, color=(0, 255, 0))
                     lcd.display(ui.canvas)
                     time.sleep_ms(100)
-                del ui.canvas
+                ui.display()
                 gc.collect()
             except Exception as e:
                 print(e)
