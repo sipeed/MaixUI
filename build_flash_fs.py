@@ -38,4 +38,4 @@ if __name__ == "__main__":
     shutil.copyfile('./app/app_cube.py', './fs/main.py')
     # created main.py
     shutil.copytree("./res","./fs/res")
-    shutil.copytree("./img","./fs/img")
+    shutil.copytree("./imgs","./fs/imgs")

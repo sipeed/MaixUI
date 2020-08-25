@@ -210,8 +210,8 @@ class launcher:
   def draw():
     launcher.agent.parallel_cycle()
 
-    ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
-                                     fill = True, color = (120, 120, 120))
+    # ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
+    #                                  fill = True, color = (120, 120, 120))
     ui.canvas.draw_string(203, 73, "Amigo",
                           color=(64, 64, 64), scale=8, mono_space=0)
     ui.canvas.draw_string(200, 70, "A",

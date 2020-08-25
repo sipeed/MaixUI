@@ -7,6 +7,11 @@
 
 import time, gc, math, ulab, image
 
+from pmu_axp173 import AXP173, AXP173_ADDR
+from machine import I2C
+from fpioa_manager import fm
+
+from Maix import GPIO
 from core import agent
 from ui_canvas import ui, print_mem_free
 # from ui_launcher import launcher
@@ -35,7 +40,7 @@ class photos:
     image_pos = 0
     image_set = []
 
-    def scan(path=['/sd/res/images', '/flash/imgs']):
+    def scan(path=['/sd/imgs','/flash/imgs']): # '/sd/imgs',
         images = {}
         for p in path:
             try:
@@ -47,12 +52,15 @@ class photos:
         for path in images:
             for file in images[path]:
                 photos.image_set.append(path + '/' + file)
+        print(photos.image_set)
 
     def image_next():
-        photos.image_pos = (photos.image_pos + 1) % len(photos.image_set)
+        if len(photos.image_set) > 0:
+            photos.image_pos = (photos.image_pos + 1) % len(photos.image_set)
 
     def image_last():
-        photos.image_pos = (photos.image_pos - 1) % len(photos.image_set)
+        if len(photos.image_set) > 0:
+            photos.image_pos = (photos.image_pos - 1) % len(photos.image_set)
 
     def image_path():
         #print(photos.image_set, photos.image_pos)
@@ -91,6 +99,10 @@ class app:
     touch_select = 0
     msa301 = None
 
+    touch_left = b"\x00\x00\x00\x00\x03\x0F\x3F\xFF\xFF\x3F\x0F\x03\x00\x00\x00\x00\x07\x0F\x3F\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x3F\x0F\x03"
+    touch_right = b"\xE0\xF0\xFC\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFC\xF0\xC0\x00\x00\x00\x00\xC0\xF0\xFC\xFF\xFF\xFC\xF0\xC0\x00\x00\x00\x00"
+    touch_close = b"\x00\x1C\x3C\x78\x7C\x6E\x07\x03\x03\x07\x6E\x7C\x78\x3C\x1C\x00\x00\x38\x3C\x1E\x3E\x76\xE0\xC0\xC0\xE0\x76\x3E\x1E\x3C\x38\x00"
+
     def touch_draw():
         app.toth.event()
 
@@ -102,7 +114,7 @@ class app:
         tmp_x, tmp_l, tmp_r = 0, 0, 0
 
         if app.toth.state == 2:
-          #print(app.toth.state, app.toth.points)
+          print(app.toth.state, app.toth.points)
           p = app.toth.points[1]
           if p[0] > 430 and p[1] > 260:
             app.layer -= 1
@@ -113,6 +125,8 @@ class app:
                 app.current.page -= 1
             elif launcher.app_select == 3:
                 photos.image_last()
+            elif launcher.app_select == 0:
+                ai_camera.back()
           elif p[0] > 420 and p[1] < 60:
             app.touch_select = +1
             #print(app.touch_select)
@@ -120,6 +134,8 @@ class app:
                 app.current.page -= 1
             elif launcher.app_select == 3:
                 photos.image_last()
+            elif launcher.app_select == 0:
+                ai_camera.next()
 
         if app.toth.state == 1:
             p = app.toth.points[1]
@@ -130,20 +146,23 @@ class app:
             elif p[0] > 430 and p[1] < 50:
                 tmp_r = int(value) + 30
 
-        ui.canvas.draw_circle(ui.height, 0, 42 + tmp_x, thickness=8, fill=False, color=(100, 100, 100))
+        ui.canvas.draw_circle(ui.height, 0, 40 + tmp_x, thickness=8, fill=False, color=(100, 100, 100))
         ui.canvas.draw_circle(ui.height, 0, 38 + tmp_x, fill=True, color=(255, 255, 255))
-        ui.canvas.draw_string(ui.height - 15, 5, "x", scale=2, color=(0, 0, 0))
+        #ui.canvas.draw_string(ui.height - 15, 5, "x", scale=2, color=(0, 0, 0))
+        ui.canvas.draw_font(ui.height - 22, 8, 16, 16, app.touch_close, scale=1, color=(155, 155, 0))
 
-        ui.canvas.draw_circle(0, ui.weight, 42 + tmp_l, thickness=8, fill=False, color=(100, 100, 100))
+        ui.canvas.draw_circle(0, ui.weight, 40 + tmp_l, thickness=8, fill=False, color=(100, 100, 100))
         ui.canvas.draw_circle(0, ui.weight, 38 + tmp_l, fill=True, color=(255, 255, 100))
-        ui.canvas.draw_string(10, ui.weight - 30, "<", scale=2, color=(0, 0, 0))
+        #ui.canvas.draw_string(10, ui.weight - 30, "<", scale=2, color=(0, 0, 0))
+        ui.canvas.draw_font(8, ui.weight - 25, 16, 16, app.touch_left, scale=1, color=(155, 155, 0))
 
-        ui.canvas.draw_circle(ui.height, ui.weight, 42 + tmp_r, thickness=8, fill=False, color=(100, 100, 100))
+        ui.canvas.draw_circle(ui.height, ui.weight, 40 + tmp_r, thickness=8, fill=False, color=(100, 100, 100))
         ui.canvas.draw_circle(ui.height, ui.weight, 38 + tmp_r, fill=True, color=(100, 255, 255))
-        ui.canvas.draw_string(ui.height - 15, ui.weight - 30, ">", scale=2, color=(0, 0, 0))
+        #ui.canvas.draw_string(ui.height - 15, ui.weight - 30, ">", scale=2, color=(0, 0, 0))
+        ui.canvas.draw_font(ui.height - 20, ui.weight - 25, 16, 16, app.touch_right, scale=1, color=(0, 155, 155))
 
     #@ui.warp_template(CubeAudio.event)
-    @ui.warp_template(ui.bg_in_draw)
+    #@ui.warp_template(ui.bg_in_draw)
     #@ui.warp_template(ui.help_in_draw)
     def draw_load():
 
@@ -251,9 +270,9 @@ class app:
 
         value = math.cos(math.pi * app.loop / 12) * 2 + 20
 
-        ui.canvas.draw_rectangle((240, 0, 240, 320), fill=False, thickness=3, color=(175, 175, 175))
+        #ui.canvas.draw_rectangle((240, 0, 240, 320), fill=False, thickness=3, color=(175, 175, 175))
         acceleration = app.msa301.acceleration
-        x, y = 360, 160 # center
+        x, y = 240, 160 # center
         #print(acceleration)
         ui.canvas.draw_circle(x + int(acceleration[0] * 15), y + int(acceleration[1] * 20), int(value), fill=True,
             color=(150 + int(acceleration[0] * 20), 150 + int(acceleration[1] * 20), 100 + int(acceleration[2] * 20)))  # 10ms
@@ -270,7 +289,7 @@ class app:
         ui.display()
 
     photos_title = "/"
-    #photos_temp = None
+    photos_temp = None
     #@ui.warp_template(taskbar.time_draw)
     #@ui.warp_template(sample_page.sample_draw)
     #@ui.warp_template(ui.grey_draw)
@@ -278,19 +297,18 @@ class app:
     #@ui.warp_template(touch_draw)
     def draw_photos():
         if photos.photos_len() > 0:
-            #if app.photos_title != photos.image_path():
-                #app.photos_title = photos.image_path()
-                #if app.photos_temp != None:
-                    #tmp = app.photos_temp
-                    #del tmp
-                    #app.photos_temp = None
-                #app.photos_temp = image.Image(app.photos_title)
+            if app.photos_title != photos.image_path():
+                app.photos_title = photos.image_path()
+                if app.photos_temp != None:
+                    tmp = app.photos_temp
+                    del tmp
+                    app.photos_temp = None
+                app.photos_temp = image.Image(app.photos_title)
 
-            del ui.canvas
-            #ui.canvas.draw_image(image.Image(photos.image_path()), 0, 0)
-            ui.canvas = image.Image(photos.image_path())
+            ui.canvas.draw_image(app.photos_temp, 0, 0)
+            #ui.canvas = image.Image(photos.image_path())
         else:
-            ui.canvas.draw_string(40, 120, "Please put pictures\n in '/sd/res/images' folder", color=(255, 255, 255), scale=3, mono_space=0)
+            ui.canvas.draw_string(40, 120, "Please put pictures\n in '/sd/imgs' folder", color=(255, 255, 255), scale=3, mono_space=0)
         app.touch_draw()
         ui.display()
 
@@ -418,20 +436,19 @@ class app:
         elif selected == 3:
             photos.scan()
 
-
     def exec_application():
-        if launcher.app_select == 0:
-            app.draw_camera()
-        if launcher.app_select == 1:
-            app.draw_pages()
-        if launcher.app_select == 2:
-            app.draw_demo()
-        if launcher.app_select == 3:
-            app.draw_photos()
-        #try:
-            #app.draw_photos()
-        #except Exception as e:
-            #app.layer -= 1
+        try:
+            if launcher.app_select == 0:
+                app.draw_camera()
+            if launcher.app_select == 1:
+                app.draw_pages()
+            if launcher.app_select == 2:
+                app.draw_demo()
+            if launcher.app_select == 3:
+                app.draw_photos()
+        except Exception as e:
+            app.layer -= 1
+            raise e
 
     rgb = 0
     def rgb_change(rgb):
@@ -439,11 +456,7 @@ class app:
         cube_led.g.value(rgb & 0b010)
         cube_led.b.value(rgb & 0b100)
 
-    @ui.warp_template(ui.blank_draw)
-    #@ui.warp_template(ui.grey_draw)
-    @catch
-    def draw():
-
+    def on_event():
         #app.btn.event()
         app.btn.expand_event()
         if app.btn.home() == 2 or launcher.app_run: # click button release to 2
@@ -480,10 +493,18 @@ class app:
             if launcher.app_select == 3:
                 photos.image_last()
 
+    @ui.warp_template(ui.blank_draw)
+    #@ui.warp_template(ui.grey_draw)
+    @catch
+    def draw():
+        app.on_event()
+        #ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
+                                      #fill = True, color = (40, 40, 40))
+
+        gc.collect()
         if app.layer == 0:
             app.draw_load()
         elif app.layer == 1:
-            gc.collect()
             app.draw_launcher()
         elif app.layer == 2:
             app.exec_application()
@@ -493,10 +514,6 @@ class app:
         button_io.config(23, 31, 20) # amigo
         cube_led.init(14, 15, 17, 32)
 
-        # about sensor
-        from pmu_axp173 import AXP173, AXP173_ADDR
-        from machine import I2C
-        from fpioa_manager import fm
 
         app.i2c0 = I2C(I2C.I2C0, freq=100*1000)
 
@@ -505,8 +522,6 @@ class app:
 
         i2c = I2C(I2C.I2C1, freq=400*1000)
         print('monkey patch & config for i2c')
-        from fpioa_manager import fm
-        from Maix import GPIO
         tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
         fm.register(tmp, fm.fpioa.GPIOHS15)
         sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
@@ -535,15 +550,16 @@ class app:
             fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
 
         #app.ctrl.event(100, lambda *args: time.sleep(1))
-        #app.ctrl.event(10, app.btn.event)
+        #app.ctrl.event(10, app.on_event)
         app.ctrl.event(5, app.draw)
+        #ui.enable = False
         while True:
-            import time
             last = 0
             while True:
                 try:
+                    gc.collect()
                     print((int)(1000 / (time.ticks_ms() - last)), 'fps')
-                    last = time.ticks_ms() - 10
+                    last = time.ticks_ms()
                     print_mem_free()
                     app.ctrl.cycle()
                     protect.keep()
@@ -557,6 +573,5 @@ class app:
 
 #'''
 if __name__ == "__main__":
-    gc.collect()
     print_mem_free()
     app.run()
