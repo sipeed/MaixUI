@@ -23,6 +23,7 @@ class ui:
     logo_path = os.getcwd() + "/res/images/logo.jpg"
 
     height, weight = lcd.height(), lcd.width()
+    enable = True
 
     def warp_template(func):
         def tmp_warp(warp=None):
@@ -31,88 +32,104 @@ class ui:
         return tmp_warp
 
     def blank_draw():
-        ui.canvas = image.Image(size=(ui.height, ui.weight)
+        if ui.enable:
+            ui.canvas = image.Image(size=(ui.height, ui.weight)
                                 )  # 10ms # 168.75kb (112kb)
 
     def grey_draw():
-        ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
+        if ui.enable:
+            ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
                                  fill=True, color=(75, 75, 75))
 
     def bg_in_draw():
-        #ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
-                                 #fill=True, color=(75, 75, 75))
-        #if ui.bak == None:
-        #ui.bak.draw_rectangle((60,30,120,150), fill=True, color=(250, 0, 0))
-        #ui.bak.draw_string(70, 40, "o", color=(255, 255, 255), scale=2)
-        #ui.bak.draw_string(80, 10, "s", color=(255, 255, 255), scale=15)
-        ui.canvas.draw_circle(121, 111, int(50),
-                              color=(64, 64, 64), thickness=3)  # 10ms
-        ui.canvas.draw_circle(120, 110, int(50),
-                              color=(250, 0, 0))  # 10ms
-        ui.canvas.draw_circle(120, 110, int(50), fill=True,
-                              color=(250, 0, 0))  # 10ms
+        if ui.enable:
+            #ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
+                                    #fill=True, color=(75, 75, 75))
+            #if ui.bak == None:
+            #ui.bak.draw_rectangle((60,30,120,150), fill=True, color=(250, 0, 0))
+            #ui.bak.draw_string(70, 40, "o", color=(255, 255, 255), scale=2)
+            #ui.bak.draw_string(80, 10, "s", color=(255, 255, 255), scale=15)
+            ui.canvas.draw_circle(121, 111, int(50),
+                                color=(64, 64, 64), thickness=3)  # 10ms
+            ui.canvas.draw_circle(120, 110, int(50),
+                                color=(250, 0, 0))  # 10ms
+            ui.canvas.draw_circle(120, 110, int(50), fill=True,
+                                color=(250, 0, 0))  # 10ms
 
-        sipeed = b'\x40\xA3\x47\x0F\x18\x38\x18\x0F\x07\x03\x00\x00\x00\x0F\x0F\x0F\x00\xFC\xFC\xFC\x00\x00\x00\xF0\xF8\xFC\x06\x07\x06\xFC\xF8\xF0'
+            sipeed = b'\x40\xA3\x47\x0F\x18\x38\x18\x0F\x07\x03\x00\x00\x00\x0F\x0F\x0F\x00\xFC\xFC\xFC\x00\x00\x00\xF0\xF8\xFC\x06\x07\x06\xFC\xF8\xF0'
 
-        ui.canvas.draw_font(88, 80, 16, 16, sipeed, scale=4, color=(64,64,64))
+            ui.canvas.draw_font(88, 80, 16, 16, sipeed, scale=4, color=(64,64,64))
 
-        ui.canvas.draw_font(86, 78, 16, 16, sipeed, scale=4, color=(255,255,255))
+            ui.canvas.draw_font(86, 78, 16, 16, sipeed, scale=4, color=(255,255,255))
 
 
-        # ui.canvas = ui.canvas # 15ms
-        #ui.canvas = ui.bak.copy() # 10ms 282kb
+            # ui.canvas = ui.canvas # 15ms
+            #ui.canvas = ui.bak.copy() # 10ms 282kb
 
     def bg_draw():
-        if ui.bak == None:
-            ui.bak = image.Image(ui.bg_path)  # 90ms
-        ui.canvas.draw_image(ui.bak, 0, 0)  # 20ms
+        if ui.enable:
+            if ui.bak == None:
+                ui.bak = image.Image(ui.bg_path)  # 90ms
+            ui.canvas.draw_image(ui.bak, 0, 0)  # 20ms
 
     def help_in_draw():
-        ui.canvas.draw_string(30, 6, "<", (255, 0, 0), scale=2)
-        ui.canvas.draw_string(60, 6, "ENTER/HOME", (255, 0, 0), scale=2)
-        ui.canvas.draw_string(200, 6, ">", (255, 0, 0), scale=2)
-        ui.canvas.draw_string(10, ui.height - 30,
-                              "RESET", (255, 0, 0), scale=2)
-        ui.canvas.draw_string(178, ui.height - 30,
-                              "POWER", (255, 0, 0), scale=2)
+        if ui.enable:
+            ui.canvas.draw_string(30, 6, "<", (255, 0, 0), scale=2)
+            ui.canvas.draw_string(60, 6, "ENTER/HOME", (255, 0, 0), scale=2)
+            ui.canvas.draw_string(200, 6, ">", (255, 0, 0), scale=2)
+            ui.canvas.draw_string(10, ui.height - 30,
+                                "RESET", (255, 0, 0), scale=2)
+            ui.canvas.draw_string(178, ui.height - 30,
+                                "POWER", (255, 0, 0), scale=2)
 
     def anime_draw(alpha=None):
-        if alpha == None:
-            alpha = math.cos(math.pi * ui.alpha / 32) * 80 + 170
-            ui.alpha = (ui.alpha + 1) % 64
-        if ui.anime == None:
-            ui.anime = image.Image(ui.logo_path)  # 90ms
-        ui.canvas.draw_image(ui.anime, 70, 70, alpha=int(alpha))  # 15ms
+        if ui.enable:
+            if alpha == None:
+                alpha = math.cos(math.pi * ui.alpha / 32) * 80 + 170
+                ui.alpha = (ui.alpha + 1) % 64
+            if ui.anime == None:
+                ui.anime = image.Image(ui.logo_path)  # 90ms
+            ui.canvas.draw_image(ui.anime, 70, 70, alpha=int(alpha))  # 15ms
 
     def anime_in_draw(alpha=None):
-        if alpha == None:
-            alpha = math.cos(math.pi * ui.alpha / 100) * 200
-            ui.alpha = (ui.alpha + 1) % 200
-        r, g, b = random.randint(120, 255), random.randint(
-            120, 255), random.randint(120, 255)
-        ui.canvas.draw_circle(0, 0, int(alpha), color=(
-            r, g, b), thickness=(r % 5))  # 10ms
-        ui.canvas.draw_circle(0, 0, 200 - int(alpha),
-                              color=(r, g, b), thickness=(g % 5))  # 10ms
+        if ui.enable:
+            if alpha == None:
+                alpha = math.cos(math.pi * ui.alpha / 100) * 200
+                ui.alpha = (ui.alpha + 1) % 200
+            r, g, b = random.randint(120, 255), random.randint(
+                120, 255), random.randint(120, 255)
+            ui.canvas.draw_circle(0, 0, int(alpha), color=(
+                r, g, b), thickness=(r % 5))  # 10ms
+            ui.canvas.draw_circle(0, 0, 200 - int(alpha),
+                                color=(r, g, b), thickness=(g % 5))  # 10ms
 
-        ui.canvas.draw_circle(240, 0, int(alpha), color=(
-            r, g, b), thickness=(b % 5))  # 10ms
-        ui.canvas.draw_circle(240, 0, 200 - int(alpha),
-                              color=(r, g, b), thickness=(r % 5))  # 10ms
+            ui.canvas.draw_circle(240, 0, int(alpha), color=(
+                r, g, b), thickness=(b % 5))  # 10ms
+            ui.canvas.draw_circle(240, 0, 200 - int(alpha),
+                                color=(r, g, b), thickness=(r % 5))  # 10ms
 
-        ui.canvas.draw_circle(0, 240, int(alpha), color=(
-            r, g, b), thickness=(g % 5))  # 10ms
-        ui.canvas.draw_circle(0, 240, 200 - int(alpha),
-                              color=(r, g, b), thickness=(b % 5))  # 10ms
+            ui.canvas.draw_circle(0, 240, int(alpha), color=(
+                r, g, b), thickness=(g % 5))  # 10ms
+            ui.canvas.draw_circle(0, 240, 200 - int(alpha),
+                                color=(r, g, b), thickness=(b % 5))  # 10ms
 
-        ui.canvas.draw_circle(240, 240, int(alpha), color=(
-            r, g, b), thickness=(r % 5))  # 10ms
-        ui.canvas.draw_circle(240, 240, 200 - int(alpha),
-                              color=(r, g, b), thickness=(g % 5))  # 10ms
+            ui.canvas.draw_circle(240, 240, int(alpha), color=(
+                r, g, b), thickness=(r % 5))  # 10ms
+            ui.canvas.draw_circle(240, 240, 200 - int(alpha),
+                                color=(r, g, b), thickness=(g % 5))  # 10ms
 
     def display():  # 10ms
-        lcd.display(ui.canvas)
-        del ui.canvas
+        try:
+            if ui.canvas != None:
+                lcd.display(ui.canvas)
+        finally:
+            try:
+                if ui.canvas != None:
+                    tmp = ui.canvas
+                    ui.canvas = None
+                    del tmp
+            except Exception as e:
+                gc.collect()
 
 if __name__ == "__main__":
     # ui.height, ui.weight = 480, 320 # amigo
