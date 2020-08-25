@@ -40,8 +40,8 @@ class FaceReco():
                 # print(i)
                 img.draw_rectangle(i.rect())
 
-        img.draw_string(10, 2, 'FaceReco free %d kb' % (
-            utils.heap_free() / 1024), (127, 255, 255), scale=2)
+        # img.draw_string(10, 2, 'FaceReco free %d kb' % (
+        #     utils.heap_free() / 1024), (127, 255, 255), scale=2)
 
     def free():
         try:

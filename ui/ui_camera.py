@@ -38,8 +38,8 @@ class ai_sample():
 
     def work(img):
         #print(ai_sample.work)
-        img.draw_string(20, 2, 'sample free %d kb' %
-                        (utils.heap_free() / 1024), (127, 255, 255), scale=2)
+        # img.draw_string(20, 2, 'sample free %d kb' %
+        #                 (utils.heap_free() / 1024), (127, 255, 255), scale=2)
         return img
 
     def free():
@@ -60,24 +60,31 @@ class ai_camera():
             ai_camera.model = ai_camera.models[ai_camera.index]
             ai_camera.model.load()
 
+    def back():
+        ai_camera.index -= 1
+        ai_camera.replace = True
+
+    def next():
+        ai_camera.index += 1
+        ai_camera.replace = True
+
     def ai_draw():
         ai_camera.btn.event()
-        ai_camera.replace = False
 
         if ai_camera.btn.home() == 2:
             ai_camera.backlight = not ai_camera.backlight
             cube_led.w.value(ai_camera.backlight)
 
         if ai_camera.btn.back() == 2:
-            ai_camera.index -= 1
-            ai_camera.replace = True
+            ai_camera.back()
         elif ai_camera.btn.next() == 2:
-            ai_camera.index += 1
-            ai_camera.replace = True
+            ai_camera.next()
+
         ai_camera.index = ai_camera.index % len(ai_camera.models)
 
         if ai_camera.replace:
             ai_camera.reload()
+            ai_camera.replace = False
 
         tmp = camera.obj.get_image()
         if ai_camera.model and ai_camera.model.is_load:
