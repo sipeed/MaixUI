@@ -304,7 +304,8 @@ class app:
                     del tmp
                     app.photos_temp = None
                 app.photos_temp = image.Image(app.photos_title)
-
+            
+            ui.canvas.draw_string(2, 2, app.photos_title, color=(255, 255, 255), scale=1, mono_space=0)
             ui.canvas.draw_image(app.photos_temp, 0, 0)
             #ui.canvas = image.Image(photos.image_path())
         else:
