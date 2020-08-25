@@ -162,7 +162,7 @@ class app:
         ui.canvas.draw_font(ui.height - 20, ui.weight - 25, 16, 16, app.touch_right, scale=1, color=(0, 155, 155))
 
     #@ui.warp_template(CubeAudio.event)
-    #@ui.warp_template(ui.bg_in_draw)
+    @ui.warp_template(ui.bg_in_draw)
     #@ui.warp_template(ui.help_in_draw)
     def draw_load():
 
