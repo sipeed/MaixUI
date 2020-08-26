@@ -54,6 +54,8 @@ class taskbar:
         try:
             vbat_voltage = taskbar.power.getVbatVoltage() / 1000
             vbat_value = int((vbat_voltage - 3.2) * 100)
+            if vbat_value > 100:
+                vbat_value = 100
             taskbar.sync = (taskbar.power.is_charging(), vbat_value)
         except Exception as e:
             gc.collect()
