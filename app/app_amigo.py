@@ -140,7 +140,7 @@ class app:
             ui.canvas.draw_string(200 - int(value) * 2, 68 + (int(value) % 8) * 2, "A",
                                 color=(64, 64, 64), scale=8, mono_space=0)
             ui.canvas.draw_string(200 - int(value), 72 + (int(value) % 8), "A",
-                                color=(0xFF, 0x40, 0x40), scale=8, mono_space=0)
+                                color=(0x2d, 0x85, 0xf0), scale=8, mono_space=0)
         else:
             ui.canvas.draw_string(203, 73, "A", color=(
                 64, 64, 64), scale=8, mono_space=0)
@@ -150,7 +150,7 @@ class app:
             ui.canvas.draw_string(203, 72 - int(value) * 5 - 9, "  m",
                                 color=(64, 64, 64), scale=8, mono_space=0)
             ui.canvas.draw_string(200, 70 - int(value) * 4 - 8, "  m",
-                                color=(0xFF, 0xFF, 0x40), scale=8, mono_space=0)
+                                color=(0xf4, 0x43, 0x3c), scale=8, mono_space=0)
         else:
             ui.canvas.draw_string(203, 72, "  m",
                                 color=(64, 64, 64), scale=8, mono_space=0)
@@ -160,20 +160,20 @@ class app:
             ui.canvas.draw_string(203, 72, "    i",
                                 color=(64, 64, 64), scale=8, mono_space=0)
             ui.canvas.draw_string(200, 70, "    i",
-                                color=(0x40, 0x40, 0xFF), scale=8, mono_space=0)
+                                color=(0xff, 0xbc, 0x32), scale=8, mono_space=0)
 
             ui.canvas.draw_rectangle((304, 77, 12, 12),
-                                color=(0, 0, 0), fill=True)
+                                color=(0x70, 0x70, 0x70), fill=True)
 
             ui.canvas.draw_string(259, 44 + int(value), "    .    ",
                                 color=(64, 64, 64), scale=4, mono_space=0)
             ui.canvas.draw_string(256, 42 + int(value), "    .    ",
-                                color=(0x40, 0x40, 0xFF), scale=4, mono_space=0)
+                                color=(0xff, 0xbc, 0x32), scale=4, mono_space=0)
         else:
             ui.canvas.draw_string(203, 72, "    i",
                                 color=(64, 64, 64), scale=8, mono_space=0)
             ui.canvas.draw_rectangle((304, 77, 12, 12),
-                                color=(0, 0, 0), fill=True)
+                                color=(0x70, 0x70, 0x70), fill=True)
             ui.canvas.draw_string(259, 44, "    .    ",
                                 color=(64, 64, 64), scale=4, mono_space=0)
 
@@ -182,7 +182,7 @@ class app:
             ui.canvas.draw_string(203 + int(value) * 2 + 10, 72, "     g",
                                 color=(64, 64, 64), scale=8, mono_space=0)
             ui.canvas.draw_string(200 + int(value) * 2 + 10, 70, "     g",
-                                color=(0x40 + int(value) * 50, 0xFF, 0x40 + int(value) * 50), scale=8, mono_space=0)
+                                color=(0x0a + int(value) * 50, 0xa8, 0x58 + int(value) * 50), scale=8, mono_space=0)
         else:
             ui.canvas.draw_string(203, 72, "     g",
                                 color=(64, 64, 64), scale=8, mono_space=0)
@@ -192,7 +192,7 @@ class app:
             ui.canvas.draw_string(203 - int(value) * 2 + 20, 72, "       o",
                                 color=(64, 64, 64), scale=8, mono_space=0)
             ui.canvas.draw_string(200 - int(value) * 2 + 20, 70, "       o",
-                                color=(0xFF, 0x50 + int(value) * 50, 0xFF), scale=8, mono_space=0)
+                                color=(0xf4, 0x43 + int(value) * 50, 0x3c), scale=8, mono_space=0)
         else:
             ui.canvas.draw_string(203, 72, "       o",
                                 color=(64, 64, 64), scale=8, mono_space=0)
@@ -255,7 +255,8 @@ class app:
                     app.msa301 = MSA301(app.i2c1)
                 break
             except Exception as e:
-                gc.collect()
+                pass
+                # gc.collect()
         #ui.canvas.draw_string(240 + 10, 140, "x", (255, 0, 0), scale=2)
         #ui.canvas.draw_string(240 + 10, 140, "x", (255, 0, 0), scale=2)
         #ui.canvas.draw_line(240 + 120, 150, 120 + int(accel[0] * 8), 150, color=(41, 131, 255))
@@ -312,15 +313,21 @@ class app:
         try:
             if app.isconnected == False:
                 CubeAudio.event()
-                if app.loop % 10 == 0:
+                #if app.loop % 10 == 0:
+                    # tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C0_SDA)
+                    # fm.register(tmp, fm.fpioa.GPIOHS14)
+                    # sda = GPIO(GPIO.GPIOHS14, GPIO.OUT)
+                    # sda.value(1)
+                    # fm.register(tmp, fm.fpioa.I2C0_SDA, force=True)
+
                     # print(app.loop)
-                    # print(self.i2c.scan())
-                    if SHT3x_ADDR in app.i2c0.scan():
-                        app.sht3x = SHT3x(app.i2c0, SHT3x_ADDR)
-                        app.isconnected = True
-                    if SHT31_ADDR in app.i2c0.scan():
-                        app.sht3x = SHT3x(app.i2c0, SHT31_ADDR)
-                        app.isconnected = True
+                print(app.i2c0.scan())
+                if SHT3x_ADDR in app.i2c0.scan():
+                    app.sht3x = SHT3x(app.i2c0, SHT3x_ADDR)
+                    app.isconnected = True
+                if SHT31_ADDR in app.i2c0.scan():
+                    app.sht3x = SHT3x(app.i2c0, SHT31_ADDR)
+                    app.isconnected = True
 
                 ui.canvas.draw_string(280, 25, "Wait Grove Sensor \n sht31/35 <<<  <<  <-",
                                       color=(140 + int(value) * 5, 240 + int(value) * 5, 140 + int(value) * 5), scale=2, mono_space=0)
@@ -340,6 +347,7 @@ class app:
             else:
                 CubeAudio.event()
                 data = app.sht3x.read_temp_humd()
+                print(data)
                 if app.sidu == None:
                     app.sidu = image.Image(os.getcwd() + "/res/images/sidu.jpg")
 
@@ -350,7 +358,7 @@ class app:
                 ui.canvas.draw_rectangle(60, 60, 180, 200, thickness=4, color=(155, 155, 155))
                 if len(app.points) > 18:
                     app.points.pop(0)
-                elif app.temp != int(data[0] * 10):
+                elif data[0] > 1 and app.temp != int(data[0] * 10):
                     app.temp = int(data[0] * 10)
                     app.points.append(app.temp)
                 for p in range(len(app.points)):
@@ -386,17 +394,38 @@ class app:
 
               elif 'FaceReco' == ai_camera.model.__qualname__:
 
-                  if ai_camera.models[1].bbox != None:
-                      bbox = ai_camera.models[1].bbox
-                      ui.canvas.draw_string(50, 260, "Find Face %d" % len(bbox), scale=5)
-                      for pos in range(len(bbox)):
-                          i = bbox[pos]
-                          print(i.x(), i.y(), i.w(), i.h())
-                          face_cut = ui.canvas.cut(i.x(), i.y(), i.w(), i.h())
-                          face_cut_128 = face_cut.resize(80, 80)
-                          ui.canvas.draw_image(face_cut_128, 320 + int((pos % 2)*80), int((pos // 2)*80))
-                  else:
-                      ui.canvas.draw_string(50, 260, "Find Face Reco", scale=5)
+                    if ai_camera.model.bbox != None:
+                        bbox = ai_camera.model.bbox
+                        ui.canvas.draw_string(50, 260, "Find Face %d" % len(bbox), scale=5)
+                        for pos in range(len(bbox)):
+                            i = bbox[pos]
+                            print(i.x(), i.y(), i.w(), i.h())
+                            face_cut = ui.canvas.cut(i.x(), i.y(), i.w(), i.h())
+                            face_cut_128 = face_cut.resize(80, 80)
+                            ui.canvas.draw_image(face_cut_128, 320 + int((pos % 2)*80), int((pos // 2)*80))
+                    else:
+                        ui.canvas.draw_string(50, 260, "Find Face Reco", scale=5)
+
+              elif 'find_color' == ai_camera.model.__qualname__:
+
+                    ui.canvas.draw_string(50, 260, "Find Color For Red (53, 31, 44, 82, 18, 78)", scale=2)
+                    ui.canvas.draw_string(50, 260, "                         Red", color=(255,0,0), scale=2)
+
+                    ui.canvas.draw_string(340, 30, "Red\nSum\n  %d" % len(ai_camera.model.blobs), scale=5)
+
+              elif 'HowMany' == ai_camera.model.__qualname__:
+
+                    if ai_camera.model.things != None:
+                        ui.canvas.draw_string(340, 30, "How\nMany\n  %d" % len(ai_camera.model.things), scale=5)
+
+                    ui.canvas.draw_string(50, 260, "How many things are there?", scale=2)
+
+              elif 'MaybeIs' == ai_camera.model.__qualname__:
+
+                    ui.canvas.draw_string(340, 50, "Maybe\n   Is\n", scale=3)
+                    ui.canvas.draw_string(340, 150, "%s" % str(ai_camera.model.result), scale=2)
+                    ui.canvas.draw_string(50, 260, "What is likely to be?", scale=2)
+
             app.touch_draw()
             ui.display()
         except Exception as e:
@@ -488,10 +517,10 @@ class app:
     @catch
     def draw():
         app.on_event()
-        #ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
-                                      #fill = True, color = (40, 40, 40))
+        ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
+                                      fill = True, color = (0x70, 0x70, 0x70))
 
-        gc.collect()
+        # gc.collect()
         if app.layer == 0:
             app.draw_load()
         elif app.layer == 1:
@@ -501,8 +530,8 @@ class app:
 
     def run():
         # debug into app_select
-        # launcher.app_select = 0
-        # app.layer = 2
+        #launcher.app_select = 0
+        #app.layer = 2
 
         ui.height, ui.weight = 480, 320
         button_io.config(23, 31, 20) # amigo
@@ -519,6 +548,12 @@ class app:
 
         for i in range(100):
             try:
+                tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
+                fm.register(tmp, fm.fpioa.GPIOHS15)
+                sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
+                sda.value(1)
+                fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
+
                 #if AXP173_ADDR in i2c.scan():
                 axp173 = AXP173(i2c_dev=app.i2c1)
                 axp173.enable_adc(True)
@@ -530,14 +565,10 @@ class app:
                 axp173.writeREG(0x28, 0x0C)
                 taskbar.init(axp173)
 
-                tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
-                fm.register(tmp, fm.fpioa.GPIOHS15)
-                sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
-                sda.value(1)
-                fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
                 break
             except Exception as e:
-                gc.collect()
+                # gc.collect()
+                pass
 
                 #if i == 99:
                     #raise(e)
@@ -558,7 +589,7 @@ class app:
             last = 0
             while True:
                 try:
-                    gc.collect()
+                    # gc.collect()
                     print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                     last = time.ticks_ms()
                     #print_mem_free()
@@ -569,7 +600,7 @@ class app:
                     protect.stop()
                     raise KeyboardInterrupt()
                 except Exception as e:
-                    gc.collect()
+                    # gc.collect()
                     print(e)
 
 #'''
