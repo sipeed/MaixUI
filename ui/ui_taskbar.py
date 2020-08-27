@@ -58,7 +58,7 @@ class taskbar:
                 vbat_value = 100
             taskbar.sync = (taskbar.power.is_charging(), vbat_value)
         except Exception as e:
-            gc.collect()
+            # gc.collect()
             print(e)
 
     def battery_draw():
@@ -72,7 +72,7 @@ class taskbar:
                 ui.canvas.draw_font(ui.height - 60, 8, 16, 16, taskbar.charge, scale=1, color=(300 - value * 3, value * 2, 50))
 
             #print('{0:>2d}%'.format(value))
-            ui.canvas.draw_string(ui.height - 32, 10, '{0:>2d}%'.format(value), scale=1, color=(255,255,255))
+            ui.canvas.draw_string(ui.height - 32, 10, '{0:>2d}%'.format(value), scale=1, color=(105,105,105))
 
         #ui.canvas.draw_string(10, 1, taskbar.info,
                               #scale=2, color=(50, 255, 50))
@@ -124,5 +124,5 @@ if __name__ == "__main__":
             last = time.ticks_ms()
             app_main()
         except Exception as e:
-            gc.collect()
+            # gc.collect()
             print(e)
