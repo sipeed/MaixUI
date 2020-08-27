@@ -5,7 +5,11 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import time, gc, math, ulab, image
+import time
+import gc
+import math
+import ulab
+import image
 
 from pmu_axp173 import AXP173, AXP173_ADDR
 from machine import I2C
@@ -36,9 +40,11 @@ from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
 #from sample_msa301 import sample_msa301
 
 #'''
+
+
 class app:
 
-    layer = 0 # set help_draw to top
+    layer = 0  # set help_draw to top
     ctrl = agent()
     btn = sipeed_button()
     loop = 0
@@ -46,6 +52,7 @@ class app:
     toth = Touch(480, 320, 50)
     touch_select = 0
     msa301 = None
+    i2c1 = None
 
     touch_left = b"\x00\x00\x00\x00\x03\x0F\x3F\xFF\xFF\x3F\x0F\x03\x00\x00\x00\x00\x07\x0F\x3F\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x3F\x0F\x03"
     touch_right = b"\xE0\xF0\xFC\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFC\xF0\xC0\x00\x00\x00\x00\xC0\xF0\xFC\xFF\xFF\xFC\xF0\xC0\x00\x00\x00\x00"
@@ -94,20 +101,29 @@ class app:
             elif p[0] > 430 and p[1] < 50:
                 tmp_r = int(value) + 30
 
-        ui.canvas.draw_circle(ui.height, 0, 40 + tmp_x, thickness=8, fill=False, color=(100, 100, 100))
-        ui.canvas.draw_circle(ui.height, 0, 38 + tmp_x, fill=True, color=(255, 255, 255))
+        ui.canvas.draw_circle(ui.height, 0, 40 + tmp_x,
+                              thickness=8, fill=False, color=(100, 100, 100))
+        ui.canvas.draw_circle(ui.height, 0, 38 + tmp_x,
+                              fill=True, color=(255, 255, 255))
         #ui.canvas.draw_string(ui.height - 15, 5, "x", scale=2, color=(0, 0, 0))
-        ui.canvas.draw_font(ui.height - 22, 8, 16, 16, app.touch_close, scale=1, color=(155, 155, 0))
+        ui.canvas.draw_font(ui.height - 22, 8, 16, 16,
+                            app.touch_close, scale=1, color=(155, 155, 0))
 
-        ui.canvas.draw_circle(0, ui.weight, 40 + tmp_l, thickness=8, fill=False, color=(100, 100, 100))
-        ui.canvas.draw_circle(0, ui.weight, 38 + tmp_l, fill=True, color=(255, 255, 100))
+        ui.canvas.draw_circle(0, ui.weight, 40 + tmp_l,
+                              thickness=8, fill=False, color=(100, 100, 100))
+        ui.canvas.draw_circle(0, ui.weight, 38 + tmp_l,
+                              fill=True, color=(255, 255, 100))
         #ui.canvas.draw_string(10, ui.weight - 30, "<", scale=2, color=(0, 0, 0))
-        ui.canvas.draw_font(8, ui.weight - 25, 16, 16, app.touch_left, scale=1, color=(155, 155, 0))
+        ui.canvas.draw_font(8, ui.weight - 25, 16, 16,
+                            app.touch_left, scale=1, color=(155, 155, 0))
 
-        ui.canvas.draw_circle(ui.height, ui.weight, 40 + tmp_r, thickness=8, fill=False, color=(100, 100, 100))
-        ui.canvas.draw_circle(ui.height, ui.weight, 38 + tmp_r, fill=True, color=(100, 255, 255))
+        ui.canvas.draw_circle(ui.height, ui.weight, 40 + tmp_r,
+                              thickness=8, fill=False, color=(100, 100, 100))
+        ui.canvas.draw_circle(ui.height, ui.weight, 38 +
+                              tmp_r, fill=True, color=(100, 255, 255))
         #ui.canvas.draw_string(ui.height - 15, ui.weight - 30, ">", scale=2, color=(0, 0, 0))
-        ui.canvas.draw_font(ui.height - 20, ui.weight - 25, 16, 16, app.touch_right, scale=1, color=(0, 155, 155))
+        ui.canvas.draw_font(ui.height - 20, ui.weight - 25, 16,
+                            16, app.touch_right, scale=1, color=(0, 155, 155))
 
     #@ui.warp_template(CubeAudio.event)
     @ui.warp_template(ui.bg_in_draw)
@@ -126,7 +142,8 @@ class app:
             ui.canvas.draw_string(200 - int(value), 72 + (int(value) % 8), "A",
                                 color=(0xFF, 0x40, 0x40), scale=8, mono_space=0)
         else:
-            ui.canvas.draw_string(203, 73, "A", color=(64, 64, 64), scale=8, mono_space=0)
+            ui.canvas.draw_string(203, 73, "A", color=(
+                64, 64, 64), scale=8, mono_space=0)
 
         if app.loading or app.loop > 40:
 
@@ -217,22 +234,35 @@ class app:
         app.loop = (app.loop + 1) % 200
 
         value = math.cos(math.pi * app.loop / 12) * 2 + 20
+        for i in range(100):
+            try:
+                #ui.canvas.draw_rectangle((240, 0, 240, 320), fill=False, thickness=3, color=(175, 175, 175))
+                if app.msa301 != None:
+                    accel = app.msa301.acceleration
+                    x, y = 240, 160 # center
+                    #print(accel)
+                    ui.canvas.draw_circle(x + int(accel[0] * 15), y + int(accel[1] * 20), int(value), fill=True,
+                        color=(150 + int(accel[0] * 20), 150 + int(accel[1] * 20), 100 + int(accel[2] * 20)))  # 10ms
+                    ui.canvas.draw_circle(x + int(accel[0] * 15), y + int(accel[1] * 20), int(value) + 1, thickness=3, fill=False, color=(0, 0, 0))  # 10ms
+                else:
 
-        #ui.canvas.draw_rectangle((240, 0, 240, 320), fill=False, thickness=3, color=(175, 175, 175))
-        acceleration = app.msa301.acceleration
-        x, y = 240, 160 # center
-        #print(acceleration)
-        ui.canvas.draw_circle(x + int(acceleration[0] * 15), y + int(acceleration[1] * 20), int(value), fill=True,
-            color=(150 + int(acceleration[0] * 20), 150 + int(acceleration[1] * 20), 100 + int(acceleration[2] * 20)))  # 10ms
-        ui.canvas.draw_circle(x + int(acceleration[0] * 15), y + int(acceleration[1] * 20), int(value) + 1, thickness=3, fill=False, color=(0, 0, 0))  # 10ms
+                    tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
+                    fm.register(tmp, fm.fpioa.GPIOHS15)
+                    sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
+                    sda.value(1)
+                    fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
 
+                    app.msa301 = MSA301(app.i2c1)
+                break
+            except Exception as e:
+                gc.collect()
         #ui.canvas.draw_string(240 + 10, 140, "x", (255, 0, 0), scale=2)
         #ui.canvas.draw_string(240 + 10, 140, "x", (255, 0, 0), scale=2)
-        #ui.canvas.draw_line(240 + 120, 150, 120 + int(acceleration[0] * 8), 150, color=(41, 131, 255))
+        #ui.canvas.draw_line(240 + 120, 150, 120 + int(accel[0] * 8), 150, color=(41, 131, 255))
         #ui.canvas.draw_string(240 + 10, 160, "y", (0, 255, 0), scale=2)
-        #ui.canvas.draw_line(240 + 120, 170, 120 + int(acceleration[1] * 8), 170, color=(141, 31, 255))
+        #ui.canvas.draw_line(240 + 120, 170, 120 + int(accel[1] * 8), 170, color=(141, 31, 255))
         #ui.canvas.draw_string(240 + 10, 180, "z", (0, 0, 255), scale=2)
-        #ui.canvas.draw_line(240 + 120, 190, 120 + int(acceleration[2] * 8), 190, color=(241, 131, 55))
+        #ui.canvas.draw_line(240 + 120, 190, 120 + int(accel[2] * 8), 190, color=(241, 131, 55))
 
         ui.display()
 
@@ -480,30 +510,37 @@ class app:
 
 
         app.i2c0 = I2C(I2C.I2C0, freq=100*1000)
-
+        app.i2c1 = I2C(I2C.I2C1, freq=100*1000)
         fm.register(24,fm.fpioa.I2C1_SCLK, force=True)
         fm.register(27,fm.fpioa.I2C1_SDA, force=True)
 
-        i2c = I2C(I2C.I2C1, freq=400*1000)
         print('monkey patch & config for i2c')
-        tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
-        fm.register(tmp, fm.fpioa.GPIOHS15)
-        sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
-        sda.value(1)
-        fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
+        TouchLow.config(i2c1=app.i2c1) # amigo
 
-        TouchLow.config(i2c) # amigo
-        app.msa301 = MSA301(i2c)
-        #if AXP173_ADDR in i2c.scan():
-        axp173 = AXP173(i2c_dev=i2c)
-        axp173.enable_adc(True)
-        # 默认充电限制在 4.2V, 190mA 档位
-        axp173.setEnterChargingControl(True)
-        axp173.exten_output_enable()
-        # amigo sensor config.
-        axp173.writeREG(0x27, 0x20)
-        axp173.writeREG(0x28, 0x0C)
-        taskbar.init(axp173)
+        for i in range(100):
+            try:
+                #if AXP173_ADDR in i2c.scan():
+                axp173 = AXP173(i2c_dev=app.i2c1)
+                axp173.enable_adc(True)
+                # 默认充电限制在 4.2V, 190mA 档位
+                axp173.setEnterChargingControl(True)
+                axp173.exten_output_enable()
+                # amigo sensor config.
+                axp173.writeREG(0x27, 0x20)
+                axp173.writeREG(0x28, 0x0C)
+                taskbar.init(axp173)
+
+                tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
+                fm.register(tmp, fm.fpioa.GPIOHS15)
+                sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
+                sda.value(1)
+                fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
+                break
+            except Exception as e:
+                gc.collect()
+
+                #if i == 99:
+                    #raise(e)
 
         if CubeAudio.check():
             CubeAudio.ready()

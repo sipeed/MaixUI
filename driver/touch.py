@@ -15,7 +15,7 @@ FT_ID_G_PERIODACTIVE = 0x88
 FT6X36_ADDR = 0x38
 
 class TouchLow:
-  i2c = None
+  i2c1 = None
   addr = 0x0
 
   def config(i2c1, addr=FT6X36_ADDR):
@@ -60,7 +60,7 @@ class TouchLow:
     #print("get_gesture:" + str(data))
     data = TouchLow.read_reg(0x02, 1)
     #print("get_points:" + str(data))
-    if (data[0] == 0x1):
+    if (data != None and data[0] == 0x1):
         data_buf = TouchLow.read_reg(0x03, 4)
         y = ((data_buf[0] & 0x0f) << 8) | (data_buf[1])
         x = ((data_buf[2] & 0x0f) << 8) | (data_buf[3])
