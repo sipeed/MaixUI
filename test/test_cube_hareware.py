@@ -802,10 +802,10 @@ if __name__ == "__main__":
     #Grove_Test = False
     #Spmod_Test = False
     import time, gc
-    gc.collect()
+    # gc.collect()
     if len(sample_page.samples) > 0:
         sample_page.samples = []
-        gc.collect()
+        # gc.collect()
         print('ram total : ' + str(gc.mem_free() / 1024) + ' kb')
 
     button_io.config(10, 11, 16)

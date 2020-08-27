@@ -10,7 +10,7 @@ lcd.init()
 
 if __name__ == "__main__":
     while True:
-        gc.collect()
+        # gc.collect()
         print(gc.mem_free() / 1024, 'kb')
         bak = gc.mem_free()
         img = image.Image("/sd/tmp.jpeg") # size=(lcd.width(), lcd.height())
@@ -22,9 +22,9 @@ if __name__ == "__main__":
         lcd.display(img)
         del img
         print(gc.mem_free() / 1024, 'kb')
-        gc.collect()
+        # gc.collect()
         time.sleep(1)
-        gc.collect()
+        # gc.collect()
         print(gc.mem_free() / 1024, 'kb')
         bak = gc.mem_free()
         img = image.Image("/sd/test.jpg") # size=(lcd.width(), lcd.height())
@@ -36,6 +36,6 @@ if __name__ == "__main__":
         lcd.display(img)
         del img
         print(gc.mem_free() / 1024, 'kb')
-        gc.collect()
+        # gc.collect()
         time.sleep(1)
 

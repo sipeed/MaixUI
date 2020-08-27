@@ -265,7 +265,7 @@ while(1):
         print("%2.1f fps" % fps)
         img_lcd.draw_image(img, (0,0))
         a = lcd.display(img_lcd) #.resize(480, 320)
-        gc.collect()
+        # gc.collect()
         kpu.memtest()
     except KeyboardInterrupt as e:
         a = kpu.deinit(task_fe)

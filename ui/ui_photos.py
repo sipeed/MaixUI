@@ -19,7 +19,7 @@ class photos:
                 images[p] = OS.listdir(p)
             except Exception as e:
                 print(e, p)
-                gc.collect()
+                # gc.collect()
         photos.image_set = []
         for path in images:
             for file in images[path]:

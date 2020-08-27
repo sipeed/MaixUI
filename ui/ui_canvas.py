@@ -7,7 +7,7 @@
 
 import image, lcd, math, gc, random, os
 
-gc.collect()
+# gc.collect()
 
 lcd.init(freq=15000000)
 
@@ -129,7 +129,8 @@ class ui:
                     ui.canvas = None
                     del tmp
             except Exception as e:
-                gc.collect()
+                pass
+                # gc.collect()
 
 if __name__ == "__main__":
     # ui.height, ui.weight = 480, 320 # amigo
@@ -153,7 +154,7 @@ if __name__ == "__main__":
         try:
             print(time.ticks_ms() - last)
             last = time.ticks_ms()
-            gc.collect()
+            # gc.collect()
             test_launcher_draw()
         except Exception as e:
             print(e)

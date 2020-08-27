@@ -394,5 +394,5 @@ if __name__ == "__main__":
             last = time.ticks_ms()
             test_pmu_axp173_draw()
         except Exception as e:
-            gc.collect()
+            # gc.collect()
             print(e)

@@ -46,10 +46,10 @@ class app:
                     protect.stop()
                     raise KeyboardInterrupt()
                 except Exception as e:
-                    gc.collect()
+                    # gc.collect()
                     print(e)
 
 if __name__ == "__main__":
-    gc.collect()
+    # gc.collect()
     print_mem_free()
     app.run()

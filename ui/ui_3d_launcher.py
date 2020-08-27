@@ -122,7 +122,7 @@ class launcher:
     color = (100 + 5 *value, 100 + 5 *value, 100 + 5 * value)
     #print(color)
     ui.canvas.draw_ellipse(130, 150, 90 + (value % 20 - 10), 40 + (value % 20 - 10), -10, color=color, thickness=2 + value % 5, fill=False)
-    gc.collect()
+    # gc.collect()
     launcher.load(launcher.pos, 0)
     launcher.load(launcher.pos - 30, 1)
     launcher.load(launcher.pos - 60, 2)

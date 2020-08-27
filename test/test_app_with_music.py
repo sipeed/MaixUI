@@ -207,7 +207,7 @@ class app:
                     protect.stop()
                     raise KeyboardInterrupt()
                 except Exception as e:
-                    gc.collect()
+                    # gc.collect()
                     print(e)
 
 

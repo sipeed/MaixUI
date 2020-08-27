@@ -70,7 +70,7 @@ def catch(func):
                     lcd.display(ui.canvas)
                     time.sleep_ms(100)
                 ui.display()
-                gc.collect()
+                # gc.collect()
             except Exception as e:
                 print(e)
     return warp

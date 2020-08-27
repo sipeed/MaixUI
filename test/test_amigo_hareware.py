@@ -1272,11 +1272,11 @@ if __name__ == "__main__":
     protect.keep()
 
     import time, gc
-    gc.collect()
-    gc.collect()
+    # gc.collect()
+    # gc.collect()
     if len(sample_page.samples) > 0:
         sample_page.samples = []
-        gc.collect()
+        # gc.collect()
 
     button_io.config(23, 20, 31)
     sample_page.key_init()

@@ -28,7 +28,8 @@ class FaceReco():
         if FaceReco.is_load == False:
             FaceReco.model = kpu.load(0x2C0000)  # Load Model File from Flash
             # Anchor data is for bbox, extracted from the training sets.
-            kpu.init_yolo2(FaceReco.model, 0.5, 0.3, 5, FaceReco.anchor)
+            kpu.init_yolo2(FaceReco.model, 0.5, 0.3, 5, (1.889, 2.5245, 2.9465, 3.94056, 3.99987,
+              5.3658, 5.155437, 6.92275, 6.718375, 9.01025))
             FaceReco.is_load = True
 
     def work(img):
@@ -82,7 +83,7 @@ if __name__ == "__main__":
                 last = time.ticks_ms()
                 app_main()
             except Exception as e:
-                gc.collect()
+                # gc.collect()
                 print(e)
 
         FaceReco.free()
