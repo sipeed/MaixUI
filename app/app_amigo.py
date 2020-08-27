@@ -311,8 +311,8 @@ class app:
                           color=(40 + int(value) * 2, 240 + int(value) * 2, 40 + int(value) * 2), scale=3, mono_space=0)
 
         try:
+            CubeAudio.event()
             if app.isconnected == False:
-                CubeAudio.event()
                 #if app.loop % 10 == 0:
                     # tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C0_SDA)
                     # fm.register(tmp, fm.fpioa.GPIOHS14)
@@ -321,13 +321,29 @@ class app:
                     # fm.register(tmp, fm.fpioa.I2C0_SDA, force=True)
 
                     # print(app.loop)
-                print(app.i2c0.scan())
-                if SHT3x_ADDR in app.i2c0.scan():
-                    app.sht3x = SHT3x(app.i2c0, SHT3x_ADDR)
-                    app.isconnected = True
-                if SHT31_ADDR in app.i2c0.scan():
-                    app.sht3x = SHT3x(app.i2c0, SHT31_ADDR)
-                    app.isconnected = True
+                #print(app.i2c0.scan())
+
+                #tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C0_SDA)
+                #fm.register(tmp, fm.fpioa.GPIOHS14)
+                #sda = GPIO(GPIO.GPIOHS14, GPIO.OUT)
+                #sda.value(1)
+                #fm.register(tmp, fm.fpioa.I2C0_SDA, force=True)
+
+                CubeAudio.event()
+
+                if app.loop % 5 == 1:
+                    result = app.i2c0.scan()
+                    ui.canvas.draw_string(290, 80, "Scan Dev: " + str(result),
+                                          color=(140 + int(value) * 5, 240 + int(value) * 5, 140 + int(value) * 5), scale=2, mono_space=0)
+
+                    if SHT3x_ADDR in result:
+                        app.sht3x = SHT3x(app.i2c0, SHT3x_ADDR)
+                        app.isconnected = True
+                    CubeAudio.event()
+                    if SHT31_ADDR in result:
+                        app.sht3x = SHT3x(app.i2c0, SHT31_ADDR)
+                        app.isconnected = True
+                    CubeAudio.event()
 
                 ui.canvas.draw_string(280, 25, "Wait Grove Sensor \n sht31/35 <<<  <<  <-",
                                       color=(140 + int(value) * 5, 240 + int(value) * 5, 140 + int(value) * 5), scale=2, mono_space=0)
@@ -345,9 +361,8 @@ class app:
                     ui.canvas.draw_circle(0, 0, 100 + tmp * 4, fill=False, color=(0, (150 + tmp) + 40, 0))
 
             else:
-                CubeAudio.event()
                 data = app.sht3x.read_temp_humd()
-                print(data)
+                # print(data)
                 if app.sidu == None:
                     app.sidu = image.Image(os.getcwd() + "/res/images/sidu.jpg")
 
@@ -374,7 +389,7 @@ class app:
                 ui.canvas.draw_string(60, 280, "Average temperature: %s" % str(ulab.mean(app.points) / 10.0),
                                       color=(240 + int(value) * 5, 240 + int(value) * 5, 240 + int(value) * 5), scale=2, mono_space=0)
 
-                CubeAudio.event()
+            CubeAudio.event()
             ui.display()
         except Exception as e:
             app.layer = 1
@@ -399,7 +414,7 @@ class app:
                         ui.canvas.draw_string(50, 260, "Find Face %d" % len(bbox), scale=5)
                         for pos in range(len(bbox)):
                             i = bbox[pos]
-                            print(i.x(), i.y(), i.w(), i.h())
+                            # print(i.x(), i.y(), i.w(), i.h())
                             face_cut = ui.canvas.cut(i.x(), i.y(), i.w(), i.h())
                             face_cut_128 = face_cut.resize(80, 80)
                             ui.canvas.draw_image(face_cut_128, 320 + int((pos % 2)*80), int((pos // 2)*80))
@@ -429,8 +444,10 @@ class app:
             app.touch_draw()
             ui.display()
         except Exception as e:
-            app.layer = 1
-            raise e
+            # ai_camera.next()
+            # protect.restart() # temp patch
+            app.layer -= 1
+            raise Exception("This is a Easter egg(Known Bug) This error requires a  restart. It will soon be resolved. :)")
 
     current = None
 
@@ -480,7 +497,7 @@ class app:
         app.btn.expand_event()
         if app.btn.home() == 2 or launcher.app_run: # click button release to 2
             launcher.app_run = False
-            print('into', app.layer)
+            # print('into', app.layer)
             if app.layer == 1:
                 app.layer += 1
                 # launcher into application
