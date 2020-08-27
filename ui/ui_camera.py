@@ -12,14 +12,18 @@ import random
 
 try:
     from ui_canvas import ui
-    from button import sipeed_button
+    from button import sipeed_button, button_io
     import camera
+    from ai_track import find_color
+    from classify20 import HowMany, MaybeIs
     from face_reco import FaceReco
     from led import cube_led
 except ImportError:
     from ui.ui_canvas import ui
-    from driver.button import sipeed_button
+    from driver.button import sipeed_button, button_io
     import driver.camera as camera
+    from driver.ai_track import find_color
+    from driver.classify20 import HowMany, MaybeIs
     from driver.face_reco import FaceReco
     from driver.led import cube_led
 
@@ -50,7 +54,7 @@ class ai_sample():
 
 class ai_camera():
 
-    index, model, models = 0, ai_sample, [ai_sample, FaceReco]
+    index, model, models = 0, ai_sample, [ai_sample, FaceReco, find_color, HowMany, MaybeIs]
     btn, replace = sipeed_button(), False
     backlight = 1
 
@@ -97,6 +101,8 @@ ai_camera.reload()
 
 if __name__ == "__main__":
 
+    ui.height, ui.weight = 480, 320
+    button_io.config(23, 31, 20) # amigo
     def test_ai_camera():
 
         @ui.warp_template(ui.blank_draw)
@@ -113,7 +119,7 @@ if __name__ == "__main__":
                 last = time.ticks_ms()
                 app_main()
             except Exception as e:
-                gc.collect()
+                # gc.collect()
                 print(e)
             kpu.memtest()
 

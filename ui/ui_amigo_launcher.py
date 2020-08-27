@@ -70,14 +70,14 @@ class Camera(icon):
 
     def on_draw(self):
 
-        self.img.draw_font(2, 2, 16, 16, Camera.tmp1,
-                           scale=4, color=(64, 64, 64))
+        #self.img.draw_font(1, 1, 16, 16, Camera.tmp1,
+                           #scale=4, color=(64, 64, 64))
         self.img.draw_font(0, 0, 16, 16, Camera.tmp1,
                            scale=4, color=(255, 255, 255))
         self.img.draw_font(0, 0, 16, 16, Camera.tmp2,
-                           scale=4, color=(180, 180, 180))
+                           scale=4, color=(93, 116, 93))
 
-    def on_title(self, color=(255, 255, 255)):
+    def on_title(self, color=(105, 105, 105)):
         ui.canvas.draw_string(self.x - 3, self.y + self.h + 5,
                               self.__qualname__, scale=2, color=color)
 
@@ -92,11 +92,11 @@ class System(icon):
         self.img.draw_font(2, 2, 16, 16, System.tmp1,
                            scale=4, color=(64, 64, 64))
         self.img.draw_font(0, 0, 16, 16, System.tmp1,
-                           scale=4, color=(0xCF, 0xCF, 0xCF))
+                           scale=4, color=(193, 205, 193))
         self.img.draw_font(0, 0, 16, 16, System.tmp2,
                            scale=4, color=(255, 255, 255))
 
-    def on_title(self, color=(255, 255, 255)):
+    def on_title(self, color=(105, 105, 105)):
         ui.canvas.draw_string(self.x, self.y + self.h + 5,
                               self.__qualname__, scale=2, color=color)
 
@@ -108,14 +108,14 @@ class Demo(icon):
 
     def on_draw(self):
 
-        self.img.draw_font(2, 2, 16, 16, Demo.tmp1,
+        self.img.draw_font(1, 1, 16, 16, Demo.tmp1,
                            scale=4, color=(64, 64, 64))
         self.img.draw_font(0, 0, 16, 16, Demo.tmp1, scale=4,
-                           color=(0xCF, 0xCF, 0xCF))
+                           color=(84, 255, 159))
         self.img.draw_font(0, 0, 16, 16, Demo.tmp2, scale=4,
-                           color=(0x40, 0xFF, 0x40))
+                           color=(47, 79, 79))
 
-    def on_title(self, color=(255, 255, 255)):
+    def on_title(self, color=(105, 105, 105)):
         ui.canvas.draw_string(self.x + 10, self.y + self.h + 5,
                               self.__qualname__, scale=2, color=color)
 
@@ -123,21 +123,21 @@ class Demo(icon):
 class Photo(icon):
 
     tmp1 = b"\x3F\x60\xC0\x80\x80\x80\x80\x90\xB8\xEC\xC6\x83\x81\xC0\x60\x3F\xFC\x06\x3B\x6D\x45\x6D\x39\x01\x01\x41\xE1\xB1\x19\x0F\x06\xFC"
-    tmp2 = b"\x00\x00\x00\x00\x00\x00\x00\x10\x38\x6C\x46\x03\x01\x00\x00\x00\x00\x00\x38\x6D\x44\x6D\x38\x00\x00\x40\xE0\xB0\x18\x0E\x00\x00"
+    tmp2 = b"\x00\x00\x00\x00\x00\x00\x00\x10\x38\x6C\x46\x03\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x40\xE0\xB0\x18\x0E\x00\x00"
     tmp3 = b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x38\x6C\x44\x6C\x38\x00\x00\x00\x00\x00\x00\x00\x00\x00"
 
     def on_draw(self):
 
-        self.img.draw_font(2, 2, 16, 16, Photo.tmp1,
+        self.img.draw_font(1, 1, 16, 16, Photo.tmp1,
                            scale=4, color=(64, 64, 64))
         self.img.draw_font(0, 0, 16, 16, Photo.tmp1,
-                           scale=4, color=(0, 255, 255))
+                           scale=4, color=(255, 165, 0))
         self.img.draw_font(0, 0, 16, 16, Photo.tmp2,
-                           scale=4, color=(0x1F, 255, 0xa0))
+                           scale=4, color=(0x0a, 0xa8, 0x58))
         self.img.draw_font(0, 0, 16, 16, Photo.tmp3,
-                           scale=4, color=(0xFF, 0xa0, 0xa0))
+                           scale=4, color=(230, 69, 0))
 
-    def on_title(self, color=(255, 255, 255)):
+    def on_title(self, color=(105, 105, 105)):
         ui.canvas.draw_string(self.x + 3, self.y + self.h + 5,
                               self.__qualname__, scale=2, color=color)
 
@@ -207,23 +207,43 @@ class launcher:
 
     launcher.app_select = launcher.app_select % len(launcher.app_sets)  # lock pos
 
+  a = b'\x00\x00\x03\x03\x07\x07\x0E\x0E\x1C\x1F\x38\x38\x70\xF0\x00\x00\x00\x00\xC0\xC0\xE0\xE0\x70\x70\x38\xF8\x1C\x1C\x0E\x0F\x00\x00'
+  m = b'\x00\x00\x00\x00\x00\x67\x7F\x61\x61\x61\x61\x61\x61\x61\x00\x00\x00\x00\x00\x00\x00\x1C\xFE\x86\x86\x86\x86\x86\x86\x86\x00\x00'
+  i = b'\x00\x00\x01\x00\x00\x01\x01\x01\x01\x01\x01\x01\x01\x01\x00\x00\x00\x00\x80\x00\x00\x80\x80\x80\x80\x80\x80\x80\x80\x80\x00\x00'
+  g = b'\x00\x00\x00\x00\x00\x07\x1C\x18\x38\x1C\x1F\x30\x1F\x30\x70\x1F\x00\x00\x00\x00\x00\xCE\x72\x30\x38\x70\xC0\x00\xF8\x0C\x0E\xF8'
+  o = b'\x00\x00\x00\x00\x00\x03\x1E\x38\x70\x70\x70\x38\x1C\x03\x00\x00\x00\x00\x00\x00\x00\xC0\x78\x1C\x0C\x0E\x0E\x1C\x38\xC0\x00\x00'
+
   def draw():
     launcher.agent.parallel_cycle()
 
-    # ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
-    #                                  fill = True, color = (120, 120, 120))
-    ui.canvas.draw_string(203, 73, "Amigo",
-                          color=(64, 64, 64), scale=8, mono_space=0)
-    ui.canvas.draw_string(200, 70, "A",
-                        color=(0xFF, 0x40, 0x40), scale=8, mono_space=0)
-    ui.canvas.draw_string(200, 70, "  m",
-                        color=(0xFF, 0xFF, 0x40), scale=8, mono_space=0)
-    ui.canvas.draw_string(200, 70, "    i",
-                        color=(0x40, 0x40, 0xFF), scale=8, mono_space=0)
-    ui.canvas.draw_string(200, 70, "     g",
-                        color=(0x40, 0xFF, 0x40), scale=8, mono_space=0)
-    ui.canvas.draw_string(200, 70, "       o",
-                        color=(0xFF, 0x50, 0xFF), scale=8, mono_space=0)
+    #ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
+                                      #fill = True, color = (0, 0, 0))
+    #ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight), fill = True, color = (0x70, 0x80, 0x90))
+    ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight), fill = True, color = (215, 228, 181))
+    #ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
+                                      #fill = True, color = (37, 40, 55))
+    #ui.canvas.draw_string(203, 73, "Amigo",
+                          #color=(64, 64, 64), scale=8, mono_space=0)
+    ui.canvas.draw_font(182, 82, 16, 16, launcher.a, scale=5, color=(37, 40, 55))
+    ui.canvas.draw_font(180, 80, 16, 16, launcher.a, scale=5, color=(0x2d, 0x85, 0xf0))
+    ui.canvas.draw_font(252, 82, 16, 16, launcher.m, scale=4, color=(37, 40, 55))
+    ui.canvas.draw_font(250, 80, 16, 16, launcher.m, scale=4, color=(0xf4, 0x43, 0x3c))
+    ui.canvas.draw_font(292, 82, 16, 16, launcher.i, scale=4, color=(37, 40, 55))
+    ui.canvas.draw_font(290, 80, 16, 16, launcher.i, scale=4, color=(0xff, 0xbc, 0x32))
+    ui.canvas.draw_font(332, 77, 16, 16, launcher.g, scale=4, color=(37, 40, 55))
+    ui.canvas.draw_font(330, 75, 16, 16, launcher.g, scale=4, color=(0x0a, 0xa8, 0x58))
+    ui.canvas.draw_font(392, 82, 16, 16, launcher.o, scale=4, color=(37, 40, 55))
+    ui.canvas.draw_font(390, 80, 16, 16, launcher.o, scale=4, color=(0xf4, 0x43, 0x3c))
+    #ui.canvas.draw_string(200, 70, "A",
+                        #color=(0x2d, 0x85, 0xf0), scale=8, mono_space=0)
+    #ui.canvas.draw_string(200, 70, "  m",
+                        #color=(0xf4, 0x43, 0x3c), scale=8, mono_space=0)
+    #ui.canvas.draw_string(200, 70, "    i",
+                        #color=(0xff, 0xbc, 0x32), scale=8, mono_space=0)
+    #ui.canvas.draw_string(200, 70, "     g",
+                        #color=(0x0a, 0xa8, 0x58), scale=8, mono_space=0)
+    #ui.canvas.draw_string(200, 70, "       o",
+                        #color=(0xf4, 0x43, 0x3c), scale=8, mono_space=0)
 
     value = math.cos(math.pi * launcher.alpha / 12) * 50 + 200
     launcher.alpha = (launcher.alpha + 1) % 24
