@@ -148,9 +148,11 @@ class app:
         cube_led.b.value(rgb & 0b100)
 
     @ui.warp_template(ui.blank_draw)
-    @ui.warp_template(ui.grey_draw)
+    #@ui.warp_template(ui.grey_draw)
     @catch
     def draw():
+        ui.canvas.draw_rectangle((0, 0, ui.height, ui.weight),
+                             fill=True, color=(10, 10, 10))
 
         #app.btn.event()
         app.btn.expand_event()
