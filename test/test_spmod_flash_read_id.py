@@ -25,17 +25,21 @@ from fpioa_manager import fm
 '''
 
 print("Welcome to MicroPython!")
-fm.register(12, fm.fpioa.GPIOHS16, force=True)
-cs = GPIO(GPIO.GPIOHS16, GPIO.OUT)
+fm.register(20, fm.fpioa.GPIO5, force=True)
+cs = GPIO(GPIO.GPIO5, GPIO.OUT)
 #cs.value(0)
 #utime.sleep_ms(2000)
 
+print(os.listdir())
 spi = SPI(SPI.SPI1, mode=SPI.MODE_MASTER, baudrate=400*1000, polarity=0, phase=0, bits=8, firstbit=SPI.MSB,
-    sck=11, mosi=10, miso=6)#使用程序配置了 cs0 则无法读取 W25QXX
-
+    sck=21, mosi=8, miso=15)#使用程序配置了 cs0 则无法读取 W25QXX
+print(os.listdir())
 print(spi)
 
 while True:
+    fm.register(21, fm.fpioa.SPI1_SCLK, force=True)
+    fm.register(8, fm.fpioa.SPI1_D0, force=True)
+    fm.register(15, fm.fpioa.SPI1_D1, force=True)
     cs.value(0)
     write_data = bytearray([0x90, 0x00, 0x00, 0x00])
     spi.write(write_data)
@@ -43,9 +47,13 @@ while True:
     spi.readinto(id_buf, write=0xff)
     print(id_buf)
     print(time.ticks_ms())
+    cs.value(1)
     #cs.value(0)
     utime.sleep_ms(200)
-    cs.value(1)
     #utime.sleep_ms(2200)
+    fm.register(27, fm.fpioa.SPI1_SCLK, force=True)
+    fm.register(28, fm.fpioa.SPI1_D0, force=True)
+    fm.register(26, fm.fpioa.SPI1_D1, force=True)
+    print(os.listdir())
 
 spi.deinit()

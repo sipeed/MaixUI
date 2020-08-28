@@ -53,44 +53,44 @@ class Report():
     def work(self):
         #print(case.work)
         y = 0
-        ui.canvas.draw_string(120, y, "Power", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "1  " + str(Report.Power_Test), (0, 255, 0) if (Report.Power_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_string(100, y, "Power", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(10, y, "1  " + str(Report.Power_Test), (0, 255, 0) if (Report.Power_Test) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
-        ui.canvas.draw_string(120, y, "Msa301", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "2  " + str(Report.Msa301_Test), (0, 255, 0) if (Report.Msa301_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_string(100, y, "Msa301", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(10, y, "2  " + str(Report.Msa301_Test), (0, 255, 0) if (Report.Msa301_Test) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
-        ui.canvas.draw_string(120, y, "Grove", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "3  " + str(Report.Grove_Test), (0, 255, 0) if (Report.Grove_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_string(100, y, "Grove", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(10, y, "3  " + str(Report.Grove_Test), (0, 255, 0) if (Report.Grove_Test) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
-        ui.canvas.draw_string(120, y, "Spmod", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "4  " + str(Report.Spmod_Test), (0, 255, 0) if (Report.Spmod_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_string(100, y, "Spmod", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(10, y, "4  " + str(Report.Spmod_Test), (0, 255, 0) if (Report.Spmod_Test) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
-        ui.canvas.draw_string(120, y, "Key + RGB", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "5  " + str(Report.Key_Test), (0, 255, 0) if (Report.Key_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_string(100, y, "Key + RGB", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(10, y, "5  " + str(Report.Key_Test), (0, 255, 0) if (Report.Key_Test) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
-        ui.canvas.draw_string(120, y, "Touch", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "6  " + str(Report.Touch_Test), (0, 255, 0) if (Report.Touch_Test) else (255, 0, 0), scale=2)
+        #ui.canvas.draw_string(100, y, "Touch", (127, 255, 255), scale=2)
+        #ui.canvas.draw_string(10, y, "6  " + str(Report.Touch_Test), (0, 255, 0) if (Report.Touch_Test) else (255, 0, 0), scale=2)
+        #ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        #y += 30
+        #ui.canvas.draw_string(100, y, "FrontSensor", (127, 255, 255), scale=2)
+        #ui.canvas.draw_string(10, y, "7  " + str(Report.FrontSensor_Test), (0, 255, 0) if (Report.FrontSensor_Test) else (255, 0, 0), scale=2)
+        #ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
+        #y += 30
+        ui.canvas.draw_string(100, y, "RearSensor", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(10, y, "8  " + str(Report.RearSensor_Test), (0, 255, 0) if (Report.RearSensor_Test) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
-        ui.canvas.draw_string(120, y, "FrontSensor", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "7  " + str(Report.FrontSensor_Test), (0, 255, 0) if (Report.FrontSensor_Test) else (255, 0, 0), scale=2)
+        ui.canvas.draw_string(100, y, "Audio", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(10, y, "9  " + str(Report.Audio_Test), (0, 255, 0) if (Report.Audio_Test) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
-        ui.canvas.draw_string(120, y, "RearSensor", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "8  " + str(Report.RearSensor_Test), (0, 255, 0) if (Report.RearSensor_Test) else (255, 0, 0), scale=2)
-        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
-        y += 30
-        ui.canvas.draw_string(120, y, "Audio", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "9  " + str(Report.Audio_Test), (0, 255, 0) if (Report.Audio_Test) else (255, 0, 0), scale=2)
-        ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
-        y += 30
-        ui.canvas.draw_string(120, y, "SdCard & Lcd", (127, 255, 255), scale=2)
-        ui.canvas.draw_string(20, y, "*  " + str(True), (0, 255, 0) if (True) else (255, 0, 0), scale=2)
+        ui.canvas.draw_string(100, y, "SdCard & Lcd", (127, 255, 255), scale=2)
+        ui.canvas.draw_string(10, y, "*  " + str(True), (0, 255, 0) if (True) else (255, 0, 0), scale=2)
         ui.canvas.draw_line(10, y + 25, 240, y + 25, color=(255, 255, 255))
         y += 30
 
@@ -206,7 +206,7 @@ class PowerTest():
         self.agent.parallel_cycle()
 
         ui.canvas.draw_string(10, 10, "1 Power Test", (127, 127, 255), scale=3)
-        ui.canvas.draw_string(10, 40, "isconnected: %s" % (
+        ui.canvas.draw_string(10, 50, "isconnected: %s" % (
             str)(self.isconnected), (255, 127, 0), scale=2)
         #if self.isconnected:
             #for i in range(len(self.work_info)):
@@ -231,8 +231,8 @@ class PowerReport():
 
     def work(self):
         self.agent.cycle()
-        ui.canvas.draw_string(10, 20, "1 PowerReport", (127, 255, 255), scale=4)
-        ui.canvas.draw_string(60, 120, "Pass" if (Report.Power_Test) else "Fail", (0, 255, 0) if (Report.Power_Test) else (255, 0, 0), scale=8)
+        ui.canvas.draw_string(10, 20, "1 PowerReport", (127, 255, 255), scale=3)
+        ui.canvas.draw_string(30, 120, "Pass" if (Report.Power_Test) else "Fail", (0, 255, 0) if (Report.Power_Test) else (255, 0, 0), scale=8)
 
     def free(self):
         if self.is_load:
@@ -241,7 +241,7 @@ class PowerReport():
 
 class Msa301Test():
 
-    def __init__(self, scl=24, sda=27):
+    def __init__(self, scl=30, sda=31):
         self.is_load = False
         self.scl = scl
         self.sda = sda
@@ -330,8 +330,8 @@ class Msa301Report():
 
     def work(self):
         self.agent.cycle()
-        ui.canvas.draw_string(10, 20, "2 Msa301Report", (127, 255, 255), scale=4)
-        ui.canvas.draw_string(60, 120, "Pass" if (Report.Msa301_Test) else "Fail", (0, 255, 0) if (Report.Msa301_Test) else (255, 0, 0), scale=8)
+        ui.canvas.draw_string(10, 20, "2 Msa301Report", (127, 255, 255), scale=3)
+        ui.canvas.draw_string(30, 120, "Pass" if (Report.Msa301_Test) else "Fail", (0, 255, 0) if (Report.Msa301_Test) else (255, 0, 0), scale=8)
 
     def free(self):
         if self.is_load:
@@ -340,7 +340,7 @@ class Msa301Report():
 
 class GroveTest():
 
-    def __init__(self, scl=9, sda=7):
+    def __init__(self, scl=24, sda=25):
         self.is_load = False
         self.scl = scl
         self.sda = sda
@@ -425,8 +425,8 @@ class GroveReport():
 
     def work(self):
         self.agent.cycle()
-        ui.canvas.draw_string(10, 20, "3 GroveReport", (127, 255, 255), scale=4)
-        ui.canvas.draw_string(60, 120, "Pass" if (Report.Grove_Test) else "Fail", (0, 255, 0) if (Report.Grove_Test) else (255, 0, 0), scale=8)
+        ui.canvas.draw_string(10, 20, "3 GroveReport", (127, 255, 255), scale=3)
+        ui.canvas.draw_string(30, 120, "Pass" if (Report.Grove_Test) else "Fail", (0, 255, 0) if (Report.Grove_Test) else (255, 0, 0), scale=8)
 
     def free(self):
         if self.is_load:
@@ -437,18 +437,16 @@ class SpmodTest():
 
     test_conut = 0
 
-    def __init__(self, mosi=10, miso=6, cs=12, clk=11):
+    def __init__(self, mosi=8, miso=15, cs=20, clk=21):
         self.is_load = False
         self.spi = SPI(SPI.SPI1, mode=SPI.MODE_MASTER, baudrate=400*1000,
             polarity=0, phase=0, bits=8, firstbit=SPI.MSB, sck=clk, mosi=mosi, miso=miso)
-        fm.register(cs, fm.fpioa.GPIOHS12, force=True)
-        self.cs = GPIO(GPIO.GPIOHS12, GPIO.OUT)
+        fm.register(cs, fm.fpioa.GPIO6, force=True)
+        self.cs = GPIO(GPIO.GPIO6, GPIO.OUT)
 
     def test_event(self):
         if self.work_data != None and self.work_data == b'\x0b\x17':
-            SpmodTest.test_conut += 1
-            if SpmodTest.test_conut == 2:
-                Report.Spmod_Test = True
+            Report.Spmod_Test = True
         sample_page.next()
 
     def load(self):
@@ -470,6 +468,10 @@ class SpmodTest():
             # i2c deinit()
             sample_page.btn.enable = True
             self.is_load = False
+            # recover sdcard
+            fm.register(27, fm.fpioa.SPI1_SCLK, force=True)
+            fm.register(28, fm.fpioa.SPI1_D0, force=True)
+            fm.register(26, fm.fpioa.SPI1_D1, force=True)
 
     def check(self):
         try:
@@ -515,8 +517,8 @@ class SpmodReport():
 
     def work(self):
         self.agent.cycle()
-        ui.canvas.draw_string(10, 20, "4 SpmodReport", (127, 255, 255), scale=4)
-        ui.canvas.draw_string(60, 120, "Pass" if (Report.Spmod_Test) else "Fail", (0, 255, 0) if (Report.Spmod_Test) else (255, 0, 0), scale=8)
+        ui.canvas.draw_string(10, 20, "4 SpmodReport", (127, 255, 255), scale=3)
+        ui.canvas.draw_string(30, 120, "Pass" if (Report.Spmod_Test) else "Fail", (0, 255, 0) if (Report.Spmod_Test) else (255, 0, 0), scale=8)
 
     def free(self):
         if self.is_load:
@@ -553,7 +555,7 @@ class WaitTestStart():
 
     def work(self):
         self.agent.cycle()
-        ui.canvas.draw_string(10, 20, "Press \n\n Any-key \n\n Start Test", (127, 255, 255), scale=4)
+        ui.canvas.draw_string(10, 20, "Press \n\n Any-key \n\n Start Test", (127, 255, 255), scale=3)
 
     def free(self):
         if self.is_load:
@@ -619,13 +621,13 @@ class KeyTest():
             '5 KeyTest', (255, 255, 255), scale=3)
         y += 60
         ui.canvas.draw_string(20, y,
-            'home click %d' % self.home_click, (255, 0, 0), scale=4)
+            'home click %d' % self.home_click, (255, 0, 0), scale=3)
         y += 60
         ui.canvas.draw_string(20, y,
-            'back click %d' % self.back_click, (0, 255, 0), scale=4)
+            'back click %d' % self.back_click, (0, 255, 0), scale=3)
         y += 60
         ui.canvas.draw_string(20, y,
-            'next click %d' % self.next_click, (0, 0, 255), scale=4)
+            'next click %d' % self.next_click, (0, 0, 255), scale=3)
 
     def free(self):
         if self.is_load:
@@ -669,16 +671,16 @@ class KeyReport():
     def work(self):
         self.agent.cycle()
         y = 20
-        ui.canvas.draw_string(10, y, "5 KeyReport", (127, 255, 255), scale=4)
-        y += 50
+        ui.canvas.draw_string(10, y, "5 KeyReport", (127, 255, 255), scale=3)
+        y += 40
         ui.canvas.draw_string(10, y, "Home " + ("Pass" if (KeyTest.home_click) else "Fail"), (0, 255, 0) if (KeyTest.home_click) else (255, 0, 0), scale=3)
-        y += 50
+        y += 40
         ui.canvas.draw_string(10, y, "Back " + ("Pass" if (KeyTest.back_click) else "Fail"), (0, 255, 0) if (KeyTest.back_click) else (255, 0, 0), scale=3)
-        y += 50
+        y += 40
         ui.canvas.draw_string(10, y, "Next " + ("Pass" if (KeyTest.next_click) else "Fail"), (0, 255, 0) if (KeyTest.next_click) else (255, 0, 0), scale=3)
-        y += 50
+        y += 40
         ui.canvas.draw_string(10, y, "KeyTest " + ("Pass" if (Report.Key_Test) else "Fail"), (0, 255, 0) if (Report.Key_Test) else (255, 0, 0), scale=3)
-        y += 50
+        y += 40
         ui.canvas.draw_string(10, y, "Press Any-Key Continue", (255, 255, 255), scale=2)
 
     def free(self):
@@ -730,7 +732,7 @@ class RearSensorTest():
         if Report.RearSensor_Test:
             sample_page.next()
         if self.is_load == False:
-            cube_led.init(14, 15, 17, 32)
+            cube_led.init(13, 12, 14, 32)
             cube_led.w.value(1)
             sample_page.btn.enable = False
             self.btn = sipeed_button()
@@ -903,14 +905,14 @@ class AudioTest():
             str)(self.isconnected), (255, 127, 0), scale=2)
 
         ui.canvas.draw_string(10, 100, "Test: %s" %
-            ('play' if self.state == 0 else 'record'), (255, 127, 0), scale=4)
+            ('play' if self.state == 0 else 'record'), (255, 127, 0), scale=3)
 
         #print(time.ticks_ms())
 
         if self.isconnected:
             if self.state == 0 and self.is_play:
                 if CubeAudio.event() == False:
-                    CubeAudio.load("/flash/test.wav", 100)
+                    CubeAudio.load(os.getcwd() + "/res/sound/loop.wav", 100)
                     #print('self.count', self.count)
                     if self.count > 1:
                         CubeAudio.i2s.set_sample_rate(22050)
@@ -1002,10 +1004,10 @@ class SdcardTest():
 
     def work(self):
         self.agent.cycle()
-        ui.canvas.draw_string(10, 20, "SdCardTest", (127, 255, 255), scale=4)
-        ui.canvas.draw_string(60, 120, "Pass" if (self.result) else "Fail", (0, 255, 0) if (self.result) else (255, 0, 0), scale=8)
+        ui.canvas.draw_string(10, 20, "SdCardTest", (127, 255, 255), scale=3)
+        ui.canvas.draw_string(30, 120, "Pass" if (self.result) else "Fail", (0, 255, 0) if (self.result) else (255, 0, 0), scale=8)
 
-        ui.canvas.draw_string(60, 260, "Start Test", (0, 0, 255), scale=4)
+        ui.canvas.draw_string(30, 260, "Start Test", (0, 0, 255), scale=3)
 
     def free(self):
         if self.is_load:
@@ -1040,7 +1042,7 @@ if __name__ == "__main__":
     sample_page.add_sample(WaitTestStart())
 
     sample_page.add_sample(SpmodReport())
-    sample_page.add_sample(SpmodTest(30, 28, 29, 8))
+    sample_page.add_sample(SpmodTest())
 
     sample_page.add_sample(GroveReport())
     sample_page.add_sample(GroveTest())

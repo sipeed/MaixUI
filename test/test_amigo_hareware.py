@@ -470,6 +470,11 @@ class SpmodTest():
             # i2c deinit()
             sample_page.btn.enable = True
             self.is_load = False
+            # recover sdcard
+            fm.register(11, fm.fpioa.SPI1_SCLK, force=True)
+            fm.register(10, fm.fpioa.SPI1_D0, force=True)
+            fm.register(6, fm.fpioa.SPI1_D1, force=True)
+
 
     def check(self):
         try:
