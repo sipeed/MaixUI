@@ -100,9 +100,40 @@ class app:
     def draw_camera():
         try:
             ai_camera.ai_draw()
+            for model in ai_camera.models:
+              #print(model.__qualname__, ai_camera.model.__qualname__)
+              if 'ai_sample' == ai_camera.model.__qualname__:
+                  ui.canvas.draw_string(60, 170, "AI Demo", scale=3)
+                  ui.canvas.draw_string(10, 210, "Press (<) or (>) to View", scale=2)
+                  pass
+
+              elif 'FaceReco' == ai_camera.model.__qualname__:
+
+                    if ai_camera.model.bbox != None:
+                        bbox = ai_camera.model.bbox
+                        ui.canvas.draw_string(10, 210, "Find Face %d" % len(bbox), scale=2)
+                    else:
+                        ui.canvas.draw_string(10, 210, "Find Face Reco", scale=2)
+
+              elif 'find_color' == ai_camera.model.__qualname__:
+
+                    ui.canvas.draw_string(10, 210, "Find Color For Red", (255,0,0), scale=2)
+
+              elif 'HowMany' == ai_camera.model.__qualname__:
+
+                    if ai_camera.model.things != None:
+                        ui.canvas.draw_string(10, 210, "How many %d" % len(ai_camera.model.things), scale=2)
+
+                    ui.canvas.draw_string(10, 210, "How many?", scale=2)
+
+              elif 'MaybeIs' == ai_camera.model.__qualname__:
+
+                    ui.canvas.draw_string(10, 210, "Maybe Is %s" % str(ai_camera.model.result), scale=2)
+
             ui.display()
         except Exception as e:
             app.layer = 1
+            gc.collect()
             raise e
 
     current = None
@@ -190,6 +221,10 @@ class app:
             app.exec_application()
 
     def run():
+        # debug into app_select
+        #launcher.app_select = 0
+        #app.layer = 2
+
         button_io.config()
         cube_led.init(13, 12, 14, 32)
         sample_page.key_init()
@@ -222,6 +257,8 @@ class app:
                 try:
                     #print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                     #last = time.ticks_ms()
+                    #print_mem_free()
+                    gc.collect()
                     app.ctrl.cycle()
                     protect.keep()
                     #time.sleep(0.1)
