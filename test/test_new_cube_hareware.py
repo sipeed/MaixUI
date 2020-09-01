@@ -11,7 +11,7 @@ from fpioa_manager import fm
 from machine import I2C, SPI
 from Maix import I2S, GPIO, FFT
 
-from led import cube_led
+from led import sipeed_led
 from button import sipeed_button, button_io
 from pmu_axp173 import AXP173, AXP173_ADDR
 from sound import CubeAudio
@@ -580,7 +580,7 @@ class KeyTest():
             #print(case.load)
             self.is_load = True
             sample_page.btn.enable = False
-            cube_led.init(13, 12, 14, 32)
+            sipeed_led.init(13, 12, 14, 32)
             self.btn = sipeed_button()
             # self.btn.config(23, 20, 31)
             self.agent = agent()
@@ -595,19 +595,19 @@ class KeyTest():
 
         if self.btn.back() == 2:
             KeyTest.back_click += 1
-            cube_led.r.value(0)
-            cube_led.g.value(1)
-            cube_led.b.value(1)
+            sipeed_led.r.value(0)
+            sipeed_led.g.value(1)
+            sipeed_led.b.value(1)
         elif self.btn.next() == 2:
             KeyTest.next_click += 1
-            cube_led.r.value(1)
-            cube_led.g.value(1)
-            cube_led.b.value(0)
+            sipeed_led.r.value(1)
+            sipeed_led.g.value(1)
+            sipeed_led.b.value(0)
         elif self.btn.home() == 2:
             KeyTest.home_click += 1
-            cube_led.r.value(1)
-            cube_led.g.value(0)
-            cube_led.b.value(1)
+            sipeed_led.r.value(1)
+            sipeed_led.g.value(0)
+            sipeed_led.b.value(1)
             if self.btn.interval() > 2000: # long press
                 sample_page.next()
         if KeyTest.home_click > 1 and KeyTest.back_click > 1 and KeyTest.next_click > 1:
@@ -636,9 +636,9 @@ class KeyTest():
             sample_page.btn.enable = True
             if self.home_click > 0 and self.back_click > 0 and self.next_click > 0:
                 Report.Key_Test = True
-            cube_led.r.value(1)
-            cube_led.g.value(1)
-            cube_led.b.value(1)
+            sipeed_led.r.value(1)
+            sipeed_led.g.value(1)
+            sipeed_led.b.value(1)
 
 class KeyReport():
 
@@ -704,7 +704,7 @@ class RearSensorTest():
             self.btn.expand_event()
 
             if self.btn.home() == 2:
-                cube_led.w.value(0)
+                sipeed_led.w.value(0)
                 Report.RearSensor_Test = True
                 sample_page.next()
 
@@ -718,7 +718,7 @@ class RearSensorTest():
                     sensor.run(1)
                     sensor.skip_frames()
                     self.isconnected = True
-                    cube_led.w.value(0)
+                    sipeed_led.w.value(0)
                 except Exception as e:
                     Report.RearSensor_Test = False
                     Report.isError = str(e)
@@ -732,8 +732,8 @@ class RearSensorTest():
         if Report.RearSensor_Test:
             sample_page.next()
         if self.is_load == False:
-            cube_led.init(13, 12, 14, 32)
-            cube_led.w.value(1)
+            sipeed_led.init(13, 12, 14, 32)
+            sipeed_led.w.value(1)
             sample_page.btn.enable = False
             self.btn = sipeed_button()
             # self.btn.config(23, 20, 31)
@@ -748,7 +748,7 @@ class RearSensorTest():
         if self.is_load:
             sample_page.btn.enable = True
             self.is_load = False
-            cube_led.w.value(1)
+            sipeed_led.w.value(1)
 
     def work(self):
         self.agent.parallel_cycle()

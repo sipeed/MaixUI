@@ -23,7 +23,7 @@ try:
     from sample_spmod import sample_spmod_test
     from button import sipeed_button
     from wdt import protect
-    from led import cube_led
+    from led import sipeed_led
     from sound import CubeAudio
 except ImportError:
     from lib.core import agent
@@ -41,7 +41,7 @@ except ImportError:
     from ui.sample_spmod import sample_spmod_test
     from driver.button import sipeed_button
     from driver.wdt import protect
-    from driver.led import cube_led
+    from driver.led import sipeed_led
     from driver.sound import CubeAudio
 
 class app:
@@ -142,9 +142,9 @@ class app:
 
     rgb = 0
     def rgb_change(rgb):
-        cube_led.r.value(rgb & 0b001)
-        cube_led.g.value(rgb & 0b010)
-        cube_led.b.value(rgb & 0b100)
+        sipeed_led.r.value(rgb & 0b001)
+        sipeed_led.g.value(rgb & 0b010)
+        sipeed_led.b.value(rgb & 0b100)
 
     @ui.warp_template(CubeAudio.event)
     @ui.warp_template(ui.grey_draw)

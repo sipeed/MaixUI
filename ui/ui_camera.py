@@ -17,7 +17,7 @@ try:
     from ai_track import find_color
     from classify20 import HowMany, MaybeIs
     from face_reco import FaceReco
-    from led import cube_led
+    from led import sipeed_led
 except ImportError:
     from ui.ui_canvas import ui
     from driver.button import sipeed_button, button_io
@@ -25,7 +25,7 @@ except ImportError:
     from driver.ai_track import find_color
     from driver.classify20 import HowMany, MaybeIs
     from driver.face_reco import FaceReco
-    from driver.led import cube_led
+    from driver.led import sipeed_led
 
 import KPU as kpu
 from Maix import utils
@@ -77,7 +77,7 @@ class ai_camera():
 
         if ai_camera.btn.home() == 2:
             ai_camera.backlight = not ai_camera.backlight
-            cube_led.w.value(ai_camera.backlight)
+            sipeed_led.w.value(ai_camera.backlight)
 
         if ai_camera.btn.back() == 2:
             ai_camera.back()

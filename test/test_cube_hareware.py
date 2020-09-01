@@ -17,7 +17,7 @@ from ui_sample import sample_page
 from core import agent
 from wdt import protect
 
-from led import cube_led
+from led import sipeed_led
 from button import sipeed_button, button_io
 from pmu_axp173 import AXP173
 from sound import CubeAudio
@@ -155,7 +155,7 @@ if __name__ == "__main__":
                 sample_page.btn.enable = False
                 self.btn = sipeed_button()
                 # self.btn.config(10, 11, 16)
-                cube_led.init(13, 12, 14, 32)
+                sipeed_led.init(13, 12, 14, 32)
                 self.agent = agent()
                 self.agent.event(150, self.key_event)
                 self.agent.event(500, self.test_event)
@@ -168,17 +168,17 @@ if __name__ == "__main__":
 
         def test_event(self):
             if self.state == 0:
-                cube_led.w.value(1)
-                cube_led.r.value(0)
+                sipeed_led.w.value(1)
+                sipeed_led.r.value(0)
             if self.state == 1:
-                cube_led.r.value(1)
-                cube_led.g.value(0)
+                sipeed_led.r.value(1)
+                sipeed_led.g.value(0)
             if self.state == 2:
-                cube_led.g.value(1)
-                cube_led.b.value(0)
+                sipeed_led.g.value(1)
+                sipeed_led.b.value(0)
             if self.state == 3:
-                cube_led.b.value(1)
-                cube_led.w.value(0)
+                sipeed_led.b.value(1)
+                sipeed_led.w.value(0)
 
         def key_event(self):
             self.btn.expand_event()
@@ -208,37 +208,37 @@ if __name__ == "__main__":
 
             elif self.btn.back() == 2:
                 if self.state == 0:
-                    cube_led.r.value(1)
+                    sipeed_led.r.value(1)
                     self.r -= 1
                     self.state = 1
                 elif self.state == 1:
-                    cube_led.g.value(1)
+                    sipeed_led.g.value(1)
                     self.g -= 1
                     self.state = 2
                 elif self.state == 2:
-                    cube_led.b.value(1)
+                    sipeed_led.b.value(1)
                     self.b -= 1
                     self.state = 3
                 elif self.state == 3:
-                    cube_led.w.value(1)
+                    sipeed_led.w.value(1)
                     self.w -= 1
                     self.state = 0
 
             elif self.btn.next() == 2:
                 if self.state == 0:
-                    cube_led.r.value(1)
+                    sipeed_led.r.value(1)
                     self.r += 1
                     self.state = 1
                 elif self.state == 1:
-                    cube_led.g.value(1)
+                    sipeed_led.g.value(1)
                     self.g += 1
                     self.state = 2
                 elif self.state == 2:
-                    cube_led.b.value(1)
+                    sipeed_led.b.value(1)
                     self.b += 1
                     self.state = 3
                 elif self.state == 3:
-                    cube_led.w.value(1)
+                    sipeed_led.w.value(1)
                     self.w += 1
                     self.state = 0
 
@@ -250,10 +250,10 @@ if __name__ == "__main__":
             if self.is_load:
                 #print(sample.free)
                 self.is_load = False
-                cube_led.r.value(1)
-                cube_led.g.value(1)
-                cube_led.b.value(1)
-                cube_led.w.value(1)
+                sipeed_led.r.value(1)
+                sipeed_led.g.value(1)
+                sipeed_led.b.value(1)
+                sipeed_led.w.value(1)
                 sample_page.btn.enable = True
                 if self.r > 0 and self.g > 0 and self.b > 0 and self.w > 0:
                     Report.Led_Test = True
