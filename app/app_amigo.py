@@ -27,7 +27,7 @@ from fs import OS
 from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
 from button import sipeed_button, button_io
 from wdt import protect
-from led import cube_led
+from led import sipeed_led
 from sound import CubeAudio
 from touch import Touch, TouchLow
 from ui_taskbar import taskbar
@@ -488,9 +488,9 @@ class app:
 
     rgb = 0
     def rgb_change(rgb):
-        cube_led.r.value(rgb & 0b001)
-        cube_led.g.value(rgb & 0b010)
-        cube_led.b.value(rgb & 0b100)
+        sipeed_led.r.value(rgb & 0b001)
+        sipeed_led.g.value(rgb & 0b010)
+        sipeed_led.b.value(rgb & 0b100)
 
     def on_event():
         #app.btn.event()
@@ -552,7 +552,7 @@ class app:
 
         ui.height, ui.weight = 480, 320
         button_io.config(23, 31, 20) # amigo
-        cube_led.init(14, 15, 17, 32)
+        sipeed_led.init(14, 15, 17, 32)
 
 
         app.i2c0 = I2C(I2C.I2C0, freq=100*1000)
