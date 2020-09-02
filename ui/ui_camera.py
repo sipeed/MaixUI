@@ -16,7 +16,7 @@ try:
     import camera
     from ai_track import find_color
     from classify20 import HowMany, MaybeIs
-    from face_reco import FaceReco
+    from ai_face import FaceReco, FaceDetect
     from led import sipeed_led
 except ImportError:
     from ui.ui_canvas import ui
@@ -24,7 +24,7 @@ except ImportError:
     import driver.camera as camera
     from driver.ai_track import find_color
     from driver.classify20 import HowMany, MaybeIs
-    from driver.face_reco import FaceReco
+    from driver.ai_face import FaceReco, FaceDetect
     from driver.led import sipeed_led
 
 import KPU as kpu
@@ -54,7 +54,7 @@ class ai_sample():
 
 class ai_camera():
 
-    index, model, models = 0, ai_sample, [ai_sample, FaceReco, find_color, HowMany, MaybeIs]
+    index, model, models = 0, ai_sample, [ai_sample, FaceDetect, FaceReco, find_color, HowMany, MaybeIs]
     btn, replace = sipeed_button(), False
     backlight = 1
 
@@ -71,6 +71,9 @@ class ai_camera():
     def next():
         ai_camera.index += 1
         ai_camera.replace = True
+
+    def exit():
+        sipeed_led.w.value(1)
 
     def ai_draw():
         ai_camera.btn.event()
