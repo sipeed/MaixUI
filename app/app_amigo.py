@@ -276,16 +276,22 @@ class app:
     #@ui.warp_template(touch_draw)
     def draw_photos():
         if photos.photos_len() > 0:
-            if app.photos_title != photos.image_path():
-                app.photos_title = photos.image_path()
-                if app.photos_temp != None:
-                    tmp = app.photos_temp
-                    del tmp
-                    app.photos_temp = None
-                app.photos_temp = image.Image(app.photos_title)
 
-            ui.canvas.draw_image(app.photos_temp, 0, 0)
-            #ui.canvas = image.Image(photos.image_path())
+            #if app.photos_title != photos.image_path():
+                #app.photos_title = photos.image_path()
+                #if app.photos_temp != None:
+                    #tmp = app.photos_temp
+                    #del tmp
+                    #app.photos_temp = None
+                #app.photos_temp = image.Image(app.photos_title)
+
+            #ui.canvas.draw_image(app.photos_temp, 0, 0)
+
+            # [mem < 800*1024]
+            t, ui.canvas = ui.canvas, None
+            del t
+            ui.canvas = image.Image(photos.image_path())
+
             ui.canvas.draw_string(2, 2, app.photos_title, color=(255, 255, 255), scale=1, mono_space=0)
         else:
             ui.canvas.draw_string(40, 120, "Please put pictures\n in '/sd/imgs' folder", color=(255, 255, 255), scale=3, mono_space=0)
@@ -399,6 +405,7 @@ class app:
 
     def draw_camera():
         try:
+            gc.collect()
             ai_camera.ai_draw()
             for model in ai_camera.models:
               #print(model.__qualname__, ai_camera.model.__qualname__)
@@ -407,11 +414,11 @@ class app:
                   ui.canvas.draw_string(50, 260, "Press Left (<) or Right (>) to View", scale=2)
                   pass
 
-              elif 'FaceReco' == ai_camera.model.__qualname__:
+              elif 'FaceDetect' == ai_camera.model.__qualname__:
 
                     if ai_camera.model.bbox != None:
                         bbox = ai_camera.model.bbox
-                        ui.canvas.draw_string(50, 260, "Find Face %d" % len(bbox), scale=5)
+                        ui.canvas.draw_string(50, 260, "Face Detect %d" % len(bbox), scale=5)
                         for pos in range(len(bbox)):
                             i = bbox[pos]
                             # print(i.x(), i.y(), i.w(), i.h())
@@ -420,6 +427,9 @@ class app:
                             ui.canvas.draw_image(face_cut_128, 320 + int((pos % 2)*80), int((pos // 2)*80))
                     else:
                         ui.canvas.draw_string(50, 260, "Find Face Reco", scale=5)
+
+              elif 'FaceReco' == ai_camera.model.__qualname__:
+                    ui.canvas.draw_string(50, 260, "FaceReco", scale=5)
 
               elif 'find_color' == ai_camera.model.__qualname__:
 
@@ -447,7 +457,8 @@ class app:
             # ai_camera.next()
             # protect.restart() # temp patch
             app.layer -= 1
-            raise Exception("This is a Easter egg(Known Bug) This error requires a  restart. It will soon be resolved. :)")
+            raise e
+            #raise Exception("This is a Easter egg(Known Bug) This error requires a  restart. It will soon be resolved. :)")
 
     current = None
 
@@ -547,8 +558,8 @@ class app:
 
     def run():
         # debug into app_select
-        #launcher.app_select = 0
-        #app.layer = 2
+        launcher.app_select = 0
+        app.layer = 2
 
         ui.height, ui.weight = 480, 320
         button_io.config(23, 31, 20) # amigo
@@ -606,10 +617,10 @@ class app:
             last = 0
             while True:
                 try:
-                    # gc.collect()
                     print((int)(1000 / (time.ticks_ms() - last)), 'fps')
                     last = time.ticks_ms()
-                    #print_mem_free()
+                    print_mem_free()
+                    gc.collect()
                     app.ctrl.cycle()
                     protect.keep()
                     #time.sleep(0.1)
