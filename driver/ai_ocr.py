@@ -1,3 +1,9 @@
+# This file is part of MaixUI
+# Copyright (c) sipeed.com
+#
+# Licensed under the MIT license:
+#   http://www.opensource.org/licenses/mit-license.php
+#
 
 from ui_canvas import ui
 import camera
@@ -20,22 +26,22 @@ class Minist():
         #tmp = image.Image(size=(160, 160))
         #tmp = tmp.to_grayscale()
         ui.canvas = ui.canvas.to_grayscale()
-        img1 = img.cut(80, 40, 160, 160).to_grayscale()
-        #img.draw_image(img1, (0, 0))
-        ui.canvas.draw_image(img1, (320, 0))
+        bak = img.cut(100, 60, 120, 120).to_grayscale()
+        #img.draw_image(tmp, (0, 0))
+        ui.canvas.draw_image(bak, (320 + 20, 0 + 20))
         #img1 = tmp
         #img1 = img1.to_grayscale(1)
         #tmp = img.resize(224, 224)
         #img1 = img.to_grayscale(1)  # convert to gray
-        img2 = img1.cut(20, 20, 120, 120)  # resize to Minist input 28x28
-        ui.canvas.draw_image(img2, (320 + 20, 160 + 20))
+        #tmp = img1.cut(20, 20, 120, 120)  # resize to Minist input 28x28
+        #ui.canvas.draw_image(tmp, (320 + 20, 160 + 20))
 
-        a = img2.invert()  # invert picture as Minist need
-        a = img2.strech_char(1)  # preprocessing pictures, eliminate dark corner
-        img.draw_image(img2.resize(80, 80), (0, 0))  # display small 28x28 picture # alpha=25
-        img2 = img2.resize(28, 28)
-        a = img2.pix_to_ai()  # generate data for ai
-        fmap = kpu.forward(Minist.task, img2)  # run neural network model
+        a = bak.invert()  # invert picture as Minist need
+        a = bak.strech_char(1)  # preprocessing pictures, eliminate dark corner
+        img.draw_image(bak.resize(80, 80), (0, 0))  # display small 28x28 picture # alpha=25
+        bak = bak.resize(28, 28)
+        a = bak.pix_to_ai()  # generate data for ai
+        fmap = kpu.forward(Minist.task, bak)  # run neural network model
         plist = fmap[:]  # get result (10 digit's probability)
         pmax = max(plist)  # get max probability
         try:
@@ -46,47 +52,51 @@ class Minist():
         Minist.score = pmax
         Minist.result = max_index
 
-        print(224, 0, "%d: %.3f" % (max_index, pmax))  # show result
-        del img1, img2
+        #ui.canvas.draw_string(0, 300, "%d: %.3f" % (max_index, pmax), scale=2)  # show result
+
         img.draw_rectangle(80, 40, 160, 160, thickness=2, color=(0, 255, 0))
         img.draw_rectangle(80 + 20, 40 + 20, 120, 120, thickness=2, color=(255, 0, 0))
 
-        #img2 = img
-        #img2 = img2.to_grayscale()  # convert to gray
-        #img2 = img2.resize(28, 28)  # resize to mnist input 28x28
-        #a = img2.invert()  # invert picture as mnist need
-        ## a=img2.strech_char(1)			#preprocessing pictures, eliminate dark corner
-        #img2x2 = img2.resize(28*2, 28*2)  # scale to display
-        #a = ui.canvas.draw_image(img2x2, 0, 0)  # display small 28x28 picture
-        #a = img2.pix_to_ai()  # generate data for ai
-        ##watch conv0
-        #a = kpu.set_layers(Minist.task, 1)
-        #fmap = kpu.forward(Minist.task, img2)  # run neural network model
-        #for i in range(0, 16):
-            #tmp = kpu.fmap(fmap, i)
-            #tmpx2 = tmp.resize(14*2, 14*2)  # scale to display
-            #a = ui.canvas.draw_image(tmpx2, (i % 8)*14*2, 28*2+14*2*int(i/8))
-        ##watch conv1
-        #a = kpu.set_layers(Minist.task, 2)
-        #fmap = kpu.forward(Minist.task, img2)  # run neural network model
-        #for i in range(0, 32):
-            #tmp = kpu.fmap(fmap, i)
-            #tmpx2 = tmp.resize(7*2, 7*2)  # scale to display
-            #a = ui.canvas.draw_image(
-                #tmpx2, (i % 16)*7*2, 28*2+14*2*2+7*2*int(i/16))
-        ##watch conv2
-        #a = kpu.set_layers(Minist.task, 8)
-        #fmap = kpu.forward(Minist.task, img2)  # run neural network model
-        #for i in range(0, 10):
-            #tmp = kpu.fmap(fmap, i)
-            #tmpx2 = tmp.resize(4*2, 4*2)  # scale to display
-            #a = ui.canvas.draw_image(tmpx2, i*4*2, 28*2+14*2*2+7*2*2)
-        ##watch softmax
-        #a = kpu.set_layers(Minist.task, 11)
-        #fmap = kpu.forward(Minist.task, img2)
-        #plist = fmap[:]
-        #for i in range(0, 10):
-            #cc = int(plist[i]*256)
+        if ui.weight > 240:
+
+            size = 28*2
+            x, y = 5, int(240) + 5 - size
+
+            #watch conv0
+            a = kpu.set_layers(Minist.task, 1)
+            fmap = kpu.forward(Minist.task, bak)  # run neural network model
+            for i in range(0, 16):
+                tmp = kpu.fmap(fmap, i)
+                tmpx2 = tmp.resize(14*2, 14*2)  # scale to display
+                a = ui.canvas.draw_image(tmpx2, (i % 8)*14*2 + x, y + size+14*2*int(i/8))
+            x, y = x + 10 + size*4, y + 5 - size
+            #watch conv1
+            a = kpu.set_layers(Minist.task, 2)
+            fmap = kpu.forward(Minist.task, bak)  # run neural network model
+            for i in range(0, 32):
+                tmp = kpu.fmap(fmap, i)
+                tmpx2 = tmp.resize(7*2, 7*2)  # scale to display
+                a = ui.canvas.draw_image(
+                    tmpx2, (i % 16)*7*2 + x, y + size+14*2*2+7*2*int(i/16))
+            x, y = x + 15, y + 10
+            #watch conv2
+            a = kpu.set_layers(Minist.task, 8)
+            fmap = kpu.forward(Minist.task, bak)  # run neural network model
+            for i in range(0, 10):
+                tmp = kpu.fmap(fmap, i)
+                tmpx2 = tmp.resize(4*4, 4*4)  # scale to display
+                a = ui.canvas.draw_image(tmpx2, i*4*4 + x + i * 5, y + size+14*2*2+7*2*2)
+
+            #watch softmax
+            a = kpu.set_layers(Minist.task, 11)
+            fmap = kpu.forward(Minist.task, bak)
+            plist = fmap[:]
+            for i in range(0, 10):
+                cc = int(plist[i]*256)
+                ui.canvas.draw_string(i*4*4 + x + 3 + i * 5, y + 20 + size+14*2*2+7*2*2, '%.0f' % (plist[i] * 100), scale=1, color=(255, 255, 255))
+                #print(i, cc)
+
+        del bak
 
         return img
 
@@ -110,39 +120,12 @@ if __name__ == "__main__":
             tmp = camera.obj.get_image()
             Minist.work(tmp)
             ui.canvas.draw_image(tmp, 0, 0)
-            #ui.canvas.draw_string(0, ui.weight - 25, '%.2f:%s' %
-                                  #(Minist.score, Minist.result), scale=2, color=(0, 255, 0))
+            ui.canvas.draw_string(5, ui.weight - 20, 'minist result > %d : %.2f' %
+                                  (Minist.result, Minist.score), scale=2, color=(255, 255, 255))
             ui.display()
 
         import time
         last = time.ticks_ms()
-        #while True:
-        #try:
-        #HowMany.load()
-        #while True:
-        #try:
-        #print(time.ticks_ms() - last)
-        #last = time.ticks_ms()
-        #howmany()
-        #except Exception as e:
-        ## gc.collect()
-        #print(e)
-        #except KeyboardInterrupt as e:
-        #HowMany.free()
-        ##break
-        #try:
-        #MaybeIs.load()
-        #while True:
-        #try:
-        #print(time.ticks_ms() - last)
-        #last = time.ticks_ms()
-        #maybe()
-        #except Exception as e:
-        ## gc.collect()
-        #print(e)
-        #except KeyboardInterrupt as e:
-        #MaybeIs.free()
-        ##break
         Minist.load()
         while True:
             try:
