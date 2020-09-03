@@ -73,6 +73,7 @@ class app:
           p = app.toth.points[1]
           if p[0] > 430 and p[1] > 260:
             app.layer -= 1
+            app.exit_application()
           elif p[0] < 60 and p[1] < 60:
             app.touch_select = -1
             #print(app.touch_select)
@@ -277,20 +278,22 @@ class app:
     def draw_photos():
         if photos.photos_len() > 0:
 
-            #if app.photos_title != photos.image_path():
-                #app.photos_title = photos.image_path()
-                #if app.photos_temp != None:
-                    #tmp = app.photos_temp
-                    #del tmp
-                    #app.photos_temp = None
-                #app.photos_temp = image.Image(app.photos_title)
+            if app.photos_title != photos.image_path():
+                app.photos_title = photos.image_path()
+                if app.photos_temp != None:
+                    tmp = app.photos_temp
+                    del tmp
+                    app.photos_temp = None
+            if app.photos_temp:
+                ui.canvas.draw_image(app.photos_temp, 0, 0)
+            else:
+                app.photos_temp = image.Image(app.photos_title)
 
-            #ui.canvas.draw_image(app.photos_temp, 0, 0)
 
             # [mem < 800*1024]
-            t, ui.canvas = ui.canvas, None
-            del t
-            ui.canvas = image.Image(photos.image_path())
+            #t, ui.canvas = ui.canvas, None
+            #del t
+            #ui.canvas = image.Image(photos.image_path())
 
             ui.canvas.draw_string(2, 2, app.photos_title, color=(255, 255, 255), scale=1, mono_space=0)
         else:
@@ -426,10 +429,10 @@ class app:
                             face_cut_128 = face_cut.resize(80, 80)
                             ui.canvas.draw_image(face_cut_128, 320 + int((pos % 2)*80), int((pos // 2)*80))
                     else:
-                        ui.canvas.draw_string(50, 260, "Find Face Reco", scale=5)
+                        ui.canvas.draw_string(50, 260, "Find Detect", scale=5)
 
               elif 'FaceReco' == ai_camera.model.__qualname__:
-                    ui.canvas.draw_string(50, 260, "FaceReco", scale=5)
+                    ui.canvas.draw_string(50, 260, "Face Recognition", scale=5)
 
               elif 'find_color' == ai_camera.model.__qualname__:
 
@@ -497,6 +500,24 @@ class app:
             app.layer -= 1
             raise e
 
+    def exit_application():
+        try:
+            if launcher.app_select == 0:
+                ai_camera.exit()
+                ai_camera.jump(0)
+                ai_camera.reload()
+            elif launcher.app_select == 1:
+                pass
+            elif launcher.app_select == 2:
+                t, app.sidu = app.sidu, None # Clear
+                del t
+            elif launcher.app_select == 3:
+                t, app.photos_temp = app.photos_temp, None # Clear
+                del t
+        except Exception as e:
+            app.layer -= 1
+            raise e
+
     rgb = 0
     def rgb_change(rgb):
         sipeed_led.r.value(rgb & 0b001)
@@ -516,8 +537,7 @@ class app:
             elif app.layer == 2:
                 if app.btn.interval() > 1000: # long press
                     app.layer -= 1
-                    if launcher.app_select == 1:
-                        ui.anime = None # Clear
+                    app.exit_application()
                 # application return launcher
             else:
                 app.layer += 1
@@ -617,9 +637,9 @@ class app:
             last = 0
             while True:
                 try:
-                    print((int)(1000 / (time.ticks_ms() - last)), 'fps')
-                    last = time.ticks_ms()
-                    print_mem_free()
+                    # print((int)(1000 / (time.ticks_ms() - last)), 'fps')
+                    # last = time.ticks_ms()
+                    # print_mem_free()
                     gc.collect()
                     app.ctrl.cycle()
                     protect.keep()

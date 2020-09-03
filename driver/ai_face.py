@@ -5,7 +5,10 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import lcd, time, image
+import lcd
+import time
+import image
+import gc
 import KPU as kpu
 
 from Maix import utils
@@ -21,6 +24,7 @@ except ImportError:
 
 anchor = (1.889, 2.5245, 2.9465, 3.94056, 3.99987,
           5.3658, 5.155437, 6.92275, 6.718375, 9.01025)
+
 
 class FaceDetect():
 
@@ -54,6 +58,7 @@ class FaceDetect():
         except Exception as e:
             print(e)  # see py_kpu_deinit error will mp_raise_TypeError
 
+
 class FaceReco():
 
     is_load = False
@@ -63,7 +68,8 @@ class FaceReco():
     record_ftrs = []
     btn = sipeed_button()
     names = ['Mr.1', 'Mr.2', 'Mr.3', 'Mr.4', 'Mr.5', 'Mr.6', 'Mr.7', 'Mr.8']
-    dst_point = [(44, 59), (84, 59), (64, 82), (47, 105), (81, 105)]  # standard face key point position
+    dst_point = [(44, 59), (84, 59), (64, 82), (47, 105),
+                 (81, 105)]  # standard face key point position
     start_processing = False
 
     def set_key_state(*_):
@@ -83,7 +89,8 @@ class FaceReco():
             FaceReco.start_processing = False
 
             from Maix import GPIO
-            button_io.home_button.irq(FaceReco.set_key_state, GPIO.IRQ_RISING, GPIO.WAKEUP_NOT_SUPPORT)
+            button_io.home_button.irq(
+                FaceReco.set_key_state, GPIO.IRQ_RISING, GPIO.WAKEUP_NOT_SUPPORT)
 
             FaceReco.is_load = True
 
@@ -109,9 +116,11 @@ class FaceReco():
                 # Landmark for face 5 points
                 fmap = kpu.forward(FaceReco.task_ld, face_cut_128)
                 plist = fmap[:]
-                le = (int(i.x() + plist[0]*i.w() - 5), int(i.y() + plist[1]*i.h()))
+                le = (int(i.x() + plist[0]*i.w() - 5),
+                      int(i.y() + plist[1]*i.h()))
                 re = (int(i.x() + plist[2]*i.w()), int(i.y() + plist[3]*i.h()))
-                nose = (int(i.x() + plist[4]*i.w()), int(i.y() + plist[5]*i.h()))
+                nose = (int(i.x() + plist[4]*i.w()),
+                        int(i.y() + plist[5]*i.h()))
                 lm = (int(i.x() + plist[6]*i.w()), int(i.y() + plist[7]*i.h()))
                 rm = (int(i.x() + plist[8]*i.w()), int(i.y() + plist[9]*i.h()))
                 #print(le, re, nose, lm, rm)
@@ -127,12 +136,14 @@ class FaceReco():
                 a = FaceReco.img_face.ai_to_pix()
                 #a = ui.canvas.draw_image(FaceReco.img_face, (320,128))
 
-                gc.collect()
-                tmp = face_cut_128.resize(80, 80)
-                #a = ui.canvas.draw_image(face_cut_128, (start, 240))
-                ui.canvas.draw_image(tmp, 320 + int((pos % 2)*80), int((pos // 2)*80))
-                del(tmp)
-                #start = start + 80
+                if ui.height > 240:
+                    gc.collect()
+                    tmp = face_cut_128.resize(80, 80)
+                    #a = ui.canvas.draw_image(face_cut_128, (start, 240))
+                    ui.canvas.draw_image(
+                        tmp, 320 + int((pos % 2)*80), int((pos // 2)*80))
+                    del(tmp)
+                    #start = start + 80
                 del(face_cut_128)
 
                 # calculate face feature vector
@@ -150,22 +161,24 @@ class FaceReco():
                        max_score = scores[k]
                        index = k
                 if max_score > 85:
-                   a = img.draw_string(i.x(), i.y(), ("%s:%2.1f" % (
-                       FaceReco.names[index], max_score)), color=(0, 255, 0), scale=2)
-                   a = ui.canvas.draw_string(100 * (pos % 3), 240 + 30 * (pos // 3), ("%s :%2.1f" % (
-                       FaceReco.names[index], max_score)), color=(0, 255, 0), scale=2)
+                    a = img.draw_string(i.x(), i.y(), ("%s:%2.1f" % (
+                        FaceReco.names[index], max_score)), color=(0, 255, 0), scale=2)
+                    if ui.height > 240:
+                        a = ui.canvas.draw_string(100 * (pos % 3), 240 + 30 * (pos // 3), ("%s :%2.1f" % (
+                            FaceReco.names[index], max_score)), color=(0, 255, 0), scale=2)
                 else:
-                   a = img.draw_string(i.x(), i.y(), ("X:%2.1f" % (
-                       max_score)), color=(255, 0, 0), scale=2)
-                   a = ui.canvas.draw_string(100 * (pos % 3), 240 + 30 * (pos // 3), ("X :%2.1f" % (
-                       max_score)), color=(255, 0, 0), scale=2)
+                    a = img.draw_string(i.x(), i.y(), ("X:%2.1f" % (
+                        max_score)), color=(255, 0, 0), scale=2)
+                    if ui.height > 240:
+                        a = ui.canvas.draw_string(100 * (pos % 3), 240 + 30 * (pos // 3), ("X :%2.1f" % (
+                            max_score)), color=(255, 0, 0), scale=2)
 
                 if FaceReco.start_processing:
-                   FaceReco.record_ftr = feature
-                   if len(FaceReco.record_ftrs) == len(FaceReco.names):
-                      FaceReco.record_ftrs = []
-                   FaceReco.record_ftrs.append(FaceReco.record_ftr)
-                   FaceReco.start_processing = False
+                    FaceReco.record_ftr = feature
+                    if len(FaceReco.record_ftrs) == len(FaceReco.names):
+                        FaceReco.record_ftrs = []
+                    FaceReco.record_ftrs.append(FaceReco.record_ftr)
+                    FaceReco.start_processing = False
 
         # img.draw_string(10, 2, 'FaceReco free %d kb' % (
         #     utils.heap_free() / 1024), (127, 255, 255), scale=2)
@@ -197,7 +210,6 @@ class FaceReco():
             print(e)  # see py_kpu_deinit error will mp_raise_TypeError
 
 
-
 if __name__ == "__main__":
     try:
         from ui_canvas import ui
@@ -206,7 +218,7 @@ if __name__ == "__main__":
 
     ui.height, ui.weight = 480, 320
     # button_io.config(10, 11, 16) # cube
-    button_io.config(23, 31, 20) # amigo 3.8M 750*1024
+    button_io.config(23, 31, 20)  # amigo 3.8M 750*1024
 
     @ui.warp_template(ui.blank_draw)  # first draw
     def app_main():

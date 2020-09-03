@@ -72,6 +72,10 @@ class ai_camera():
         ai_camera.index += 1
         ai_camera.replace = True
 
+    def jump(index):
+        ai_camera.index = index
+        ai_camera.replace = True
+
     def exit():
         sipeed_led.w.value(1)
 
