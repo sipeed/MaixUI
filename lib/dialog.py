@@ -60,7 +60,7 @@ def draw_dialog_alpha(img, x, y, w, h, radius=0, color=(255, 0, 0), alpha=255):
     if radius == 0:
         radius = h // 2
     bak = image.Image(size=(w + 2*radius, h + 2*radius))
-    draw_fillet(bak, [radius, radius], [radius+ w, radius], [radius, radius+ h], [radius+ w, radius+ h], radius, False, color=color)
+    draw_fillet(bak, [radius, radius], [radius+ w, radius], [radius, radius+ h], [radius+ w, radius+ h], radius-1, False, color=color)
     draw_fillet(bak, [radius, radius], [radius+ w, radius], [radius, radius+ h], [radius+ w, radius+ h], radius-7, True, color=(255, 255, 255))
     img.draw_image(bak, x - radius, y - radius, alpha=alpha)
     del bak
@@ -99,7 +99,7 @@ if __name__ == "__main__":
             pos = draw_dialog_alpha(img, x, y, w, h, 10, alpha=200)
             img.draw_string(pos[0] + 10, pos[1] + 10, "dialog A\n" + str(time.ticks_ms() // 1000), scale=2, color=(0,0,0))
 
-            pos = draw_dialog_alpha(img, x + 20, 40, w, h, 10, color=(0, 0, 255), alpha=200)
+            pos = draw_dialog_alpha(img, x + 20, 40, w, h, 10, color=(0, 255, 0), alpha=200)
             img.draw_string(pos[0] + 10, pos[1] + 10, "dialog B\n" + str(time.ticks_ms() // 1000), scale=2, color=(0,0,0))
 
             lcd.display(img)
