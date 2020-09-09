@@ -47,6 +47,8 @@ while True:
         sensor.reset(choice=1)
         sensor.set_pixformat(sensor.YUV422)
         sensor.set_framesize(sensor.QVGA)
+        # sensor.set_hmirror(1)
+        sensor.set_vflip(1)
         sensor.skip_frames(time=2000)
         for i in range(50):
             img = sensor.snapshot()
@@ -58,6 +60,8 @@ while True:
         sensor.reset(choice=2)
         sensor.set_pixformat(sensor.YUV422)
         sensor.set_framesize(sensor.QVGA)
+        sensor.set_hmirror(1)
+        sensor.set_vflip(1)
         sensor.skip_frames(time=2000)
         for i in range(50):
             img = sensor.snapshot()
