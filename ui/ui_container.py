@@ -60,7 +60,7 @@ if __name__ == "__main__":
     def load():
       Loading.h, Loading.w = 20, 20
       #system.remove(Loading.event)
-      system.event(3000, switch_Launcher)
+      system.event(2000, switch_Launcher)
     def free():
       pass
     @ui.warp_template(ui.blank_draw)
@@ -70,9 +70,9 @@ if __name__ == "__main__":
       ui.display()
     def event():
       if Loading.h < 240:
-        Loading.h += 4
+        Loading.h += 20
       if Loading.w < 240:
-        Loading.w += 2
+        Loading.w += 10
       ui.height, ui.weight = Loading.h, Loading.w
       Loading.draw()
 
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     h, w = 0, 0
     def load():
       Launcher.h, Launcher.w = 20, 20
-      system.event(3000, switch_Loading)
+      system.event(2000, switch_Loading)
     def free():
       pass
     @ui.warp_template(ui.blank_draw)
@@ -91,9 +91,9 @@ if __name__ == "__main__":
       ui.display()
     def event():
       if Launcher.h < 240:
-        Launcher.h += 2
+        Launcher.h += 20
       if Launcher.w < 240:
-        Launcher.w += 4
+        Launcher.w += 10
       ui.height, ui.weight = Launcher.h, Launcher.w
       Launcher.draw()
 
