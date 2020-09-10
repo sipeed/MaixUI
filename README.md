@@ -79,6 +79,64 @@ Developers can sart from [ui/ui_canvas.py](ui/ui_canvas.py)
 
 Explain with code.
 
+### Core Execution
+
+Let's look at pseudo-code.
+
+```python
+
+# such as agent
+class agent:
+  def run():
+    exec(queue)
+  def load(event)
+    queue.push(event)
+
+# old you can
+
+class app:
+  obj = agent()
+  def init():
+    obj.load(app.draw())
+  def draw():
+    pass
+  def event()
+    obj.run()
+
+class demo:
+  obj = agent()
+  def init():
+    obj.load(demo.draw())
+  def draw():
+    pass
+  def event()
+    obj.run()
+
+# now you can
+
+class core:
+  obj = agent()
+  def forever():
+    obj.run()
+
+class app:
+  def init():
+    core.obj.load(app.draw())
+  def draw():
+    pass
+  
+class demo:
+  def init():
+    core.obj.load(app.draw())
+  def draw():
+    pass
+  
+```
+
+![](./image/agent.png)
+
+Up to you, more see [lib/core.py](lib/core.py).
+
 ### Layer drawing
 
 Let's look at an example.

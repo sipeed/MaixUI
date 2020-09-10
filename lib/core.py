@@ -6,7 +6,6 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-
 class agent:
 
   def __init__(self):
@@ -74,5 +73,8 @@ class agent:
       self.parallel_cycle()
       time.sleep(0.1)
 
+system = agent()
+
 if __name__ == "__main__":
-  agent().unit_test()
+  #agent().unit_test()
+  system.unit_test()
