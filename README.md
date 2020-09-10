@@ -143,7 +143,7 @@ class demo:
 
 ![](./image/agent.png)
 
-Up to you, more see [lib/core.py](lib/core.py).
+Up to you, more see [lib/core.py](lib/core.py) & [ui/ui_container.py](lib/ui_container.py).
 
 ### Layer drawing
 
