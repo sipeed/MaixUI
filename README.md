@@ -28,10 +28,16 @@
 - Decoration design
 - Support layer drawing
 - Support event-driven model
+- Support event scheduling
+- Support loading multiple applications and multiple pages
 - No function overloading is required
-- Provide basic framework examples
+- Provide basic framework examples & unit-test
 
 Enjoy it! 🤡
+
+> Note: MaixUI is not a collection of UI controls. It can provide a UI framework with high performance and low memory usage on MicroPython. Therefore, it will focus on integrating the stable code of the system, scheduling, application, event and other components, not just the UI page.
+
+> 注意：MaixUI 不是一套 UI 控件的集合，它能够提供在 MicroPython 上的执行高性能与内存低占用的 UI 框架，因此会重点集成系统、调度、应用、事件等组件的稳定代码。
 
 ## Demo effect
 
@@ -289,7 +295,7 @@ look at this [driver/button.py](driver/button.py)
 
 ![](./image/button.gif)
 
-### driver programming
+### driver programming (Singleton-Class)
 
 Simple can be written like this.
 
@@ -405,6 +411,10 @@ Next up to you.
 
 > 20200910 The following information is out of date
 
+Now! Run this [app/app_main.py](app/app_main.py) up 30 fps.
+
+![](./image/app_main.gif)
+
 Record the time and memory usage of each component.
 
 - ui_canvas.py
@@ -426,8 +436,6 @@ Record the time and memory usage of each component.
   - need mem 330kb
 
 ![](./image/test_micro.gif)
-
-Now! Run this [app/app_main.py](app/app_main.py) up 30 fps.
 
 ## Precautions
 
