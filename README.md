@@ -71,7 +71,7 @@ Developers can sart from [ui/ui_canvas.py](ui/ui_canvas.py)
 
 #### Currently supported startup applications.
 
-- [app/app_main.py](app/app_main.py)
+- [app/app_main.py](app/app_main.py) (for other hardware)
 - [app/app_cube.py](app/app_cube.py)
 - [app/app_amigo.py](app/app_amigo.py)
 
@@ -401,6 +401,8 @@ Next up to you.
 
 ## Performance statistics
 
+> 20200910 The following information is out of date
+
 Record the time and memory usage of each component.
 
 - ui_canvas.py
@@ -422,6 +424,8 @@ Record the time and memory usage of each component.
   - need mem 330kb
 
 ![](./image/test_micro.gif)
+
+Now! Run this [app/app_main.py](app/app_main.py) up 47 fps.
 
 ## Precautions
 
