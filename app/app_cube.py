@@ -21,48 +21,22 @@ except ImportError as e:
   from ui.ui_container import container
   from driver.wdt import protect
 
-class loading:
-
-  def into_launcher(ctrl):
-    container.reload(launcher)
-    ctrl.remove(loading.into_launcher)
-
-  def load():
-    loading.h, loading.w = 0, 0
-    loading.ctrl = agent()
-    loading.ctrl.event(5, loading.draw)
-    loading.ctrl.event(2000, loading.into_launcher)
-    #loading.draw()
-
-  def free():
-    loading.ctrl = None
-    ui.height, ui.weight = 240, 240
-
-  @ui.warp_template(ui.blank_draw)
-  @ui.warp_template(ui.bg_in_draw)
-  @ui.warp_template(ui.help_in_draw)
-  def draw():
-    ui.display()
-
-  def event():
-    if loading.h < 240:
-      loading.h += 5
-    if loading.w < 240:
-      loading.w += 5
-    ui.height, ui.weight = loading.h, loading.w
-    loading.ctrl.parallel_cycle()
-
 class launcher:
 
-  ctrl, value = None, None
-
   def load():
-    launcher.value = 0
-    launcher.ctrl = agent()
-    launcher.ctrl.event(10, launcher.draw)
+    self = __class__
+    self.h, self.w = 0, 0
+    self.value = 0
+    self.ctrl = agent()
+    self.ctrl.event(10, self.draw)
+    def test_once(self):
+      container.latest()
+      self.remove(test_once)
+    self.ctrl.event(2000, test_once)
 
   def free():
-    launcher.ctrl = None
+    self = __class__
+    self.ctrl = None
 
   @ui.warp_template(ui.blank_draw)
   @ui.warp_template(ui.grey_draw)
@@ -75,7 +49,46 @@ class launcher:
     ui.display()
 
   def event():
-    launcher.ctrl.cycle()
+    self = __class__
+    if self.h < 240:
+      self.h += 20
+    if self.w < 240:
+      self.w += 10
+    ui.height, ui.weight = self.h, self.w
+    self.ctrl.parallel_cycle()
+
+class loading:
+
+  def load():
+    self = __class__
+    self.h, self.w = 0, 0
+    self.ctrl = agent()
+    self.ctrl.event(5, self.draw)
+    def into_launcher(self):
+      container.reload(launcher)
+      self.remove(into_launcher)
+    self.ctrl.event(2000, into_launcher)
+    #loading.draw()
+
+  def free():
+    self = __class__
+    self.ctrl = None
+    ui.height, ui.weight = 240, 240
+
+  @ui.warp_template(ui.blank_draw)
+  @ui.warp_template(ui.bg_in_draw)
+  @ui.warp_template(ui.help_in_draw)
+  def draw():
+    ui.display()
+
+  def event():
+    self = __class__
+    if self.h < 240:
+      self.h += 10
+    if self.w < 240:
+      self.w += 10
+    ui.height, ui.weight = self.h, self.w
+    self.ctrl.parallel_cycle()
 
 if __name__ == "__main__":
   system = agent()
@@ -88,7 +101,7 @@ if __name__ == "__main__":
       while True:
         try:
           #time.sleep(0.1)
-          print(1000 // (time.ticks_ms() - last), 'fps')
+          #print(1000 // (time.ticks_ms() - last), 'fps')
           last = time.ticks_ms()
 
           gc.collect()
@@ -97,7 +110,7 @@ if __name__ == "__main__":
 
           protect.keep()
           #gc.collect()
-          print_mem_free()
+          #print_mem_free()
         except KeyboardInterrupt:
           protect.stop()
           raise KeyboardInterrupt

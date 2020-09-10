@@ -24,75 +24,34 @@ except ImportError as e:
 class launcher:
 
   def load():
-    self = __class__
-    self.h, self.w = 0, 0
-    self.value = 0
-    self.ctrl = agent()
-    self.ctrl.event(10, self.draw)
-    def test_once(self):
-      container.latest()
-      self.remove(test_once)
-    self.ctrl.event(2000, test_once)
+    __class__.value = 0
+    __class__.ctrl = agent()
+    __class__.ctrl.event(20, __class__.draw)
 
   def free():
-    self = __class__
-    self.ctrl = None
+    __class__.ctrl = None
 
   @ui.warp_template(ui.blank_draw)
   @ui.warp_template(ui.grey_draw)
   @ui.warp_template(ui.bg_in_draw)
   @ui.warp_template(ui.anime_in_draw)
+  @ui.warp_template(ui.help_in_draw)
   #@ui.warp_template(taskbar.time_draw)
   #@ui.warp_template(taskbar.mem_draw)
   #@catch # need sipeed_button
   def draw():
+    height = int(math.cos(math.pi * __class__.value / 32) * 30 + 100)
+    __class__.value = (__class__.value + 1) % 64
+    pos = draw_dialog_alpha(ui.canvas, 20, height, 200, 20, 10, color=(255, 0, 0), alpha=200)
+    ui.canvas.draw_string(pos[0] + 10, pos[1] + 10, "Welcome to MaixUI", scale=2, color=(0,0,0))
     ui.display()
 
   def event():
-    self = __class__
-    if self.h < 240:
-      self.h += 20
-    if self.w < 240:
-      self.w += 10
-    ui.height, ui.weight = self.h, self.w
-    self.ctrl.parallel_cycle()
-
-class loading:
-
-  def load():
-    self = __class__
-    self.h, self.w = 0, 0
-    self.ctrl = agent()
-    self.ctrl.event(5, self.draw)
-    def into_launcher(self):
-      container.reload(launcher)
-      self.remove(into_launcher)
-    self.ctrl.event(2000, into_launcher)
-    #loading.draw()
-
-  def free():
-    self = __class__
-    self.ctrl = None
-    ui.height, ui.weight = 240, 240
-
-  @ui.warp_template(ui.blank_draw)
-  @ui.warp_template(ui.bg_in_draw)
-  @ui.warp_template(ui.help_in_draw)
-  def draw():
-    ui.display()
-
-  def event():
-    self = __class__
-    if self.h < 240:
-      self.h += 10
-    if self.w < 240:
-      self.w += 10
-    ui.height, ui.weight = self.h, self.w
-    self.ctrl.parallel_cycle()
+    __class__.ctrl.cycle()
 
 if __name__ == "__main__":
   system = agent()
-  container.reload(loading)
+  container.reload(launcher)
 
   last = time.ticks_ms()
   while True:
@@ -101,7 +60,7 @@ if __name__ == "__main__":
       while True:
         try:
           #time.sleep(0.1)
-          #print(1000 // (time.ticks_ms() - last), 'fps')
+          print(1000 // (time.ticks_ms() - last), 'fps')
           last = time.ticks_ms()
 
           gc.collect()
