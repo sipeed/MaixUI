@@ -69,6 +69,8 @@ Developers can sart from [ui/ui_canvas.py](ui/ui_canvas.py)
 
 4. Boot from the SD card.
 
+![](./image/app_main.gif)
+
 #### Currently supported startup applications.
 
 - [app/app_main.py](app/app_main.py) (for other hardware)
@@ -425,7 +427,7 @@ Record the time and memory usage of each component.
 
 ![](./image/test_micro.gif)
 
-Now! Run this [app/app_main.py](app/app_main.py) up 47 fps.
+Now! Run this [app/app_main.py](app/app_main.py) up 30 fps.
 
 ## Precautions
 

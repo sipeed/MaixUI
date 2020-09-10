@@ -23,7 +23,7 @@ class container:
       pass
     def free():
       pass
-    def free():
+    def event():
       pass
 
   current, backup = demo, None
@@ -41,7 +41,6 @@ class container:
       tmp.free()
       del tmp
       container.backup = app
-
 
 if __name__ == "__main__":
   from ui.ui_canvas import ui
@@ -62,6 +61,8 @@ if __name__ == "__main__":
       #system.remove(Loading.event)
       system.event(2000, switch_Launcher)
     def free():
+      pass
+    def event():
       pass
     @ui.warp_template(ui.blank_draw)
     @ui.warp_template(ui.grey_draw)

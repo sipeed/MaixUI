@@ -5,51 +5,82 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import time, gc
+import time, gc, math
 
-from core import agent
-from ui_canvas import ui, print_mem_free
-from ui_system_info import system_info
-#from ui_catch import catch
-#from ui_taskbar import taskbar
-from wdt import protect
+try:
+  from core import agent, system
+  from dialog import draw_dialog_alpha
+  from ui_canvas import ui, print_mem_free
+  from ui_container import container
+  from wdt import protect
+except ImportError as e:
+  print(e)
+  from lib.core import agent, system
+  from lib.dialog import draw_dialog_alpha
+  from ui.ui_canvas import ui, print_mem_free
+  from ui.ui_container import container
+  from driver.wdt import protect
 
-class app:
+class launcher:
 
-    ctrl = agent()
+  ctrl, value = None, None
 
-    @ui.warp_template(ui.blank_draw)
-    @ui.warp_template(ui.grey_draw)
-    @ui.warp_template(ui.bg_in_draw)
-    @ui.warp_template(ui.anime_in_draw)
-    #@ui.warp_template(ui.help_in_draw)
-    #@ui.warp_template(taskbar.time_draw)
-    #@ui.warp_template(taskbar.mem_draw)
-    #@catch # need sipeed_button
-    def draw():
-        ui.display()
+  def load():
+    launcher.value = 0
+    launcher.ctrl = agent()
+    launcher.ctrl.event(20, launcher.draw)
 
-    def run():
-        #app.ctrl.event(100, lambda *args: time.sleep(1))
-        app.ctrl.event(5, app.draw)
-        while True:
-            #import time
-            #last = time.ticks_ms()
-            while True:
-                try:
-                    #print((int)(1000 / (time.ticks_ms() - last)), 'fps')
-                    #last = time.ticks_ms()
-                    app.ctrl.cycle()
-                    protect.keep()
-                    #time.sleep(0.1)
-                except KeyboardInterrupt:
-                    protect.stop()
-                    raise KeyboardInterrupt()
-                except Exception as e:
-                    # gc.collect()
-                    print(e)
+  def free():
+    launcher.ctrl = None
+
+  @ui.warp_template(ui.blank_draw)
+  @ui.warp_template(ui.grey_draw)
+  @ui.warp_template(ui.bg_in_draw)
+  @ui.warp_template(ui.anime_in_draw)
+  @ui.warp_template(ui.help_in_draw)
+  #@ui.warp_template(taskbar.time_draw)
+  #@ui.warp_template(taskbar.mem_draw)
+  #@catch # need sipeed_button
+  def draw():
+    height = int(math.cos(math.pi * launcher.value / 32) * 30 + 100)
+    launcher.value = (launcher.value + 1) % 64
+    pos = draw_dialog_alpha(ui.canvas, 20, height, 200, 20, 10, color=(255, 0, 0), alpha=200)
+    ui.canvas.draw_string(pos[0] + 10, pos[1] + 10, "Welcome to MaixUI", scale=2, color=(0,0,0))
+    ui.display()
+
+  def event():
+    launcher.ctrl.cycle()
 
 if __name__ == "__main__":
-    # gc.collect()
-    print_mem_free()
-    app.run()
+  system = agent()
+  container.reload(launcher)
+
+  last = time.ticks_ms()
+  #container.reload(Loading)
+  while True:
+    while True:
+      last = time.ticks_ms() - 1
+      while True:
+        try:
+          #time.sleep(0.1)
+          print(1000 // (time.ticks_ms() - last), 'fps')
+          last = time.ticks_ms()
+
+          gc.collect()
+          container.forever()
+          system.parallel_cycle()
+
+          protect.keep()
+          #gc.collect()
+          #print_mem_free()
+        except KeyboardInterrupt:
+          protect.stop()
+          raise KeyboardInterrupt
+        #except Exception as e:
+          #gc.collect()
+          #print(e)
+        finally:
+          try:
+            ui.display()
+          except:
+            pass
