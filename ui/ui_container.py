@@ -26,11 +26,11 @@ class container:
     def event():
       pass
 
-  current, backup = demo, None
+  current, temp, history = demo, None, None
 
   def forever():
-    if container.backup != None:
-      container.current, container.backup = container.backup, None
+    if container.temp != None:
+      container.current, container.temp = container.temp, None
       container.current.load()
     if container.current != None:
       container.current.event()
@@ -39,8 +39,10 @@ class container:
     if container.current != None:
       tmp, container.current = container.current, None
       tmp.free()
-      del tmp
-      container.backup = app
+      container.history, container.temp = tmp, app
+
+  def latest():
+    container.reload(container.history)
 
 if __name__ == "__main__":
   from ui.ui_canvas import ui
