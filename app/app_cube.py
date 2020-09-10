@@ -12,14 +12,18 @@ try:
   from dialog import draw_dialog_alpha
   from ui_canvas import ui, print_mem_free
   from ui_container import container
+  from ui_3d_launcher import launcher
   from wdt import protect
+  from button import sipeed_button, button_io
 except ImportError as e:
   print(e)
   from lib.core import agent, system
   from lib.dialog import draw_dialog_alpha
   from ui.ui_canvas import ui, print_mem_free
   from ui.ui_container import container
+  from ui.ui_3d_launcher import launcher
   from driver.wdt import protect
+  from driver.button import sipeed_button, button_io
 
 class launcher:
 
@@ -32,7 +36,8 @@ class launcher:
     def test_once(self):
       container.latest()
       self.remove(test_once)
-    self.ctrl.event(2000, test_once)
+    self.ctrl.event(5000, test_once)
+    button_io.config(10, 11, 16)
 
   def free():
     self = __class__
@@ -40,8 +45,9 @@ class launcher:
 
   @ui.warp_template(ui.blank_draw)
   @ui.warp_template(ui.grey_draw)
-  @ui.warp_template(ui.bg_in_draw)
-  @ui.warp_template(ui.anime_in_draw)
+  #@ui.warp_template(ui.bg_in_draw)
+  #@ui.warp_template(ui.anime_in_draw)
+  @ui.warp_template(launcher.draw)
   #@ui.warp_template(taskbar.time_draw)
   #@ui.warp_template(taskbar.mem_draw)
   #@catch # need sipeed_button
