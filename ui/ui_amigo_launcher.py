@@ -163,7 +163,7 @@ class launcher:
     launcher.agent.event(150, launcher.key_event)
     launcher.agent.event(50, launcher.touch_event)
 
-  def touch_event():
+  def touch_event(args):
     launcher.toth.event()
     #print(launcher.toth.state, launcher.toth.points)
     if launcher.toth.state == 1:
@@ -193,7 +193,7 @@ class launcher:
               print('launcher.app_select', launcher.app_select)
               launcher.app_run = True
 
-  def key_event():
+  def key_event(args):
     launcher.btn.event()
 
     if launcher.btn.back() == 1:
@@ -265,7 +265,7 @@ if __name__ == "__main__":
   from ui_canvas import ui
   ui.height, ui.weight = 480, 320
   button_io.config(23, 31, 20) # amigo
-  TouchLow.config(I2C(I2C.I2C1, freq=400*1000, scl=24, sda=27)) # amigo
+  TouchLow.config(I2C(I2C.I2C3, freq=1000*1000, scl=24, sda=27)) # amigo
   @ui.warp_template(ui.blank_draw)
   @ui.warp_template(launcher.draw)
   @ui.warp_template(ui.bg_in_draw)

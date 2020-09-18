@@ -317,7 +317,7 @@ class AXP173:
 if __name__ == "__main__":
     import time
     # tmp = I2C(I2C.I2C1, freq=100*1000, scl=30, sda=31)
-    tmp = I2C(I2C.I2C1, freq=100*1000, scl=24, sda=27)
+    tmp = I2C(I2C.I2C3, freq=100*1000, scl=24, sda=27)
     axp173 = AXP173(tmp)
     axp173.enable_adc(True)
     # 默认充电限制在 4.2V, 190mA 档位

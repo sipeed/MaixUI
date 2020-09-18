@@ -15,40 +15,18 @@ FT_ID_G_PERIODACTIVE = 0x88
 FT6X36_ADDR = 0x38
 
 class TouchLow:
-  i2c1 = None
+  i2c3 = None
   addr = 0x0
 
-  def config(i2c1, addr=FT6X36_ADDR):
-    TouchLow.i2c1 = i2c1
+  def config(i2c3, addr=FT6X36_ADDR):
+    TouchLow.i2c3 = i2c3
     TouchLow.addr = addr
 
   def write_reg(reg_addr, buf):
-    for i in range(255): # i2c patch
-      try:
-        TouchLow.i2c1.writeto_mem(TouchLow.addr, reg_addr, buf, mem_size=8)
-      except OSError as e:
-          #print(e)
-          from fpioa_manager import fm
-          from Maix import GPIO
-          tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
-          fm.register(tmp, fm.fpioa.GPIOHS15)
-          sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
-          sda.value(1)
-          fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
+    TouchLow.i2c3.writeto_mem(TouchLow.addr, reg_addr, buf, mem_size=8)
 
   def read_reg(reg_addr, buf_len):
-    for i in range(255): # i2c patch
-      try:
-        return TouchLow.i2c1.readfrom_mem(TouchLow.addr, reg_addr, buf_len, mem_size=8)
-      except OSError as e:
-          #print(e)
-          from fpioa_manager import fm
-          from Maix import GPIO
-          tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
-          fm.register(tmp, fm.fpioa.GPIOHS15)
-          sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
-          sda.value(1)
-          fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
+    return TouchLow.i2c3.readfrom_mem(TouchLow.addr, reg_addr, buf_len, mem_size=8)
 
   def config_ft6x36():
     TouchLow.write_reg(FT_DEVIDE_MODE, 0); # 进入正常操作模式
@@ -56,19 +34,20 @@ class TouchLow:
     TouchLow.write_reg(FT_DEVIDE_MODE, 14); # 激活周期，不能小于12，最大14
 
   def get_point():
-    #data = self.read_reg(0x01, 1)
-    #print("get_gesture:" + str(data))
-    data = TouchLow.read_reg(0x02, 1)
-    #print("get_points:" + str(data))
-    if (data != None and data[0] == 0x1):
-        data_buf = TouchLow.read_reg(0x03, 4)
-        y = ((data_buf[0] & 0x0f) << 8) | (data_buf[1])
-        x = ((data_buf[2] & 0x0f) << 8) | (data_buf[3])
-        #print("1 point[{}:{}]".format(x,y))
-        if ((data_buf[0] & 0xc0) == 0x80):
-            #print("2 point[({},{}):({},{})]".format(
-                #x, y,  self.width - x, self.height - y))
-            return (x, y)
+    if TouchLow.i2c3 != None:
+      #data = self.read_reg(0x01, 1)
+      #print("get_gesture:" + str(data))
+      data = TouchLow.read_reg(0x02, 1)
+      #print("get_points:" + str(data))
+      if (data != None and data[0] == 0x1):
+          data_buf = TouchLow.read_reg(0x03, 4)
+          y = ((data_buf[0] & 0x0f) << 8) | (data_buf[1])
+          x = ((data_buf[2] & 0x0f) << 8) | (data_buf[3])
+          #print("1 point[{}:{}]".format(x,y))
+          if ((data_buf[0] & 0xc0) == 0x80):
+              #print("2 point[({},{}):({},{})]".format(
+                  #x, y,  self.width - x, self.height - y))
+              return (x, y)
     return None
 
 class Touch:
@@ -107,7 +86,7 @@ if __name__ == "__main__":
   import lcd
   from machine import I2C
 
-  i2c = I2C(I2C.I2C1, freq=100*1000, scl=24, sda=27)
+  i2c = I2C(I2C.I2C3, freq=1000*1000, scl=24, sda=27) # amigo
   devices = i2c.scan()
   print(devices)
   TouchLow.config(i2c)
@@ -116,4 +95,4 @@ if __name__ == "__main__":
     #tmp.get_point()
     tmp.event()
     print(tmp.state, tmp.points)
-    time.sleep_ms(200)
+    #time.sleep_ms(200)

@@ -66,7 +66,7 @@ try:
     #lcd.direction(0xA8)#修改颜色模式
     #lcd.direction(0xe8)#修改颜色模式
 
-    i2c = I2C(I2C.I2C0, freq=100*1000, scl=24, sda=27)
+    i2c = I2C(I2C.I2C3, freq=1000*1000, scl=24, sda=27)
     print("scan...")
     devices = i2c.scan()
     print(devices)
@@ -101,12 +101,12 @@ try:
         #if sta & 0x0f: # 读取触摸点的状态
         if (data[0] == 0x1): # 读取触摸点 1 的状态
             data_buf =  ft6x36_read_reg(0x03, 4)
-            x = ((data_buf[0]&0x0f)<<8) | (data_buf[1])
-            y = ((data_buf[2]&0x0f)<<8) | (data_buf[3])
+            y = ((data_buf[0]&0x0f)<<8) | (data_buf[1])
+            x = ((data_buf[2]&0x0f)<<8) | (data_buf[3])
             #if ((data_buf[0]&0xc0) == 0x80): # 松开
             print("point[{}:{}]".format(x,y))
             #img.draw_rectangle(x + 1, y + 1, x, y, fill=True, color=(0x00, 0x00, 0xff))
-            img.draw_circle(x, y, 25, fill=True, color=(0x00, 0x00, 0xff))
+            img.draw_circle(x, 320 - y, 5, fill=True, color=(0x00, 0x00, 0xff))
             lcd.display(img)
             if (x<=20 and y<=20):
                 img.clear()

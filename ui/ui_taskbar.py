@@ -50,7 +50,7 @@ class taskbar:
         info = 'Rmnng %s KB' % str(gc.mem_free() / 1024)
         ui.canvas.draw_string(10, 2, info, scale=2)
 
-    def battery_sync():
+    def battery_sync(args):
         try:
             vbat_voltage = taskbar.power.getVbatVoltage() / 1000
             vbat_value = int((vbat_voltage - 3.2) * 100)
@@ -85,11 +85,11 @@ if __name__ == "__main__":
 
     from machine import I2C
     from fpioa_manager import fm
-    fm.register(24,fm.fpioa.I2C1_SCLK, force=True)
-    fm.register(27,fm.fpioa.I2C1_SDA, force=True)
+    #fm.register(24,fm.fpioa.I2C1_SCLK, force=True)
+    #fm.register(27,fm.fpioa.I2C1_SDA, force=True)
     from pmu_axp173 import AXP173
 
-    i2c = I2C(I2C.I2C1, freq=400*1000)
+    i2c = I2C(I2C.I2C3, freq=1000*1000, scl=24, sda=27)
     axp173 = AXP173(i2c_dev=i2c)
     axp173.enable_adc(True)
     # 默认充电限制在 4.2V, 190mA 档位
