@@ -242,34 +242,12 @@ class ES8374:
 
     # read reg value
     def _readReg(self, regAddr):
-        while True:
-            try:
-                self.i2c_bus.writeto(self.i2c_addr, bytes([regAddr]))
-                return (self.i2c_bus.readfrom(self.i2c_addr, 1))[0]
-            except OSError as e:
-                #print(e)
-                from fpioa_manager import fm
-                from Maix import GPIO
-                tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
-                fm.register(tmp, fm.fpioa.GPIOHS15)
-                sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
-                sda.value(1)
-                fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
+        self.i2c_bus.writeto(self.i2c_addr, bytes([regAddr]))
+        return (self.i2c_bus.readfrom(self.i2c_addr, 1))[0]
 
     # write value to reg
     def _writeReg(self, regAddr, data):
-        while True:
-            try:
-                return self.i2c_bus.writeto_mem(self.i2c_addr, regAddr, data, mem_size=8)
-            except OSError as e:
-                #print(e)
-                from fpioa_manager import fm
-                from Maix import GPIO
-                tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
-                fm.register(tmp, fm.fpioa.GPIOHS15)
-                sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
-                sda.value(1)
-                fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
+        return self.i2c_bus.writeto_mem(self.i2c_addr, regAddr, data, mem_size=8)
 
 
     # read all reg value
@@ -423,49 +401,6 @@ class ES8374:
         self._writeReg(0x27, 0x10)#  alc set
         self._writeReg(0x29, 0x00)#  alc set
         self._writeReg(0x2B, 0x00)#  alc set
-
-        # eq filter
-        #  self._writeReg(0x45, 0x03)
-        #  self._writeReg(0x46, 0xF7)
-        #  self._writeReg(0x47, 0xFD)
-        #  self._writeReg(0x48, 0xFF)
-        #  self._writeReg(0x49, 0x1F)
-        #  self._writeReg(0x4A, 0xF7)
-        #  self._writeReg(0x4B, 0xFD)
-        #  self._writeReg(0x4C, 0xFF)
-        #  self._writeReg(0x4D, 0x03)
-        #  self._writeReg(0x4E, 0xF7)
-        #  self._writeReg(0x4F, 0xFD)
-        #  self._writeReg(0x50, 0xFF)
-        #  self._writeReg(0x51, 0x1F)
-        #  self._writeReg(0x52, 0xF7)
-        #  self._writeReg(0x53, 0xFD)
-        #  self._writeReg(0x54, 0xFF)
-        #  self._writeReg(0x55, 0x1F)
-        #  self._writeReg(0x56, 0xF7)
-        #  self._writeReg(0x57, 0xFD)
-        #  self._writeReg(0x58, 0xFF)
-        #  self._writeReg(0x59, 0x03)
-        #  self._writeReg(0x5A, 0xF7)
-        #  self._writeReg(0x5B, 0xFD)
-        #  self._writeReg(0x5C, 0xFF)
-        #  self._writeReg(0x5D, 0x1F)
-        #  self._writeReg(0x5E, 0xF7)
-        #  self._writeReg(0x5F, 0xFD)
-        #  self._writeReg(0x60, 0xFF)
-        #  self._writeReg(0x61, 0x03)
-        #  self._writeReg(0x62, 0xF7)
-        #  self._writeReg(0x63, 0xFD)
-        #  self._writeReg(0x64, 0xFF)
-        #  self._writeReg(0x65, 0x1F)
-        #  self._writeReg(0x66, 0xF7)
-        #  self._writeReg(0x67, 0xFD)
-        #  self._writeReg(0x68, 0xFF)
-        #  self._writeReg(0x69, 0x1F)
-        #  self._writeReg(0x6A, 0xF7)
-        #  self._writeReg(0x6B, 0xFD)
-        #  self._writeReg(0x6C, 0xFF)
-        #  self._writeReg(0x2D, 0x85)
 
         self._writeReg(0x25, 0x00)#  ADCVOLUME on
         self._writeReg(0x38, 0x00)#  DACVOLUME on
@@ -759,57 +694,57 @@ if __name__ == "__main__":
     #fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
     #fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
 
-    i2c = I2C(I2C.I2C1, freq=100*1000) # , sda=31, scl=30
-    #i2c = I2C(I2C.I2C1, freq=600*1000, sda=27, scl=24) # amigo
+    #i2c = I2C(I2C.I2C1, freq=100*1000) # , sda=31, scl=30
+    i2c = I2C(I2C.I2C3, freq=600*1000, sda=27, scl=24) # amigo
 
     #fm.register(30,fm.fpioa.I2C1_SCLK, force=True)
     #fm.register(31,fm.fpioa.I2C1_SDA, force=True)
 
-    fm.register(24,fm.fpioa.I2C1_SCLK, force=True)
-    fm.register(27,fm.fpioa.I2C1_SDA, force=True)
+    #fm.register(24,fm.fpioa.I2C1_SCLK, force=True)
+    #fm.register(27,fm.fpioa.I2C1_SDA, force=True)
 
     while True:
 
         try:
             print(i2c.scan())
 
-            #time.sleep_ms(2000)
+            time.sleep_ms(2000)
 
-            #dev = ES8374(i2c)
+            dev = ES8374(i2c)
 
-            #dev.setVoiceVolume(100)
+            dev.setVoiceVolume(100)
 
-            #dev.start(ES_MODULE._ES_MODULE_ADC_DAC)
+            dev.start(ES_MODULE._ES_MODULE_ADC_DAC)
 
-            ## init i2s(i2s0)
-            #i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
+            # init i2s(i2s0)
+            i2s = I2S(I2S.DEVICE_0, pll2=262144000, mclk=31)
 
-            ## config i2s according to audio info # STANDARD_MODE LEFT_JUSTIFYING_MODE RIGHT_JUSTIFYING_MODE
-            #i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
+            # config i2s according to audio info # STANDARD_MODE LEFT_JUSTIFYING_MODE RIGHT_JUSTIFYING_MODE
+            i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
 
-            #fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
-            #fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
-            #fm.register(18,fm.fpioa.I2S0_WS, force=True)
-            #fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
-            #fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
+            fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
+            fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
+            fm.register(18,fm.fpioa.I2S0_WS, force=True)
+            fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
+            fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
 
-            #i2s.set_sample_rate(22050)
+            i2s.set_sample_rate(22050)
 
-            #player = audio.Audio(path="/sd/record_2.wav", is_create=True, samplerate=22050)
-            #queue = []
-            #for i in range(600):
-             #tmp = i2s.record(1024)
-             #if len(queue) > 0:
-                 #print(time.ticks())
-                 #ret = player.record(queue[0])
-                 #queue.pop(0)
-             #i2s.wait_record()
-             #queue.append(tmp)
-            #player.finish()
+            player = audio.Audio(path="/sd/record_4.wav", is_create=True, samplerate=22050)
+            queue = []
+            for i in range(200):
+             tmp = i2s.record(1024)
+             if len(queue) > 0:
+                 print(time.ticks())
+                 ret = player.record(queue[0])
+                 queue.pop(0)
+             i2s.wait_record()
+             queue.append(tmp)
+            player.finish()
 
-            #del i2s, player
+            del i2s, player
 
-            #time.sleep_ms(2000)
+            time.sleep_ms(2000)
 
             dev = ES8374(i2c)
 
@@ -840,8 +775,8 @@ if __name__ == "__main__":
                 time.sleep_ms(10)
 
                 # init audio
-                player = audio.Audio(path="/sd/12802.wav")
-                #player = audio.Audio(path="/sd/record_2.wav")
+                #player = audio.Audio(path="/sd/res/sound/loop.wav")
+                player = audio.Audio(path="/sd/record_4.wav")
                 player.volume(100)
 
                 # read audio info
