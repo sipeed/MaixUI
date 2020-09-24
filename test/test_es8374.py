@@ -755,7 +755,7 @@ if __name__ == "__main__":
     #fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
     #fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
 
-    i2c = I2C(I2C.I2C1, freq=100*1000) # , sda=31, scl=30
+    i2c = I2C(I2C.I2C1, freq=100*1000, sda=31, scl=30) # , sda=31, scl=30
     #i2c = I2C(I2C.I2C1, freq=600*1000, sda=27, scl=24) # amigo
 
     #fm.register(30,fm.fpioa.I2C1_SCLK, force=True)

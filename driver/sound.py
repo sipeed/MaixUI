@@ -101,31 +101,61 @@ if __name__ == "__main__":
                 #CubeAudio.event()
                 #print(time.ticks_ms())
 
-        #while True:
-        # record to wav
-        print('record to wav')
-        CubeAudio.ready(True)
-        CubeAudio.i2s.set_sample_rate(22050)
+        #from Maix import GPIO, I2S, FFT
+        #import image, lcd, math
+        #from board import board_info
+        #from fpioa_manager import fm
 
-        # init audio
-        player = audio.Audio(path="/sd/record_3.wav",
-                             is_create=True, samplerate=22050)
-        queue = []
-        for i in range(200):
-          tmp = CubeAudio.i2s.record(1024)
-          if len(queue) > 0:
-              print(time.ticks())
-              ret = player.record(queue[0])
-              queue.pop(0)
-          CubeAudio.i2s.wait_record()
-          queue.append(tmp)
-        player.finish()
+        sample_rate = 38640
+        sample_points = 1024
+        #fft_points = 512
+        #hist_x_num = 50
 
-        print('play to wav')
-        CubeAudio.ready()
-        CubeAudio.load("/sd/record_3.wav")
-        while CubeAudio.is_load:
-            #time.sleep_ms(20)
-            CubeAudio.event()
-            print(time.ticks_ms())
+        img = image.Image()
+        if hist_x_num > 320:
+            hist_x_num = 320
+        hist_width = int(320 / hist_x_num)#changeable
+        x_shift = 0
+
+        while True:
+          # record to wav
+          print('record to wav')
+          CubeAudio.ready(True)
+          CubeAudio.i2s.set_sample_rate(sample_rate)
+
+          # init audio
+          player = audio.Audio(path="/sd/record_3.wav",
+                               is_create=True, samplerate=sample_rate)
+          queue = []
+          for i in range(200):
+            tmp = CubeAudio.i2s.record(sample_points)
+            if len(queue) > 0:
+                print(time.ticks())
+                ret = player.record(queue[0])
+                queue.pop(0)
+
+            #fft_res = FFT.run(tmp.to_bytes(), fft_points)
+            #fft_amp = FFT.amplitude(fft_res)
+            #img = img.clear()
+            #x_shift = 0
+            #for i in range(hist_x_num):
+                #if fft_amp[i] > 240:
+                    #hist_height = 240
+                #else:
+                    #hist_height = fft_amp[i]
+                #img = img.draw_rectangle((x_shift,240-hist_height,hist_width,hist_height),[255,255,255],2,True)
+                #x_shift = x_shift + hist_width
+            #lcd.display(img)
+            #fft_amp.clear()
+            #CubeAudio.i2s.wait_record()
+            queue.append(tmp)
+          player.finish()
+
+          print('play to wav')
+          CubeAudio.ready()
+          CubeAudio.load("/sd/record_3.wav")
+          while CubeAudio.is_load:
+              #time.sleep_ms(20)
+              CubeAudio.event()
+              print(time.ticks_ms())
 
