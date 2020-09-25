@@ -1,4 +1,9 @@
-
+# This file is part of MaixUI
+# Copyright (c) sipeed.com
+#
+# Licensed under the MIT license:
+#   http://www.opensource.org/licenses/mit-license.php
+#
 import image
 
 def draw_quadrangle(img, topL, topR, downL, downR, radius, fill=True, color=(255, 0, 0)):
