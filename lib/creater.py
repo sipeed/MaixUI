@@ -10,6 +10,10 @@ def get_time_curve(level=1, scope=500, func=math.sin):
     res = func(time.ticks_ms() / scope / math.pi)
     return pow(res, level) if level != 1 else res
 
+def get_count_curve(count, level=1, scope=500, func=math.sin):
+    res = func(count % scope / math.pi)
+    return pow(res, level) if level != 1 else res
+
 if __name__ == "__main__":
             
     from dialog import draw_dialog_alpha

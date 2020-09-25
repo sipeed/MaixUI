@@ -13,6 +13,7 @@ try:
   from ui_canvas import ui, print_mem_free
   from ui_container import container
   from wdt import protect
+  from creater import get_time_curve
 except ImportError as e:
   print(e)
   from lib.core import agent, system
@@ -20,11 +21,11 @@ except ImportError as e:
   from ui.ui_canvas import ui, print_mem_free
   from ui.ui_container import container
   from driver.wdt import protect
+  from lib.creater import get_time_curve
 
 class launcher:
 
   def load():
-    __class__.value = 0
     __class__.ctrl = agent()
     __class__.ctrl.event(20, __class__.draw)
 
@@ -40,8 +41,7 @@ class launcher:
   #@ui.warp_template(taskbar.mem_draw)
   #@catch # need sipeed_button
   def draw():
-    height = int(math.cos(math.pi * __class__.value / 32) * 30 + 100)
-    __class__.value = (__class__.value + 1) % 64
+    height = 100 + int(get_time_curve(3, 250) * 60)
     pos = draw_dialog_alpha(ui.canvas, 20, height, 200, 20, 10, color=(255, 0, 0), alpha=200)
     ui.canvas.draw_string(pos[0] + 10, pos[1] + 10, "Welcome to MaixUI", scale=2, color=(0,0,0))
     ui.display()
