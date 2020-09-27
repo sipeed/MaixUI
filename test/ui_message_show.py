@@ -75,25 +75,92 @@ class message:
   def event():
     __class__.ctrl.parallel_cycle()
 
-class slide_list:
+class slide_view:
 
   def load():
     __class__.state = 0
-    __class__.lists = ['123', '456', '789', 'abc', 'efg']
-    __class__.selected = 0
     __class__.limit = 100
     __class__.count = 0
     __class__.ctrl = agent()
     __class__.ctrl.event(20, __class__.draw)
     def test_once(self):
-        #self.remove(test_once)
+        self.remove(test_once)
+        if __class__.state == 0:
+            __class__.state = 1
+    __class__.ctrl.event(1000, test_once)
+    def test_task(self):
         if __class__.state == 0:
             __class__.state = 1
         if __class__.state == 2:
             __class__.state = 3
-            #__class__.selected = (__class__.selected + 1) % len(__class__.lists)
+    __class__.ctrl.event(3000, test_task)
 
-    __class__.ctrl.event(2000, test_once)
+
+  def free():
+    __class__.ctrl = None
+
+  def get_curve():
+      __class__.count += 1
+      return abs(int(get_count_curve(__class__.count + 25, 3, 50) * __class__.limit))
+
+  def show_slide():
+      l, r, w, h = 20, 210, 200, 40
+      if __class__.state == 1:
+          value = __class__.get_curve()
+          pos = draw_dialog_alpha(ui.canvas, l, r + value // 2, w, h, 10, color=(255, 0, 0), alpha=200 - value)
+          pos = draw_dialog_alpha(ui.canvas, l + 50, r - 220 - value // 2, w - 100, h, 10, color=(0, 0, 255), alpha=200 - value)
+          if value <= 5:
+              __class__.state = 2
+
+      if __class__.state == 2:
+          text = "It will show Message"
+          pos = draw_dialog_alpha(ui.canvas, l, r, w, h, 10, color=(255, 0, 0), alpha=220)
+          ui.canvas.draw_string(pos[0] + 8, pos[1] + 10, text, scale=2, color=(0, 0, 0))
+          text = "   Camera"
+          pos = draw_dialog_alpha(ui.canvas, l + 50, r - 220, w - 100, h, 10, color=(0, 0, 255), alpha=220)
+          ui.canvas.draw_string(pos[0] + 8, pos[1] + 25, text, scale=2, color=(0, 0, 0))
+
+      if __class__.state == 3:
+          value = __class__.get_curve()
+          pos = draw_dialog_alpha(ui.canvas, l, r + value // 2, w, h, 10, color=(255, 0, 0), alpha=200 - value)
+          pos = draw_dialog_alpha(ui.canvas, l + 50, r - 220 - value // 2, w - 100, h, 10, color=(0, 0, 255), alpha=200 - value)
+          if value >= __class__.limit - 5:
+              __class__.state = __class__.count = 0
+              #container.latest()
+
+  @ui.warp_template(ui.blank_draw)
+  @ui.warp_template(ui.grey_draw)
+  @ui.warp_template(ui.bg_in_draw)
+  @ui.warp_template(ui.anime_in_draw)
+  def draw():
+      __class__.show_slide()
+
+      ui.display()
+  def event():
+    __class__.ctrl.parallel_cycle()
+
+class shift_view:
+
+  def load():
+    __class__.state = 0
+    __class__.lists = ['', '456789', '789abc', 'abcefg', '']
+    __class__.selected = 0
+    __class__.limit = 90
+    __class__.count = 0
+    __class__.ctrl = agent()
+    __class__.ctrl.event(20, __class__.draw)
+    #def test_once(self):
+        #self.remove(test_once)
+        #if __class__.state == 0:
+            #__class__.state = 1
+    #__class__.ctrl.event(1000, test_once)
+    def test_task(self):
+        __class__.count = 0
+        if time.ticks_ms() % 2:
+            __class__.state = 1
+        else:
+            __class__.state = 3
+    __class__.ctrl.event(1000, test_task)
 
   def free():
     __class__.ctrl = None
@@ -101,39 +168,46 @@ class slide_list:
   @ui.warp_template(ui.blank_draw)
   @ui.warp_template(ui.grey_draw)
   @ui.warp_template(ui.bg_in_draw)
+  @ui.warp_template(ui.anime_in_draw)
   def draw():
-      l, r, w, h = 20, 185, 200, 55
-      if __class__.state == 1:
-          __class__.count += 1
-          value = abs(int(get_count_curve(__class__.count + 25, 3, 50) * __class__.limit))
-          #print(value)
+    x, y, w, h = -80, 210, 400, 40
 
-          pos = draw_dialog_alpha(ui.canvas, l, r + value // 2, w, h, 10, color=(255, 0, 0), alpha=200 - value)
-          if value == 0:
-              __class__.state = 2
+    v = 0
 
-      if __class__.state == 2:
+    if __class__.state == 1:
+        __class__.count += 1
+        v = (int(get_count_curve(__class__.count, 2, 120) * __class__.limit))
+        if v > __class__.limit // 2:
+            __class__.state = 2
 
-          pos = draw_dialog_alpha(ui.canvas, l, r, w, h, 10, color=(255, 0, 0), alpha=250)
-          text = "It will show Message"
+    if __class__.state == 3:
+        __class__.count -= 1
+        v = -(int(get_count_curve(__class__.count, 2, 120) * __class__.limit))
+        if v < -__class__.limit // 2:
+            __class__.state = 4
 
-          chunks, chunk_size = len(text), w // 11
-          msg_lines = [text[i:i+chunk_size] for i in range(0, chunks, chunk_size)]
-          for i in range(len(msg_lines)):
-              ui.canvas.draw_string(pos[0] + 16, pos[1] + 8 + 26 * i, msg_lines[i], scale=2, color=(0, 0, 0))
+    tmp = image.Image(size=(w, h))
+    tmp.draw_rectangle((0, 0, w, h), fill=True, color=(120, 120, 120))
+    for i in range(0, w, 80):
+        c = (200, 200, 200)
+        if i == 160:
+            c = (255, 255, 255)
+        tmp.draw_string(i + 5, 5, __class__.lists[i // 80], scale=2, color=c)
+    ui.canvas.draw_image(tmp, x - v, y, alpha=255)
+    del tmp
 
-      if __class__.state == 3:
-          __class__.count += 1
-          value = abs(int(get_count_curve(__class__.count + 25, 3, 50) * __class__.limit))
-          #print(value)
+    if __class__.state == 2:
+        if __class__.lists[-2] != '':
+            __class__.lists.append(__class__.lists.pop(0))
+        __class__.state = 0
 
-          pos = draw_dialog_alpha(ui.canvas, l, r + value // 2, w, h, 10, color=(255, 0, 0), alpha=200 - value)
-          if value >= __class__.limit - 5:
-              #container.latest()
-              __class__.count = 0
-              __class__.state = 0
+    if __class__.state == 4:
+        if __class__.lists[1] != '':
+            __class__.lists.insert(0, __class__.lists.pop(-1))
+        __class__.state = 0
 
-      ui.display()
+    ui.display()
+
   def event():
     __class__.ctrl.parallel_cycle()
 
@@ -144,7 +218,7 @@ class launcher:
     self.ctrl = agent()
     self.ctrl.event(10, self.draw)
     def show_message(self):
-      container.reload(slide_list)
+      container.reload(slide_view)
       self.remove(show_message)
     self.ctrl.event(2000, show_message)
 
@@ -169,24 +243,22 @@ class launcher:
 if __name__ == "__main__":
 
   system = agent()
-  container.reload(slide_list)
+  container.reload(shift_view)
 
   while True:
     while True:
       last = time.ticks_ms() - 1
       while True:
+        print(1000 // (time.ticks_ms() - last), 'fps')
+        last = time.ticks_ms()
         try:
-          #time.sleep(0.1)
-          print(1000 // (time.ticks_ms() - last), 'fps')
-          last = time.ticks_ms()
-
           gc.collect()
           container.forever()
           system.parallel_cycle()
-
           protect.keep()
           #gc.collect()
           #print_mem_free()
+          #time.sleep(0.05)
         except KeyboardInterrupt:
           protect.stop()
           raise KeyboardInterrupt
