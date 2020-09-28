@@ -1,18 +1,5 @@
 import json
 
-cube = {
-  "type": "cube",
-  "lcd": {
-      "height": 240,
-      "width": 240,
-      "invert": 1,
-      "dir": 96
-  },
-  "freq_cpu": 416000000,
-  "freq_pll1": 400000000,
-  "kpu_div": 1
-}
-
 amigo = {
   "type": "amigo",
   "lcd": {
@@ -33,14 +20,34 @@ amigo = {
   "kpu_div": 1
 }
 
-#data = amigo
-data = cube
+cube = {
+  "type": "cube",
+  "lcd": {
+      "height": 240,
+      "width": 240,
+      "invert": 1,
+      "dir": 96
+  },
+  "freq_cpu": 416000000,
+  "freq_pll1": 400000000,
+  "kpu_div": 1
+}
+
+data = amigo
+#data = cube
 
 cfg = json.dumps(data)
 #print(cfg)
 
-with open('/flash/config.json', "w") as f:
+try:
+  with open('/flash/config.json', 'rb') as f:
+    tmp = json.loads(f.read())
+    print(tmp)
+    if tmp["type"] != data["type"]:
+      raise Exception('config.json no exist')
+except Exception as e:
+  with open('/flash/config.json', "w") as f:
     f.write(cfg)
+  import machine
+  machine.reset()
 
-import machine
-machine.reset()
