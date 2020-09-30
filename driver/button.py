@@ -17,13 +17,13 @@ class button_io:
     back_button = None
 
     def config(ENTER=10, BACK=11, NEXT=16):
-        fm.fpioa.set_function(pin=ENTER, func=fm.fpioa.GPIOHS0)
-        fm.fpioa.set_function(pin=BACK, func=fm.fpioa.GPIOHS1)
-        fm.fpioa.set_function(pin=NEXT, func=fm.fpioa.GPIOHS6)
-
-        button_io.home_button = GPIO(GPIO.GPIOHS0, GPIO.IN, GPIO.PULL_UP)
-        button_io.next_button = GPIO(GPIO.GPIOHS1, GPIO.IN, GPIO.PULL_UP)
-        button_io.back_button = GPIO(GPIO.GPIOHS6, GPIO.IN, GPIO.PULL_UP)
+        fm.fpioa.set_function(pin=ENTER, func=fm.fpioa.GPIOHS0 + ENTER)
+        fm.fpioa.set_function(pin=NEXT, func=fm.fpioa.GPIOHS0 + NEXT)
+        fm.fpioa.set_function(pin=BACK, func=fm.fpioa.GPIOHS0 + BACK)
+                
+        button_io.home_button = GPIO(GPIO.GPIOHS0 + ENTER, GPIO.IN, GPIO.PULL_UP)
+        button_io.next_button = GPIO(GPIO.GPIOHS0 + NEXT, GPIO.IN, GPIO.PULL_UP)
+        button_io.back_button = GPIO(GPIO.GPIOHS0 + BACK, GPIO.IN, GPIO.PULL_UP)
 
 
 Match = [[(1, 0), (1, 0)], [(2, 1), None]] # 0 1 1 2 0
