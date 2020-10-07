@@ -5,7 +5,7 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import time, gc, math
+import time, gc, math, sys
 
 try:
   from core import agent, system
@@ -15,7 +15,7 @@ try:
   from wdt import protect
   from creater import get_time_curve
 except ImportError as e:
-  print(e)
+  sys.print_exception(e)
   from lib.core import agent, system
   from lib.dialog import draw_dialog_alpha
   from ui.ui_canvas import ui, print_mem_free
@@ -50,10 +50,7 @@ class launcher:
     __class__.ctrl.cycle()
 
 if __name__ == "__main__":
-  system = agent()
   container.reload(launcher)
-
-  last = time.ticks_ms()
   while True:
     while True:
       last = time.ticks_ms() - 1
