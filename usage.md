@@ -1,10 +1,10 @@
-# 使用指导
+# MaixUI 基础使用指导
 
 如何正确的食用 MaixUI 项目？
 
 ## 为什么要开发它？它的意义和存在价值是什么？
 
-在任何芯片下永远存在对 UI 框架的基本需求，但由于 K210 无法在支持 Ai 功能的情况下继续使用 LVGL 环境，导致失去了本来存在的意义。
+在任何芯片下永远存在对 UI 框架的基本需求，但由于 K210 无法在支持 Ai 功能的情况下继续使用 LVGL 环境，导致 UI 失去了本来存在的意义。
 
 也就是在不能用 QT 也不能用 LVGL 的时候，又希望能够使用 Python 编写 UI 应用，所以才诞生了基于 image 的 MaixUI UI 框架。
 
@@ -42,7 +42,7 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import time, gc, math
+import time, gc, math, sys
 
 try:
   from core import agent, system
@@ -52,7 +52,7 @@ try:
   from wdt import protect
   from creater import get_time_curve
 except ImportError as e:
-  print(e)
+  sys.print_exception(e)
   from lib.core import agent, system
   from lib.dialog import draw_dialog_alpha
   from ui.ui_canvas import ui, print_mem_free
@@ -62,10 +62,10 @@ except ImportError as e:
 
 ```
 
-引用依赖的基础代码，分别使用了以下几个代码：
+分别是运行它所需要 import 的依赖代码，有如下依赖：
 
 - from core import agent, system
-  - 提供一个 agent 软定时器，和全局实例 system 。
+  - 提供一个 agent 软定时器和一个全局实例 system 软定时器对象。
 - from dialog import draw_dialog_alpha
   - 提供了一个圆角边框 MessageBox 控件的绘图操作。
 - from ui_canvas import ui, print_mem_free
@@ -79,9 +79,12 @@ except ImportError as e:
 
 这两段代码是用来 import 加载到不同区域（在 Flash/SD 的根目录或文件夹下）的代码，所以你知道怎么 import 代码了就行。
 
+- 可以使用 MaixPy IDE 发送文件，也可以使用 [mpfshell-lite](github.com/junhuanchen/mpfshell-lite) put 文件到硬件的 flash 或 sd 中。
+- 可以使用 SD 读卡器，把整个 maixui 仓库下的文件夹放到 SD 卡中启动即可。
+
 ### 定义 UI 应用
 
-接着介绍一种典型的基础应用的案例，如下代码 class launcher 静态类。
+接着介绍一种典型的基础应用的案例，准备如下代码（class launcher 静态类）。
 
 ```python
 
@@ -130,7 +133,7 @@ class launcher:
     __class__.ctrl.event(20, __class__.draw)
 ```
 
-然后在在 event 维持 软定时器 的分时事件（非阻塞 no-block），基于此设计你可以制作很多个不同定时的分时任务。
+然后在 event 函数中维持 软定时器 ctrl 拥有的分时事件（非阻塞 no-block），因此基于此设计你可以制作很多个不同定时的分时任务。
 
 ```python
     __class__.ctrl.cycle()
@@ -149,7 +152,7 @@ class launcher:
     self.ctrl.event(2000, into_launcher)
 ```
 
-然后我们看到具体的 UI 绘图事件，不同于按键/触摸等硬件驱动事件，但无论是哪类事件，我们都期望能够尽快结束当前任务。
+接着我们看到具体的 UI 绘图事件，不同于按键/触摸等硬件驱动事件，但无论是哪类事件，我们都期望它能够尽快结束，交出运行核心。
 
 ```python
   @ui.warp_template(ui.blank_draw)
@@ -227,7 +230,7 @@ if __name__ == "__main__":
 
 ```
 
-然后我们加强一下环境的稳定性，加入看门狗的维持（protect.keep()）和 GC 内存回收（gc.collect()），还有维持一个全局的软定时器（system.parallel_cycle()）。
+然后我们加强一下环境的稳定性，加入看门狗的维持（protect.keep()）和 GC 内存回收（gc.collect()），还有维持一个全局的软定时器（system.parallel_cycle()），用作全局的定时器线程。
 
 ```python
 
@@ -263,12 +266,12 @@ if __name__ == "__main__":
 
 ```
 
-- 可以通过 time.sleep(0.1) 来降低 UI 容器的执行速率来观察 UI 的变化状态是否符合预期，有时候高于 15 fps 的变化人眼感知不到，就可以减少不必要的绘图过程，压缩过程提高性能。
-- 可以通过 except Exception as e: 来保证任何异常都不会导致 UI 框架的崩溃，但调试的时候可以把这个注释来捕获可能出现的异常。
+- 你可以通过 time.sleep(0.1) 来降低 UI 容器的执行速率来观察 UI 的变化状态是否符合预期，有时候高于 15 fps 的变化人眼感知不到，就可以减少不必要的绘图过程，压缩绘图过程提高性能。
+- 你可以通过 except Exception as e: 来保证任何异常都不会导致 UI 框架的崩溃，但调试的时候可以把这个注释，来捕获可能出现的异常。
 
 > 默认情况下程序超过 10 秒没有执行 protect.keep() 重置看门狗，则系统自动重启，这从 import wdt 驱动的时候就开始计时了，详细可以看 [driver/wdt.py](driver/wdt.py) 驱动。
 
-最后加入捕获 KeyboardInterrupt 异常事件来保证程序可以在 IDE 或 Ctrl + C 输入后，停下来并被重新运行，并停下看门狗事件（protect.stop()），同时在最后还要试图执行 ui.display() 防止绘图事件中存在异常导致没有释放画布，保证 image 画布对象永远都能够被释放。
+最后再加入捕获 KeyboardInterrupt 异常事件来保证程序可以在 IDE 或 Ctrl + C 输入后，停下来并被重新运行，并停下看门狗事件（protect.stop()），同时还要在 finally 中试图执行 ui.display() 防止绘图事件中存在异常导致没有释放画布，保证 image 画布对象永远都能在循环的最后被释放。
 
 ```python
   try:
@@ -292,10 +295,10 @@ if __name__ == "__main__":
 
 ### 最后
 
-这只是介绍你如何运行最简单的示例，如果想看更多示例，可以参考 [app_cube.py](app/app_cube.py) & [app_amigo.py](app/app_amigo.py) 两个案例。
+本文档介绍如何运行最基础的示例，如果想看更多示例，可以参考 [app_cube.py](app/app_cube.py) & [app_amigo.py](app/app_amigo.py) 两个案例。
 
-截至目前 2020年10月7日 已经完成 MaixPy 的常见功能使用的 App 案例，不过这需要你亲自烧写一下体验看看了 XD ， 说明里只有一点简单的交互与动画展示。
+> 截至目前 2020年10月7日 已经完成 MaixPy 的常见功能使用的 App 案例，不过这需要你亲自烧写一下体验看看了 XD ， 说明里只有一点简单的交互与动画展示。
 
-执行效果如下：
+目前 app_main.py 运行效果如下：
 
 ![](./image/app_main.gif)
