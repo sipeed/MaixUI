@@ -14,10 +14,7 @@ amigo = {
       "mosi":10,
       "miso":6,
       "cs":26
-  },
-  "freq_cpu": 416000000,
-  "freq_pll1": 400000000,
-  "kpu_div": 1
+  }
 }
 
 cube = {
@@ -27,10 +24,7 @@ cube = {
       "width": 240,
       "invert": 1,
       "dir": 96
-  },
-  "freq_cpu": 416000000,
-  "freq_pll1": 400000000,
-  "kpu_div": 1
+  }
 }
 
 data = amigo

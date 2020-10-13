@@ -52,7 +52,7 @@ class app:
     toth = Touch(480, 320, 50)
     touch_select = 0
     msa301 = None
-    i2c1 = None
+    i2c4 = None
 
     touch_left = b"\x00\x00\x00\x00\x03\x0F\x3F\xFF\xFF\x3F\x0F\x03\x00\x00\x00\x00\x07\x0F\x3F\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x3F\x0F\x03"
     touch_right = b"\xE0\xF0\xFC\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFC\xF0\xC0\x00\x00\x00\x00\xC0\xF0\xFC\xFF\xFF\xFC\xF0\xC0\x00\x00\x00\x00"
@@ -247,13 +247,7 @@ class app:
                     ui.canvas.draw_circle(x + int(accel[0] * 15), y + int(accel[1] * 20), int(value) + 1, thickness=3, fill=False, color=(0, 0, 0))  # 10ms
                 else:
 
-                    tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
-                    fm.register(tmp, fm.fpioa.GPIOHS15)
-                    sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
-                    sda.value(1)
-                    fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
-
-                    app.msa301 = MSA301(app.i2c1)
+                    app.msa301 = MSA301(app.i2c4)
                 break
             except Exception as e:
                 pass
@@ -476,8 +470,6 @@ class app:
             app.current = pages()
             app.current.tips = "Weclome to Maix Amigo"
         elif selected == 2:
-            fm.register(9, fm.fpioa.I2C0_SCLK, force=True)
-            fm.register(7, fm.fpioa.I2C0_SDA, force=True)
             CubeAudio.load(os.getcwd() + "/res/sound/loop.wav", 100)
             app.points=[]
             pass
@@ -586,40 +578,21 @@ class app:
         sipeed_led.init(14, 15, 17, 32)
 
 
-        app.i2c0 = I2C(I2C.I2C0, freq=100*1000)
-        app.i2c1 = I2C(I2C.I2C1, freq=100*1000)
-        fm.register(24,fm.fpioa.I2C1_SCLK, force=True)
-        fm.register(27,fm.fpioa.I2C1_SDA, force=True)
+        app.i2c3 = I2C(I2C.I2C3, freq=100*1000, scl=24, sda=27)
+        app.i2c4 = I2C(I2C.I2C4, freq=100*1000, scl=9, sda=7)
 
-        print('monkey patch & config for i2c')
-        TouchLow.config(i2c1=app.i2c1) # amigo
+        TouchLow.config(i2c3=app.i2c3) # amigo
 
-        for i in range(100):
-            try:
-                tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C1_SDA)
-                fm.register(tmp, fm.fpioa.GPIOHS15)
-                sda = GPIO(GPIO.GPIOHS15, GPIO.OUT)
-                sda.value(1)
-                fm.register(tmp, fm.fpioa.I2C1_SDA, force=True)
-
-                #if AXP173_ADDR in i2c.scan():
-                axp173 = AXP173(i2c_dev=app.i2c1)
-                axp173.enable_adc(True)
-                # 默认充电限制在 4.2V, 190mA 档位
-                axp173.setEnterChargingControl(True)
-                axp173.exten_output_enable()
-                # amigo sensor config.
-                axp173.writeREG(0x27, 0x20)
-                axp173.writeREG(0x28, 0x0C)
-                taskbar.init(axp173)
-
-                break
-            except Exception as e:
-                # gc.collect()
-                pass
-
-                #if i == 99:
-                    #raise(e)
+        #if AXP173_ADDR in i2c.scan():
+        axp173 = AXP173(i2c_dev=app.i2c3)
+        axp173.enable_adc(True)
+        # 默认充电限制在 4.2V, 190mA 档位
+        axp173.setEnterChargingControl(True)
+        axp173.exten_output_enable()
+        # amigo sensor config.
+        axp173.writeREG(0x27, 0x20)
+        axp173.writeREG(0x28, 0x0C)
+        taskbar.init(axp173)
 
         if CubeAudio.check():
             CubeAudio.ready()
