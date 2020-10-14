@@ -16,6 +16,7 @@ try:
   from wdt import protect
   from button import sipeed_button, button_io
 except ImportError as e:
+  sys.print_exception(e)
   print(e)
   from lib.core import agent, system
   from lib.dialog import draw_dialog_alpha
