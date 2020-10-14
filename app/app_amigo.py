@@ -247,7 +247,7 @@ class app:
                     ui.canvas.draw_circle(x + int(accel[0] * 15), y + int(accel[1] * 20), int(value) + 1, thickness=3, fill=False, color=(0, 0, 0))  # 10ms
                 else:
 
-                    app.msa301 = MSA301(app.i2c4)
+                    app.msa301 = MSA301(app.i2c3)
                 break
             except Exception as e:
                 pass
@@ -295,7 +295,6 @@ class app:
         app.touch_draw()
         ui.display()
 
-    i2c0 = None
     sht3x = None
     sidu = None
     temp = 0
@@ -316,35 +315,19 @@ class app:
         try:
             CubeAudio.event()
             if app.isconnected == False:
-                #if app.loop % 10 == 0:
-                    # tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C0_SDA)
-                    # fm.register(tmp, fm.fpioa.GPIOHS14)
-                    # sda = GPIO(GPIO.GPIOHS14, GPIO.OUT)
-                    # sda.value(1)
-                    # fm.register(tmp, fm.fpioa.I2C0_SDA, force=True)
-
-                    # print(app.loop)
-                #print(app.i2c0.scan())
-
-                #tmp = fm.fpioa.get_Pin_num(fm.fpioa.I2C0_SDA)
-                #fm.register(tmp, fm.fpioa.GPIOHS14)
-                #sda = GPIO(GPIO.GPIOHS14, GPIO.OUT)
-                #sda.value(1)
-                #fm.register(tmp, fm.fpioa.I2C0_SDA, force=True)
-
                 CubeAudio.event()
 
                 if app.loop % 5 == 1:
-                    result = app.i2c0.scan()
+                    result = app.i2c4.scan()
                     ui.canvas.draw_string(290, 80, "Scan Dev: " + str(result),
                                           color=(140 + int(value) * 5, 240 + int(value) * 5, 140 + int(value) * 5), scale=2, mono_space=0)
 
                     if SHT3x_ADDR in result:
-                        app.sht3x = SHT3x(app.i2c0, SHT3x_ADDR)
+                        app.sht3x = SHT3x(app.i2c4, SHT3x_ADDR)
                         app.isconnected = True
                     CubeAudio.event()
                     if SHT31_ADDR in result:
-                        app.sht3x = SHT3x(app.i2c0, SHT31_ADDR)
+                        app.sht3x = SHT3x(app.i2c4, SHT31_ADDR)
                         app.isconnected = True
                     CubeAudio.event()
 
@@ -570,11 +553,11 @@ class app:
 
     def run():
         # debug into app_select
-        launcher.app_select = 0
-        app.layer = 2
+        launcher.app_select = 2
+        app.layer = 1
 
         ui.height, ui.weight = 480, 320
-        button_io.config(23, 31, 20) # amigo
+        button_io.config(23, 20, 31) # amigo
         sipeed_led.init(14, 15, 17, 32)
 
 
@@ -594,6 +577,7 @@ class app:
         axp173.writeREG(0x28, 0x0C)
         taskbar.init(axp173)
 
+        CubeAudio.init(app.i2c3)
         if CubeAudio.check():
             CubeAudio.ready()
             fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
