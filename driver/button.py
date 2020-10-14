@@ -17,9 +17,9 @@ class button_io:
     back_button = None
 
     def config(ENTER=10, BACK=11, NEXT=16):
-        fm.fpioa.set_function(pin=ENTER, func=fm.fpioa.GPIOHS0 + ENTER)
-        fm.fpioa.set_function(pin=NEXT, func=fm.fpioa.GPIOHS0 + NEXT)
-        fm.fpioa.set_function(pin=BACK, func=fm.fpioa.GPIOHS0 + BACK)
+        fm.register(ENTER, fm.fpioa.GPIOHS0 + ENTER, force=True)
+        fm.register(NEXT, fm.fpioa.GPIOHS0 + NEXT, force=True)
+        fm.register(BACK, fm.fpioa.GPIOHS0 + BACK, force=True)
                 
         button_io.home_button = GPIO(GPIO.GPIOHS0 + ENTER, GPIO.IN, GPIO.PULL_UP)
         button_io.next_button = GPIO(GPIO.GPIOHS0 + NEXT, GPIO.IN, GPIO.PULL_UP)
@@ -141,7 +141,7 @@ class ttgo_button:
             'home': 0,
         }
 
-        fm.register(ttgo_button.PIR, fm.fpioa.GPIOHS16)
+        fm.register(ttgo_button.PIR, fm.fpioa.GPIOHS16, force=True)
         self.home_button = GPIO(GPIO.GPIOHS16, GPIO.IN, GPIO.PULL_UP)
 
     def home(self):

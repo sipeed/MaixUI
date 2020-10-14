@@ -11,11 +11,11 @@ print(tmp)
 
 CubeAudio.ready(volume=100)
 
-fm.fpioa.set_function(13,fm.fpioa.I2S0_MCLK)
-fm.fpioa.set_function(21,fm.fpioa.I2S0_SCLK)
-fm.fpioa.set_function(18,fm.fpioa.I2S0_WS)
-fm.fpioa.set_function(35,fm.fpioa.I2S0_IN_D0)
-fm.fpioa.set_function(34,fm.fpioa.I2S0_OUT_D2)
+fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
+fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
+fm.register(18,fm.fpioa.I2S0_WS, force=True)
+fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
+fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
 
 import video
 v = video.open("/sd/badapple_320_240_15fps.avi")

@@ -7,10 +7,10 @@ class sipeed_led:
     r, g, b, w = None, None, None, None
 
     def init(r = 13, g = 12, b = 14, w = 32):
-        fm.register(r, fm.fpioa.GPIOHS13)
-        fm.register(g, fm.fpioa.GPIOHS12)
-        fm.register(b, fm.fpioa.GPIOHS14)
-        fm.register(w, fm.fpioa.GPIOHS3)
+        fm.register(r, fm.fpioa.GPIOHS13, force=True)
+        fm.register(g, fm.fpioa.GPIOHS12, force=True)
+        fm.register(b, fm.fpioa.GPIOHS14, force=True)
+        fm.register(w, fm.fpioa.GPIOHS3, force=True)
 
         sipeed_led.r = GPIO(GPIO.GPIOHS13, GPIO.OUT, value=1)
         sipeed_led.g = GPIO(GPIO.GPIOHS12, GPIO.OUT, value=1)
