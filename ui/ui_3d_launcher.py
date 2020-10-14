@@ -69,7 +69,7 @@ class launcher:
   def init():
     launcher.agent.event(100, launcher.key_event)
 
-  def key_event(args):
+  def key_event():
     launcher.btn.event()
 
     if launcher.btn.back() == 1:

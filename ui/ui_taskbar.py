@@ -50,7 +50,7 @@ class taskbar:
         info = 'Rmnng %s KB' % str(gc.mem_free() / 1024)
         ui.canvas.draw_string(10, 2, info, scale=2)
 
-    def battery_sync(args):
+    def battery_sync():
         try:
             vbat_voltage = taskbar.power.getVbatVoltage() / 1000
             vbat_value = int((vbat_voltage - 3.2) * 100)

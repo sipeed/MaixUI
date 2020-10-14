@@ -163,7 +163,7 @@ class launcher:
     launcher.agent.event(150, launcher.key_event)
     launcher.agent.event(50, launcher.touch_event)
 
-  def touch_event(args):
+  def touch_event():
     launcher.toth.event()
     #print(launcher.toth.state, launcher.toth.points)
     if launcher.toth.state == 1:
@@ -193,7 +193,7 @@ class launcher:
               print('launcher.app_select', launcher.app_select)
               launcher.app_run = True
 
-  def key_event(args):
+  def key_event():
     launcher.btn.event()
 
     if launcher.btn.back() == 1:
