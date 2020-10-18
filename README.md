@@ -52,6 +52,8 @@ Enjoy it! 🤡
 
 ## Get-started
 
+> 群里传送过来的朋友，可以通过 [usage.md](usage.md) 学习 MicroPython / MaixUI 开发方式。
+
 #### run build_flash_fs.py
 
 Use [/build_flash_fs.py](/build_flash_fs.py) to package all the files into fs folder and can move to Flash or SD card.
