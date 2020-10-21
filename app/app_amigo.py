@@ -5,11 +5,7 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-import time
-import gc
-import math
-import ulab
-import image
+import time, gc, math, image
 
 from pmu_axp173 import AXP173, AXP173_ADDR
 from machine import I2C
@@ -372,7 +368,7 @@ class app:
                         ui.canvas.draw_circle(b[0], b[1], 3, fill=False, color=(155, 155, 155))
                         ui.canvas.draw_line(a[0], a[1], b[0], b[1], thickness=4, color=(255,255,255))
 
-                ui.canvas.draw_string(60, 280, "Average temperature: %s" % str(ulab.mean(app.points) / 10.0),
+                ui.canvas.draw_string(60, 280, "Average temperature: %s" % str(sum(app.points) / len(app.points) / 10.0),
                                       color=(240 + int(value) * 5, 240 + int(value) * 5, 240 + int(value) * 5), scale=2, mono_space=0)
 
             CubeAudio.event()
@@ -553,8 +549,8 @@ class app:
 
     def run():
         # debug into app_select
-        launcher.app_select = 2
-        app.layer = 1
+        # launcher.app_select = 2
+        # app.layer = 1
 
         ui.height, ui.weight = 480, 320
         button_io.config(23, 20, 31) # amigo
