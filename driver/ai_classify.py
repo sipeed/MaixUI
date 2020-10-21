@@ -6,7 +6,7 @@
 #
 
 from ui_canvas import ui
-import camera
+import camera, os
 import KPU as kpu
 
 # classify20

@@ -15,16 +15,18 @@ try:
     from button import sipeed_button, button_io
     import camera
     from ai_track import find_color
-    from classify20 import HowMany, MaybeIs
+    from ai_classify import HowMany, MaybeIs, MoblieNet
     from ai_face import FaceReco, FaceDetect
+    from ai_ocr import Minist
     from led import sipeed_led
 except ImportError:
     from ui.ui_canvas import ui
     from driver.button import sipeed_button, button_io
     import driver.camera as camera
     from driver.ai_track import find_color
-    from driver.classify20 import HowMany, MaybeIs
+    from driver.ai_classify import HowMany, MaybeIs, MoblieNet
     from driver.ai_face import FaceReco, FaceDetect
+    from driver.ai_ocr import Minist
     from driver.led import sipeed_led
 
 import KPU as kpu
@@ -54,7 +56,7 @@ class ai_sample():
 
 class ai_camera():
 
-    index, model, models = 0, ai_sample, [ai_sample, FaceDetect, FaceReco, find_color, HowMany, MaybeIs]
+    index, model, models = 0, ai_sample, [ai_sample, FaceDetect, FaceReco, find_color, HowMany, MaybeIs, MoblieNet, Minist]
     btn, replace = sipeed_button(), False
     backlight = 1
 
