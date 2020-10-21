@@ -103,9 +103,7 @@ class PowerTest():
 
     def __init__(self):
         self.is_load = False
-        self.i2c = I2C(I2C.I2C1, freq=100*1000)
-        #fm.register(30, fm.fpioa.I2C1_SCLK, force=True)
-        #fm.register(31, fm.fpioa.I2C1_SDA, force=True)
+        self.i2c = I2C(I2C.I2C3, freq=100*1000, sda=27, scl=24)
         #self.load()
 
     def test_event(self):
@@ -121,14 +119,12 @@ class PowerTest():
         if self.is_load == False:
             # i2c init()
             sample_page.btn.enable = False
-            fm.register(24, fm.fpioa.I2C1_SCLK, force=True)
-            fm.register(27, fm.fpioa.I2C1_SDA, force=True)
             self.isconnected = False
             self.isError = None
             self.work_info = []
             self.agent = agent()
             self.agent.event(500, self.check)
-            self.agent.event(2500, self.test_event)
+            self.agent.event(1500, self.test_event)
             self.is_load = True
 
     def free(self):
@@ -241,13 +237,9 @@ class PowerReport():
 
 class Msa301Test():
 
-    def __init__(self, scl=24, sda=27):
+    def __init__(self):
         self.is_load = False
-        self.scl = scl
-        self.sda = sda
-        self.i2c = I2C(I2C.I2C1, freq=100*1000, scl=self.scl, sda=self.sda)
-        #fm.register(30, fm.fpioa.I2C1_SCLK, force=True)
-        #fm.register(31, fm.fpioa.I2C1_SDA, force=True)
+        self.i2c = I2C(I2C.I2C3, freq=100*1000, sda=27, scl=24)
 
     def test_event(self):
         if self.isconnected and self.acceleration[0] != 0 and self.acceleration[1] != 0 and self.acceleration[2] != 0:
@@ -260,15 +252,13 @@ class Msa301Test():
         if self.is_load == False:
             # i2c init()
             sample_page.btn.enable = False
-            fm.register(self.scl, fm.fpioa.I2C1_SCLK, force=True)
-            fm.register(self.sda, fm.fpioa.I2C1_SDA, force=True)
             self.isconnected = False
             self.isError = None
             self.tapped = False
             self.acceleration = (0, 0, 0)
             self.agent = agent()
             self.agent.event(500, self.check)
-            self.agent.event(3000, self.test_event)
+            self.agent.event(1500, self.test_event)
             self.is_load = True
 
     def free(self):
@@ -324,7 +314,7 @@ class Msa301Report():
         if self.is_load == False:
             self.is_load = True
             self.agent = agent()
-            self.agent.event(2000, sample_page.next)
+            self.agent.event(1000, sample_page.next)
         else:
             sample_page.next()
 
@@ -344,9 +334,7 @@ class GroveTest():
         self.is_load = False
         self.scl = scl
         self.sda = sda
-        self.i2c = I2C(I2C.I2C0, freq=100*1000, scl=self.scl, sda=self.sda)
-        #fm.register(30, fm.fpioa.I2C1_SCLK, force=True)
-        #fm.register(31, fm.fpioa.I2C1_SDA, force=True)
+        self.i2c = I2C(I2C.I2C4, freq=100*1000, scl=self.scl, sda=self.sda)
 
     def test_event(self):
         if self.isconnected and self.work_data != None and self.work_data[0] > 0 and self.work_data[1] > 1:
@@ -359,8 +347,6 @@ class GroveTest():
         if self.is_load == False:
             # i2c init()
             sample_page.btn.enable = False
-            fm.register(self.scl, fm.fpioa.I2C0_SCLK, force=True)
-            fm.register(self.sda, fm.fpioa.I2C0_SDA, force=True)
             self.isconnected = False
             self.isError = None
             self.work_info = []
@@ -419,7 +405,7 @@ class GroveReport():
         if self.is_load == False:
             self.is_load = True
             self.agent = agent()
-            self.agent.event(2000, sample_page.next)
+            self.agent.event(1000, sample_page.next)
         else:
             sample_page.next()
 
@@ -514,7 +500,7 @@ class SpmodReport():
         if self.is_load == False:
             self.is_load = True
             self.agent = agent()
-            self.agent.event(2000, sample_page.next)
+            self.agent.event(1000, sample_page.next)
         else:
             sample_page.next()
 
@@ -551,7 +537,7 @@ class WaitTestStart():
             # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
-            #self.agent.event(2000, sample_page.next)
+            #self.agent.event(1000, sample_page.next)
         else:
             if Report.Key_Test:
                 sample_page.next()
@@ -666,7 +652,7 @@ class KeyReport():
             # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
-            #self.agent.event(2000, sample_page.next)
+            #self.agent.event(1000, sample_page.next)
         else:
             if Report.Key_Test:
                 sample_page.next()
@@ -693,13 +679,9 @@ class KeyReport():
 
 class TouchTest():
 
-    def __init__(self, scl=24, sda=27):
+    def __init__(self):
         self.is_load = False
-        self.scl = scl
-        self.sda = sda
-        self.i2c = I2C(I2C.I2C1, freq=100*1000)
-        #fm.register(30, fm.fpioa.I2C1_SCLK, force=True)
-        #fm.register(31, fm.fpioa.I2C1_SDA, force=True)
+        self.i2c = I2C(I2C.I2C3, freq=100*1000, sda=27, scl=24)
 
     def ft6x36_write_reg(self, reg_addr, buf):
         self.i2c.writeto_mem(0x38, reg_addr, buf, mem_size=8)
@@ -718,8 +700,6 @@ class TouchTest():
         if self.is_load == False:
             # i2c init()
             sample_page.btn.enable = False
-            fm.register(self.scl, fm.fpioa.I2C1_SCLK, force=True)
-            fm.register(self.sda, fm.fpioa.I2C1_SDA, force=True)
             self.isconnected = False
             self.isError = None
             self.bak = None
@@ -808,7 +788,7 @@ class TouchReport():
             # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
-            #self.agent.event(2000, sample_page.next)
+            #self.agent.event(1000, sample_page.next)
         else:
             if Report.Touch_Test:
                 sample_page.next()
@@ -927,7 +907,7 @@ class FrontSensorReport():
             # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
-            #self.agent.event(2000, sample_page.next)
+            #self.agent.event(1000, sample_page.next)
         elif Report.RearSensor_Test:
             sample_page.next()
 
@@ -1047,7 +1027,7 @@ class RearSensorReport():
             # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
-            #self.agent.event(2000, sample_page.next)
+            #self.agent.event(1000, sample_page.next)
         elif Report.RearSensor_Test:
             sample_page.next()
 
@@ -1071,11 +1051,9 @@ class AudioTest():
     PlayTest = False
     RecordTest = False
 
-    def __init__(self, scl=24, sda=27):
+    def __init__(self):
         self.is_load = False
-        self.scl = scl
-        self.sda = sda
-        self.i2c = I2C(I2C.I2C1, freq=100*1000)
+        self.i2c = I2C(I2C.I2C3, freq=100*1000, sda=27, scl=24)
         self.count = 0
 
     def load(self):
@@ -1083,10 +1061,8 @@ class AudioTest():
             sample_page.next()
         if self.is_load == False:
             # i2c init()
+            CubeAudio.init(self.i2c)
             sample_page.btn.enable = False
-            from fpioa_manager import fm
-            fm.register(self.scl,fm.fpioa.I2C1_SCLK, force=True)
-            fm.register(self.sda,fm.fpioa.I2C1_SDA, force=True)
             self.isconnected = False
             self.isError = None
             self.is_play = False
@@ -1137,9 +1113,7 @@ class AudioTest():
             else:
                 if self.state == 0 and self.is_play == False:
                     self.is_play = True
-                    CubeAudio.i2c = self.i2c
                     CubeAudio.ready()
-                    from fpioa_manager import fm
                     fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
                     fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
                     fm.register(18,fm.fpioa.I2S0_WS, force=True)
@@ -1170,7 +1144,7 @@ class AudioTest():
         if self.isconnected:
             if self.state == 0 and self.is_play:
                 if CubeAudio.event() == False:
-                    CubeAudio.load("/flash/test.wav", 100)
+                    CubeAudio.load("/sd/res/sound/loop.wav", 100)
                     #print('self.count', self.count)
                     if self.count > 1:
                         CubeAudio.i2s.set_sample_rate(22050)
@@ -1218,7 +1192,7 @@ class AudioReport():
             # self.btn.config(23, 20, 31)
             self.agent = agent()
             self.agent.event(150, self.key_event)
-            #self.agent.event(2000, sample_page.next)
+            #self.agent.event(1000, sample_page.next)
         elif Report.Audio_Test:
             sample_page.next()
 
@@ -1256,7 +1230,7 @@ class SdcardTest():
             self.is_load = True
             self.result = os.getcwd() == '/sd' # and len(os.listdir('/sd')) > 0
             self.agent = agent()
-            self.agent.event(2000, sample_page.next)
+            self.agent.event(1000, sample_page.next)
         else:
             sample_page.next()
 
@@ -1273,6 +1247,66 @@ class SdcardTest():
             #self.is_load = False
 
 if __name__ == "__main__":
+
+    import json
+
+    config = {
+      "type": "amigo",
+      "lcd": {
+          "height": 320,
+          "width": 480,
+          "invert": 0,
+          "dir": 40,
+          "lcd_type": 1
+      },
+      "sdcard":{
+          "sclk":11,
+          "mosi":10,
+          "miso":6,
+          "cs":26
+      },
+      "board_info": {
+          'BOOT_KEY': 16,
+          'LED_R': 14,
+          'LED_G': 15,
+          'LED_B': 17,
+          'LED_W': 32,
+          'BACK': 31,
+          'ENTER': 23,
+          'NEXT': 20,
+          'WIFI_TX': 6,
+          'WIFI_RX': 7,
+          'WIFI_EN': 8,
+          'I2S0_MCLK': 13,
+          'I2S0_SCLK': 21,
+          'I2S0_WS': 18,
+          'I2S0_IN_D0': 35,
+          'I2S0_OUT_D2': 34,
+          'I2C_SDA': 27,
+          'I2C_SCL': 24,
+          'SPI_SCLK': 11,
+          'SPI_MOSI': 10,
+          'SPI_MISO': 6,
+          'SPI_CS': 12,
+      }
+    }
+
+    data = config
+
+    cfg = json.dumps(data)
+    #print(cfg)
+
+    try:
+      with open('/flash/config.json', 'rb') as f:
+        tmp = json.loads(f.read())
+        print(tmp)
+        if tmp["type"] != data["type"]:
+          raise Exception('config.json no exist')
+    except Exception as e:
+      with open('/flash/config.json', "w") as f:
+        f.write(cfg)
+      import machine
+      machine.reset()
 
     protect.keep()
 
@@ -1305,12 +1339,12 @@ if __name__ == "__main__":
 
     sample_page.add_sample(WaitTestStart())
 
-    sample_page.add_sample(SpmodReport())
-    sample_page.add_sample(SpmodTest(30, 28, 29, 8))
-    sample_page.add_sample(SpmodTest(10, 6, 12, 11))
+    # sample_page.add_sample(SpmodReport())
+    # sample_page.add_sample(SpmodTest(30, 28, 29, 8))
+    # sample_page.add_sample(SpmodTest(10, 6, 12, 11))
 
-    sample_page.add_sample(GroveReport())
-    sample_page.add_sample(GroveTest())
+    # sample_page.add_sample(GroveReport())
+    # sample_page.add_sample(GroveTest())
 
     sample_page.add_sample(Msa301Report())
     sample_page.add_sample(Msa301Test())
@@ -1322,7 +1356,7 @@ if __name__ == "__main__":
 
     #ui.height, ui.weight = int(lcd.width() / 2), int(lcd.height())
 
-    ui.height, ui.weight = 320, 300
+    ui.height, ui.weight = 300, 260
 
     @ui.warp_template(ui.blank_draw)
     #@ui.warp_template(ui.grey_draw)
