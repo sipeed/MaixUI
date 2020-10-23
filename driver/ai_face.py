@@ -236,7 +236,7 @@ if __name__ == "__main__":
         import time
         last = time.ticks_ms()
         i = 0
-        while i < 20:
+        while i < 200:
             i += 1
             #print(i)
             try:
