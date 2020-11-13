@@ -853,7 +853,7 @@ class FrontSensorTest():
         if self.is_load == False:
             # sipeed_led.init(14, 15, 17, 32)
             # sipeed_led.w.value(1)
-            sample_page.btn.enable = False
+            #sample_page.btn.enable = False
             self.btn = sipeed_button()
             # self.btn.config(23, 20, 31)
             self.get_image = None
@@ -973,7 +973,7 @@ class RearSensorTest():
         if self.is_load == False:
             sipeed_led.init(14, 15, 17, 32)
             sipeed_led.w.value(1)
-            sample_page.btn.enable = False
+            #sample_page.btn.enable = False
             self.btn = sipeed_button()
             # self.btn.config(23, 20, 31)
             self.get_image = None
@@ -1298,7 +1298,8 @@ if __name__ == "__main__":
         sample_page.samples = []
         # gc.collect()
 
-    button_io.config(23, 31, 20)
+    button_io.config(23, 31, 20) # old
+    button_io.config(16, 23, 20) # new
     sample_page.key_init()
 
     sample_page.add_sample(Report()) # keep
@@ -1315,10 +1316,10 @@ if __name__ == "__main__":
     sample_page.add_sample(TouchReport())
     sample_page.add_sample(TouchTest())
 
-    # sample_page.add_sample(KeyReport())
-    # sample_page.add_sample(KeyTest())
+    sample_page.add_sample(KeyReport())
+    sample_page.add_sample(KeyTest())
 
-    # sample_page.add_sample(WaitTestStart())
+    sample_page.add_sample(WaitTestStart())
 
     # sample_page.add_sample(SpmodReport())
     # sample_page.add_sample(SpmodTest(30, 28, 29, 8))
@@ -1327,11 +1328,11 @@ if __name__ == "__main__":
     # sample_page.add_sample(GroveReport())
     # sample_page.add_sample(GroveTest())
 
-    # sample_page.add_sample(Msa301Report())
-    # sample_page.add_sample(Msa301Test())
+    sample_page.add_sample(Msa301Report())
+    sample_page.add_sample(Msa301Test())
 
-    # sample_page.add_sample(PowerReport())
-    # sample_page.add_sample(PowerTest())
+    sample_page.add_sample(PowerReport())
+    sample_page.add_sample(PowerTest())
 
     sample_page.add_sample(SdcardTest()) # keep
 
