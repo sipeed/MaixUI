@@ -612,5 +612,7 @@ class app:
 
 #'''
 if __name__ == "__main__":
+    import lcd
+    lcd.init()
     print_mem_free()
     app.run()
