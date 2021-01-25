@@ -16,6 +16,7 @@ def all_mkdir(path):
     path = path.strip()
     path = path.rstrip("\\")
     isExists = os.path.exists(path)
+    
     if not isExists:
         os.makedirs(path)
     return os.path.exists(path)
@@ -32,6 +33,10 @@ def extract_file_by_suffix(source_dir='/', exclude=[], goal_dir='result\\', file
                 shutil.copyfile(fe, goal_dir + path)
 
 if __name__ == "__main__":
+    try:
+        shutil.rmtree('./fs')
+    except Exception as e:
+        pass
     all_mkdir('./fs')
     extract_file_by_suffix(source_dir='./', exclude=['./app', './test', './fs', 'main.py', 'settings.json', './build_flash_fs.py', 'cube.config.json', 'amigo.config.json'], goal_dir='fs/', file_set=['.py', '.json'])
     # build flash fs
@@ -39,3 +44,4 @@ if __name__ == "__main__":
     # created main.py
     shutil.copytree("./res","./fs/res")
     shutil.copytree("./imgs","./fs/imgs")
+    shutil.copytree("./game","./fs/game")
