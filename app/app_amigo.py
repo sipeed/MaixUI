@@ -427,6 +427,11 @@ class app:
                     ui.canvas.draw_string(340, 150, "%s" % str(ai_camera.model.result), scale=2)
                     ui.canvas.draw_string(50, 260, "What is likely to be?", scale=2)
 
+              elif 'MoblieNet' == ai_camera.model.__qualname__:
+
+                    ui.canvas.draw_string(340, 50, "MoblieNet\n   1000class\n", scale=3)
+                    ui.canvas.draw_string(340, 150, "What is likely to be?", scale=2)
+
             app.touch_draw()
             ui.display()
         except Exception as e:
@@ -553,7 +558,8 @@ class app:
         # app.layer = 1
 
         ui.height, ui.weight = 480, 320
-        button_io.config(23, 20, 31) # amigo
+        # button_io.config(23, 20, 31) # amigo tft
+        button_io.config(16, 23, 20) # amigo ips
         sipeed_led.init(14, 15, 17, 32)
 
 

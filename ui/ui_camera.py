@@ -17,7 +17,7 @@ try:
     from ai_track import find_color
     from ai_classify import HowMany, MaybeIs, MoblieNet
     from ai_face import FaceReco, FaceDetect
-    from ai_ocr import Minist
+    # from ai_ocr import Minist
     from led import sipeed_led
 except ImportError:
     from ui.ui_canvas import ui
@@ -56,7 +56,7 @@ class ai_sample():
 
 class ai_camera():
 
-    index, model, models = 0, ai_sample, [ai_sample, FaceDetect, FaceReco, find_color, HowMany, MaybeIs, MoblieNet, Minist]
+    index, model, models = 0, ai_sample, [ai_sample, FaceDetect, FaceReco, HowMany, MaybeIs, MoblieNet]
     btn, replace = sipeed_button(), False
     backlight = 1
 
