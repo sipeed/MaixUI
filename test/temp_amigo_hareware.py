@@ -61,7 +61,7 @@ class Report():
         elif self.btn.next() == 2:
             sample_page.next()
         elif self.btn.home() == 2:
-            axp173 = AXP173(I2C(I2C.I2C4, freq=100*1000, scl=30, sda=31))
+            axp173 = AXP173(I2C(I2C.I2C4, freq=100*1000, scl=30, gscl=fm.fpioa.GPIOHS17, sda=31, gsda=fm.fpioa.GPIOHS18))
             axp173.__write_reg(0x32, 0x80) # turn off
 
     def work(self):
