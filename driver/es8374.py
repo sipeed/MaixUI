@@ -724,18 +724,18 @@ if __name__ == "__main__":
             i2s.channel_config(I2S.CHANNEL_0, I2S.RECEIVER, resolution=I2S.RESOLUTION_16_BIT, cycles=I2S.SCLK_CYCLES_32, align_mode=I2S.STANDARD_MODE)
 
             # amigo
-            fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
-            fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
-            fm.register(18,fm.fpioa.I2S0_WS, force=True)
-            fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
-            fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
+            #fm.register(13,fm.fpioa.I2S0_MCLK, force=True)
+            #fm.register(21,fm.fpioa.I2S0_SCLK, force=True)
+            #fm.register(18,fm.fpioa.I2S0_WS, force=True)
+            #fm.register(35,fm.fpioa.I2S0_IN_D0, force=True)
+            #fm.register(34,fm.fpioa.I2S0_OUT_D2, force=True)
             
             # cube
-            #fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
-            #fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
-            #fm.register(33,fm.fpioa.I2S0_WS, force=True)
-            #fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
-            #fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
+            fm.register(19,fm.fpioa.I2S0_MCLK, force=True)
+            fm.register(35,fm.fpioa.I2S0_SCLK, force=True)
+            fm.register(33,fm.fpioa.I2S0_WS, force=True)
+            fm.register(34,fm.fpioa.I2S0_IN_D0, force=True)
+            fm.register(18,fm.fpioa.I2S0_OUT_D2, force=True)
 
             i2s.set_sample_rate(22050)
 
