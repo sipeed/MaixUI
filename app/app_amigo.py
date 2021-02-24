@@ -613,6 +613,14 @@ class app:
 #'''
 if __name__ == "__main__":
     import lcd
+    
+    from Maix import utils
+    import machine
+
+    if utils.gc_heap_size() != 1024*1024:
+        utils.gc_heap_size(1024*1024) # 1MiB
+        machine.reset()
+    
     lcd.init()
     print_mem_free()
     app.run()
