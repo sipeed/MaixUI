@@ -4,9 +4,12 @@
 # Licensed under the MIT license:
 #   http://www.opensource.org/licenses/mit-license.php
 #
-
-from ui_canvas import ui
-import camera
+try:
+    from ui_canvas import ui
+    import camera
+except:
+    from ui_canvas import ui
+    import camera
 import KPU as kpu
 
 # classify20

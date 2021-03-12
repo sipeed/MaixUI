@@ -4,8 +4,10 @@
 # Licensed under the MIT license:
 #   http://www.opensource.org/licenses/mit-license.php
 #
-
-from fs import OS
+try:
+    from fs import OS
+except:
+    from driver.fs import OS
 
 class photos:
 

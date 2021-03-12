@@ -6,28 +6,30 @@
 #
 
 import time, gc, math, image
-
-from pmu_axp173 import AXP173, AXP173_ADDR
 from machine import I2C
 from fpioa_manager import fm
-
 from Maix import GPIO
-from core import agent
-from ui_canvas import ui, print_mem_free
-from ui_amigo_launcher import launcher
-from ui_catch import catch
-from ui_pages import pages
-from ui_photos import photos
-from ui_camera import ai_camera
-from fs import OS
-from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
-from button import sipeed_button, button_io
-from wdt import protect
-from led import sipeed_led
-from sound import CubeAudio
-from touch import Touch, TouchLow
-from ui_taskbar import taskbar
-from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
+
+try:
+    from core import agent
+
+    from ui_taskbar import taskbar
+    from ui_canvas import ui, print_mem_free
+    from ui_amigo_launcher import launcher
+    from ui_catch import catch
+    from ui_pages import pages
+    from ui_photos import photos
+    from ui_camera import ai_camera
+
+    from fs import OS
+    from pmu_axp173 import AXP173, AXP173_ADDR
+    from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
+    from button import sipeed_button, button_io
+    from wdt import protect
+    from led import sipeed_led
+    from sound import CubeAudio
+    from touch import Touch, TouchLow
+    from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
 
 #from ui_sample import sample_page
 #from ui_explorer import explorer
@@ -35,7 +37,26 @@ from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
 #from sample_spmod import sample_spmod_test
 #from sample_msa301 import sample_msa301
 
-#'''
+except:
+    from lib.core import agent
+    
+    from ui.ui_canvas import ui, print_mem_free
+    from ui.ui_amigo_launcher import launcher
+    from ui.ui_catch import catch
+    from ui.ui_pages import pages
+    from ui.ui_photos import photos
+    from ui.ui_camera import ai_camera
+    from ui.ui_taskbar import taskbar
+
+    from driver.pmu_axp173 import AXP173, AXP173_ADDR
+    from driver.fs import OS
+    from driver.msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
+    from driver.button import sipeed_button, button_io
+    from driver.wdt import protect
+    from driver.led import sipeed_led
+    from driver.sound import CubeAudio
+    from driver.touch import Touch, TouchLow
+    from driver.shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
 
 
 class app:

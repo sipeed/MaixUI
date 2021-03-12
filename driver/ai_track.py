@@ -5,8 +5,12 @@
 #   http://www.opensource.org/licenses/mit-license.php
 #
 
-from ui_canvas import ui
-import camera
+try:
+    from ui_canvas import ui
+    import camera
+except:
+    from ui.ui_canvas import ui
+    import driver.camera
 
 class find_color():
 

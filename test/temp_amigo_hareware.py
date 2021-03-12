@@ -11,20 +11,39 @@ from fpioa_manager import fm
 from machine import I2C, SPI
 from Maix import I2S, GPIO, FFT
 
-from led import sipeed_led
-from button import sipeed_button, button_io
-from pmu_axp173 import AXP173, AXP173_ADDR
-from sound import CubeAudio
-from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
-from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
-from bme280 import BME280, BME280_I2CADDR
-from qmcx983 import QMCX983, QMCX983_I2CADDR
+try:
+    from core import agent
 
-from ui_catch import catch
-from ui_canvas import ui
-from ui_sample import sample_page
-from core import agent
-from wdt import protect
+    from wdt import protect
+    from led import sipeed_led
+    from button import sipeed_button, button_io
+    from pmu_axp173 import AXP173, AXP173_ADDR
+    from sound import CubeAudio
+    from msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
+    from shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
+    from bme280 import BME280, BME280_I2CADDR
+    from qmcx983 import QMCX983, QMCX983_I2CADDR
+
+    from ui_catch import catch
+    from ui_canvas import ui
+    from ui_sample import sample_page
+
+except:
+    from lib.core import agent
+
+    from driver.led import sipeed_led
+    from driver.button import sipeed_button, button_io
+    from driver.pmu_axp173 import AXP173, AXP173_ADDR
+    from driver.sound import CubeAudio
+    from driver.msa301 import MSA301, _MSA301_I2CADDR_DEFAULT
+    from driver.shtxx import SHT3x, SHT3x_ADDR, SHT31_ADDR
+    from driver.bme280 import BME280, BME280_I2CADDR
+    from driver.qmcx983 import QMCX983, QMCX983_I2CADDR
+    from driver.wdt import protect
+
+    from ui.ui_catch import catch
+    from ui.ui_canvas import ui
+    from ui.ui_sample import sample_page
 
 protect.keep()
 

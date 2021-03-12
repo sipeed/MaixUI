@@ -1,5 +1,7 @@
-
-from es8374 import ES8374
+try:
+    from es8374 import ES8374
+except:
+    from driver.es8374 import ES8374
 from Maix import I2S
 from fpioa_manager import *
 import audio
