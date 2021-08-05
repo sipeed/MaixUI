@@ -23,6 +23,7 @@ class TouchLow:
     def config(i2c, addr=FT6X36_ADDR):
         TouchLow.i2c = i2c
         TouchLow.addr = addr
+        TouchLow.config_ft6x36()
 
     def write_reg(reg_addr, buf):
         TouchLow.i2c.writeto_mem(TouchLow.addr, reg_addr, buf, mem_size=8)
@@ -32,8 +33,8 @@ class TouchLow:
 
     def config_ft6x36():
         TouchLow.write_reg(FT_DEVIDE_MODE, 0)  # 进入正常操作模式
-        TouchLow.write_reg(FT_ID_G_THGROUP, 12)  # 设置触摸有效值，触摸有效值，12，越小越灵敏
-        TouchLow.write_reg(FT_ID_G_PERIODACTIVE, 14)  # 激活周期，不能小于12，最大14
+        TouchLow.write_reg(FT_ID_G_THGROUP, 0x1c)  # 设置触摸有效值，触摸有效值，12，越小越灵敏
+        TouchLow.write_reg(FT_ID_G_PERIODACTIVE, 0x0a)  # 激活周期，不能小于12，最大14
 
     def get_point():
         if TouchLow.i2c != None:
