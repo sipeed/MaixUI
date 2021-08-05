@@ -124,11 +124,12 @@ touch = Touch(i2c=None, w=480, h=320, cycle=50, irq_pin=33)
 if __name__ == '__main__':
     def on_touch(s):
         print(touch.state)
+        print(touch.points)
         print(s)
     s = "touch it"
     a = 1
     touch.register_touch_event(on_touch, s, a)
-    touch.unregister_touch_event(on_touch)
+    #touch.unregister_touch_event(on_touch)
     clock = time.clock()
     pos_x = 0
     pos_y = 20
@@ -137,4 +138,4 @@ if __name__ == '__main__':
         # pos_x += 2
         # wig.set_pos_size(pos_x, pos_y, 80, 80)
         system.parallel_cycle()
-        # print(clock.fps())
+        #print(clock.fps())
