@@ -12,10 +12,8 @@ class agent:
     self.msg = []
     self.arg = {}
 
-  def get_ms(self):
     import time
-    # return time.time() * 1000
-    return time.ticks_ms()
+    self.get_ms = (lambda : time.ticks_ms()) if getattr(time, "ticks_ms", False) else (lambda : time.time() * 1000)
 
   def event(self, cycle, func, args=None):
     # arrived, cycle, function
